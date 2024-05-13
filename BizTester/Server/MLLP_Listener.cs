@@ -1,4 +1,5 @@
-﻿using BizTester.Libs;
+﻿using Biztalk.Libs;
+using BizTester.Libs;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -13,6 +14,7 @@ namespace BizTester.Server
 
         public int port { get; }
         public bool sendAck { get; }
+        private Thread listenThread;
 
         public MLLP_Listener(CustomLogger logger, string port_text, bool sendAck)
         {
@@ -29,19 +31,36 @@ namespace BizTester.Server
             this.sendAck = sendAck;
         }
 
+        public override void Stop()
+        {
+            isListening = false;
+            listenThread.Join();
+            tcpListener.Stop();
+            base.Stop();
+        }
+
         private void ListenForClients()
         {
             try
             {
+                tcpListener = new TcpListener(IPAddress.Any, this.port);
+                tcpListener.Start();
                 tcpListener.Start();
                 logger.Info("Server started. Waiting for connections...");
 
                 while (isListening)
                 {
-                    TcpClient client = tcpListener.AcceptTcpClient();
-                    logger.Info("Connected to a client");
-                    Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
-                    clientThread.Start(client);
+                    if (tcpListener.Pending()) // Check if there are pending connection requests
+                    {
+                        TcpClient client = tcpListener.AcceptTcpClient();
+                        logger.Info("Connected to a client");
+                        Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
+                        clientThread.Start(client);
+                    }
+                    else
+                    {
+                        Thread.Sleep(100); // Wait for a short while to avoid busy waiting
+                    }
                 }
             }
             catch (Exception ex)
@@ -50,16 +69,8 @@ namespace BizTester.Server
             }
         }
 
-        public override void Stop()
-        {
-            tcpListener.Stop();
-            base.Stop();
-        }
-
-
         public override void Start()
         {
-            tcpListener = new TcpListener(IPAddress.Any, this.port);
             listenThread = new Thread(new ThreadStart(ListenForClients));
             listenThread.Start();
         }
@@ -67,11 +78,11 @@ namespace BizTester.Server
         {
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
-
+            clientStream.ReadTimeout = 500;// you must set the timeout otherwise the Read operation keeps the thread running forever.
             byte[] message = new byte[4096];
             int bytesRead;
 
-            while (true)
+            while (isListening)
             {
                 bytesRead = 0;
 

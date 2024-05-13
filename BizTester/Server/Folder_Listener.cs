@@ -1,5 +1,4 @@
 ﻿using BizTester.Libs;
-using BizTester.Libs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,6 +59,7 @@ namespace BizTester.Server
             {
                 listenThread = new Thread(new ThreadStart(ListenForFiles));
                 listenThread.Start();
+                logger.Info("Started to collect messages from the folder.");
             }
             catch (Exception ex)
             {

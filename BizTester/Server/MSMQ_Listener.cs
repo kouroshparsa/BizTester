@@ -2,7 +2,6 @@
 using MSMQ.Messaging;
 using System;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace BizTester.Server
 {
@@ -49,12 +48,13 @@ namespace BizTester.Server
         {
             try
             {
+                logger.Info("Started to collect messages from the queue.");
                 listenThread = new Thread(new ThreadStart(ListenForQueuedItems));
                 listenThread.Start();
             }
             catch (Exception ex)
             {
-                logger.Error($"Failed to start the listener: {ex.Message}");
+                logger.Error($"Failed to start listener: {ex.Message}");
             }
         }
     }

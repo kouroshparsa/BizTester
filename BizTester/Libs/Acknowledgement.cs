@@ -1,7 +1,6 @@
-﻿using HL7.Dotnetcore;
-using System;
+﻿using System;
 
-namespace BizTester.Libs
+namespace Biztalk.Libs
 {
 
     public class Acknowledgement
@@ -11,11 +10,10 @@ namespace BizTester.Libs
             if (string.IsNullOrEmpty(incomingHl7Message))
                 throw new ApplicationException("Invalid HL7 message for parsing operation. Please check your inputs");
 
-            Message message = new Message(incomingHl7Message);
+            var message = new HL7.Dotnetcore.Message(incomingHl7Message);
             message.ParseMessage();
             var messageControlId = message.GetValue("MSH.10");
-            Console.WriteLine($"messageControlId={messageControlId}");
-            Message ack = message.GetACK();
+            var ack = message.GetACK();
             return ack.SerializeMessage(false);
         }
     }
