@@ -58,7 +58,7 @@ namespace BizTester.Server
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error starting listener: {ex.Message}");
+                logger.Error($"Failed to start listener: {ex.Message}");
             }
         }
     }
