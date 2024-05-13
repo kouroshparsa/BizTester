@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Copyright>Kourosh Parsa</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HL7-dotnetcore" Version="2.36.0" />
+    <PackageReference Include="MSMQ.Messaging" Version="1.0.4" />
+    <PackageReference Include="RandomNameGeneratorLibrary" Version="1.2.2" />
+  </ItemGroup>
+
+</Project>
