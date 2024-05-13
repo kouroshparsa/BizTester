@@ -14,6 +14,7 @@ namespace BizTester.Server
             {
                 isListening = false;
             }
+            logger.Info("Server is stopped.");
         }
     }
 }

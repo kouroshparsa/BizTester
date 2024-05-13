@@ -46,6 +46,7 @@ namespace BizTester.Server
         {
             try
             {
+                logger.Info("Started to collect messages from the queue.");
                 listenThread = new Thread(new ThreadStart(ListenForQueuedItems));
                 listenThread.Start();
             }
