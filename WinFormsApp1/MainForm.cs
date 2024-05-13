@@ -1,5 +1,5 @@
 using BizTester.Client;
-using BizTester.lib;
+using BizTester.Libs;
 using BizTester.Server;
 
 namespace BizTester

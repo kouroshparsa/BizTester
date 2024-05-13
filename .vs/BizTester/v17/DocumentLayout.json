@@ -1,0 +1,190 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\server\\mllp_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\server\\mllp_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\libs\\acknowledgement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\libs\\acknowledgement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\client\\mllp_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\client\\mllp_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\server\\folder_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\server\\folder_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\server\\msmq_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\server\\msmq_listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\server\\listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\server\\listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\client\\sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\client\\sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\client\\msmq_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\client\\msmq_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|c:\\users\\kourosh\\downloads\\x\\biztester\\winformsapp1\\client\\file_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{584824BE-7B51-4725-8A96-72DFACD00D3D}|WinFormsApp1\\BizTester.csproj|solutionrelative:winformsapp1\\client\\file_sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Acknowledgement.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Libs\\Acknowledgement.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Libs\\Acknowledgement.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Libs\\Acknowledgement.cs",
+              "RelativeToolTip": "WinFormsApp1\\Libs\\Acknowledgement.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:37:58.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MLLP_Sender.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\MLLP_Sender.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Client\\MLLP_Sender.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\MLLP_Sender.cs",
+              "RelativeToolTip": "WinFormsApp1\\Client\\MLLP_Sender.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:37:40.986Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Folder_Listener.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\Folder_Listener.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Server\\Folder_Listener.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\Folder_Listener.cs",
+              "RelativeToolTip": "WinFormsApp1\\Server\\Folder_Listener.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:37:17.116Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MSMQ_Listener.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\MSMQ_Listener.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Server\\MSMQ_Listener.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\MSMQ_Listener.cs",
+              "RelativeToolTip": "WinFormsApp1\\Server\\MSMQ_Listener.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:37:10.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MLLP_Listener.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\MLLP_Listener.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Server\\MLLP_Listener.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\MLLP_Listener.cs",
+              "RelativeToolTip": "WinFormsApp1\\Server\\MLLP_Listener.cs",
+              "ViewState": "AQIAAFcAAAAAAAAAAAAjwGcAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:36:56.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Listener.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\Listener.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Server\\Listener.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Server\\Listener.cs",
+              "RelativeToolTip": "WinFormsApp1\\Server\\Listener.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:36:51.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Sender.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\Sender.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Client\\Sender.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\Sender.cs",
+              "RelativeToolTip": "WinFormsApp1\\Client\\Sender.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:36:43.7Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MSMQ_Sender.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\MSMQ_Sender.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Client\\MSMQ_Sender.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\MSMQ_Sender.cs",
+              "RelativeToolTip": "WinFormsApp1\\Client\\MSMQ_Sender.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:36:34.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\MainForm.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\MainForm.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\MainForm.cs",
+              "RelativeToolTip": "WinFormsApp1\\MainForm.cs",
+              "ViewState": "AQIAAEsAAAAAAAAAAAAewFoAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:29:35.281Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "File_Sender.cs",
+              "DocumentMoniker": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\File_Sender.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Client\\File_Sender.cs",
+              "ToolTip": "C:\\Users\\Kourosh\\Downloads\\x\\BizTester\\WinFormsApp1\\Client\\File_Sender.cs",
+              "RelativeToolTip": "WinFormsApp1\\Client\\File_Sender.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-13T17:36:25.529Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

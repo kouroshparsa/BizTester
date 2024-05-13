@@ -1,4 +1,4 @@
-﻿namespace BizTester.lib
+﻿namespace BizTester.Libs
 {
     internal class CustomLogger
     {

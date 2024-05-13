@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0B04CE61EC224F97AC6E1DB1AF94E2B4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A38C2859A0A5461C85CAEDCACD09C09C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -43,6 +37,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -59,6 +61,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -82,7 +92,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A38C2859A0A5461C85CAEDCACD09C09C"
             {
-            "SourcePath" = "8:C:\\Users\\Kourosh\\Downloads\\flask-icon.ico"
+            "SourcePath" = "8:..\\..\\..\\flask-icon.ico"
             "TargetName" = "8:flask-icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_20B25E32D7A84F73BD20EDD8DD5898B6"
@@ -285,7 +295,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_0B04CE61EC224F97AC6E1DB1AF94E2B4"
+            "Target" = "8:"
             "Folder" = "8:_CE8902186E7149528FA17F27A267C023"
             "WorkingFolder" = "8:_20B25E32D7A84F73BD20EDD8DD5898B6"
             "Icon" = "8:_A38C2859A0A5461C85CAEDCACD09C09C"
@@ -299,7 +309,7 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_0B04CE61EC224F97AC6E1DB1AF94E2B4"
+            "Target" = "8:"
             "Folder" = "8:_46F389016327475CB6206E1884F6C2BF"
             "WorkingFolder" = "8:_20B25E32D7A84F73BD20EDD8DD5898B6"
             "Icon" = "8:_A38C2859A0A5461C85CAEDCACD09C09C"
@@ -704,34 +714,6 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0B04CE61EC224F97AC6E1DB1AF94E2B4"
-            {
-            "SourcePath" = "8:..\\MLLP_Listener\\obj\\Debug\\net6.0-windows\\apphost.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_20B25E32D7A84F73BD20EDD8DD5898B6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:PublishItems"
-            "OutputProjectGuid" = "8:{1AF2B1D9-7934-4095-A570-F2298B908E00}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
         }
     }
 }

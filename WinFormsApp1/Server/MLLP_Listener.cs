@@ -1,5 +1,5 @@
-﻿using Ack;
-using BizTester.lib;
+﻿using Biztalk.Libs;
+using BizTester.Libs;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;

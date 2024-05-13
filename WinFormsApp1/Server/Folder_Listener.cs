@@ -1,4 +1,4 @@
-﻿using BizTester.lib;
+﻿using BizTester.Libs;
 
 namespace BizTester.Server
 {
