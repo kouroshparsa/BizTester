@@ -1,6 +1,8 @@
 ﻿using BizTester.Libs;
 using MSMQ.Messaging;
 using System;
+using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace BizTester.Server
@@ -29,8 +31,13 @@ namespace BizTester.Server
                     var msg = queue.Receive(TimeSpan.FromSeconds(1));
                     if (msg != null)
                     {
-                        msg.Formatter = new XmlMessageFormatter(new string[] { "System.String,mscorlib" });
-                        logger.Info($"Received message: {msg.Body.ToString()}");
+                        string result;
+                        using (var streamReader = new StreamReader(msg.BodyStream, Encoding.Unicode))
+                        {
+                            result = streamReader.ReadToEnd();
+                        }
+                        
+                        logger.Info($"Received message from queue.", result);
                     }
                 }
                 catch (MessageQueueException mqEx)

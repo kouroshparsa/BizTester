@@ -32,6 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>BizTester.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>flask-icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="HL7-dotnetcore, Version=2.24.0.0, Culture=neutral, PublicKeyToken=b25318034c370d77, processorArchitecture=MSIL">
       <HintPath>..\packages\HL7-dotnetcore.SN.2.24.0\lib\netstandard1.3\HL7-dotnetcore.dll</HintPath>
@@ -43,58 +49,6 @@
     </Reference>
     <Reference Include="MSMQ.Messaging, Version=1.0.4.0, Culture=neutral, PublicKeyToken=5305dff8ee1dd9b9, processorArchitecture=MSIL">
       <HintPath>..\packages\MSMQ.Messaging.1.0.4\lib\net461\MSMQ.Messaging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Base, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.base.3.2.0\lib\net35\NHapi.Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V21, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v21.3.2.0\lib\net35\NHapi.Model.V21.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V22, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v22.3.2.0\lib\net35\NHapi.Model.V22.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V23, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v23.3.2.0\lib\net35\NHapi.Model.V23.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V231, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v231.3.2.0\lib\net35\NHapi.Model.V231.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V24, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v24.3.2.0\lib\net35\NHapi.Model.V24.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V25, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v25.3.2.0\lib\net35\NHapi.Model.V25.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V251, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v251.3.2.0\lib\net35\NHapi.Model.V251.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V26, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v26.3.2.0\lib\net35\NHapi.Model.V26.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V27, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v27.3.2.0\lib\net35\NHapi.Model.V27.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V271, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v271.3.2.0\lib\net35\NHapi.Model.V271.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V28, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v28.3.2.0\lib\net35\NHapi.Model.V28.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NHapi.Model.V281, Version=3.2.0.0, Culture=neutral, PublicKeyToken=d0d8ea960a3440eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\nhapi.model.v281.3.2.0\lib\net35\NHapi.Model.V281.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RandomNameGeneratorLibrary, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -187,7 +141,14 @@
     <Compile Include="Client\MLLP_Sender.cs" />
     <Compile Include="Client\MSMQ_Sender.cs" />
     <Compile Include="Client\Sender.cs" />
-    <Compile Include="Client\Simulator.cs" />
+    <Compile Include="Simulation\SimulationSpec.cs" />
+    <Compile Include="Simulation\Simulator.cs" />
+    <Compile Include="FormSimulationSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSimulationSettings.Designer.cs">
+      <DependentUpon>FormSimulationSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Libs\Acknowledgement.cs" />
     <Compile Include="Libs\CustomLogger.cs" />
     <Compile Include="MainForm.cs">
@@ -203,6 +164,9 @@
     <Compile Include="Server\MLLP_Listener.cs" />
     <Compile Include="Server\MSMQ_Listener.cs" />
     <Compile Include="Server\NetworkStreamReader.cs" />
+    <EmbeddedResource Include="FormSimulationSettings.resx">
+      <DependentUpon>FormSimulationSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -214,6 +178,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -225,9 +190,21 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Scripts\jquery-2.1.1.min.map" />
+    <None Include="simulation_data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="flask-icon.ico" />
+    <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\nugetexample.js" />
+    <None Include="Resources\flask-icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

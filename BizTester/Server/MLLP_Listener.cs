@@ -13,10 +13,8 @@ namespace BizTester.Server
         private TcpListener tcpListener;
 
         public int port { get; }
-        public bool sendAck { get; }
-        private Thread listenThread;
 
-        public MLLP_Listener(CustomLogger logger, string port_text, bool sendAck)
+        public MLLP_Listener(CustomLogger logger, string port_text)
         {
             this.logger = logger;
             int p;
@@ -28,7 +26,6 @@ namespace BizTester.Server
 
             if (p < 1)
                 throw new Exception("Invalid port");
-            this.sendAck = sendAck;
         }
 
         public override void Stop()
@@ -79,33 +76,45 @@ namespace BizTester.Server
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
             clientStream.ReadTimeout = 500;// you must set the timeout otherwise the Read operation keeps the thread running forever.
-            byte[] message = new byte[4096];
-            int bytesRead;
-
+            byte[] buffer = new byte[4096];
+            StringBuilder messageData = new StringBuilder();
             while (isListening)
             {
-                bytesRead = 0;
+                int bytesRead = 0;
+                    do
+                    {
+                        try {
+                            bytesRead = clientStream.Read(buffer, 0, buffer.Length);
+                        }
+                        catch (Exception)// timeout
+                        {
+                            if(bytesRead > 0)
+                        {
+                            string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                            messageData.Append(chunk);
+                            break;// due to timeout, there is no more data so end listening in this thread
+                        }
+                        
+                        }
+                        if (bytesRead > 0)
+                        {
+                            string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                            messageData.Append(chunk);
+                        }
+                    } while (bytesRead > 0 && isListening);
 
-                try
+                if (messageData.Length > 0)
                 {
-                    bytesRead = clientStream.Read(message, 0, 4096);
+                    string msg = messageData.ToString();
+                    messageData.Clear();
+                    logger.Info("MLLP Received message", msg);
+                    if (Acknowledgement.RequiresAcknowledgement(msg))
+                    {
+                        logger.Info("Message expects an acknowledgement.");
+                        SendAck(msg, clientStream);
+                    }
                 }
-                catch
-                {
-                    break;
-                }
-
-                if (bytesRead == 0)
-                {
-                    break;
-                }
-
-                // Handle received message here
-
-                string msg = Encoding.ASCII.GetString(message, 0, bytesRead);
-                logger.Info($"MLLP Received: {msg}");
-                if (this.sendAck)
-                    SendAck(msg, clientStream);
+                
             }
 
             tcpClient.Close();
@@ -113,10 +122,20 @@ namespace BizTester.Server
 
         private void SendAck(string msg, NetworkStream clientStream)
         {
-            string ackMessage = Acknowledgement.GetAcknowledgementMessage(msg);
+            string ackMessage;
+            try
+            {
+                ackMessage = Acknowledgement.GetAcknowledgementMessage(msg);
+            }
+            catch(Exception ex)
+            {
+                logger.Error("Failed to create achnowledgement for the message.", msg);
+                return;
+            }
+            
             var buffer = Encoding.UTF8.GetBytes(ackMessage);
             clientStream.Write(buffer, 0, buffer.Length);
-            logger.Info("Ack message was sent back to the client...");
+            logger.Info("Ack message was sent back to the client.", ackMessage);
 
         }
 

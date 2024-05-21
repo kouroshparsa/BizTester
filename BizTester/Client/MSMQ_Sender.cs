@@ -1,6 +1,8 @@
 ﻿using BizTester.Libs;
 using MSMQ.Messaging;
 using System;
+using System.IO;
+using System.Text;
 
 namespace BizTester.Client
 {
@@ -17,20 +19,19 @@ namespace BizTester.Client
             }
             this.QueueName = queue;
         }
-        public override void Start()
+        public override void Start(string data)
         {
-            using (var tx = new MessageQueueTransaction())
+            var messageToSend = new Message();
+            StreamWriter streamWriter = new StreamWriter(messageToSend.BodyStream, Encoding.Unicode);
+            streamWriter.Write(data);
+            streamWriter.Flush();
+            
+            using (MessageQueue queue = new MessageQueue(QueueName))
             {
-                tx.Begin();
-                using (MessageQueue queue = new MessageQueue(QueueName))
-                {
-                    queue.Formatter = new XmlMessageFormatter(new string[] { "System.String,mscorlib" });
-                    string msg = Simulator.GetHL7Message();
-                    queue.Send(msg, tx);
-                }
-                tx.Commit();
-                logger.Info("Message sent to Queue.");
+                queue.Send(messageToSend, "", MessageQueueTransactionType.Single);
             }
+            logger.Info("Message sent to Queue.", data);
+            
         }
 
     }
