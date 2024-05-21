@@ -1,14 +1,19 @@
 ﻿using BizTester.Libs;
 using BizTester.Server;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using BizTester.Simulation;
 
 namespace BizTester.Client
 {
     internal class MLLP_Sender : Sender
     {
         public int port { get; }
+        public SimulationSpec simSpec;
+
         public MLLP_Sender(CustomLogger logger, string port_text)
         {
             this.logger = logger;
@@ -27,13 +32,13 @@ namespace BizTester.Client
 
         }
 
-        public override void Start()
+        public override void Start(string data)
         {
-            var task = SendAsync(this.port);
+            var task = SendAsync(this.port, data);
         }
-        public async Task SendAsync(int port)
+        public async Task SendAsync(int port, string data)
         {
-            var messageToTransmit = Simulator.GetHL7Message();
+            var messageToTransmit = Simulator.GetHL7Message(simSpec);
             var tcpClient = new TcpClient();
             try
             {
@@ -45,7 +50,7 @@ namespace BizTester.Client
                 return;
             }
 
-            logger.Info("Connected to server....");
+            logger.Info("Connected to server.");
 
             //get the IO stream on this connection to write to
             var stream = tcpClient.GetStream();
@@ -56,9 +61,9 @@ namespace BizTester.Client
             //send a message through this connection using the IO stream
             stream.Write(byteBuffer, 0, byteBuffer.Length);
 
-            logger.Info("Data was sent to server successfully....");
+            logger.Info("Data was sent to server successfully.");
 
-            NetworkStreamReader reader = new();
+            NetworkStreamReader reader = new NetworkStreamReader();
             const int TIMEOUT = 2;// seconds
             try
             {

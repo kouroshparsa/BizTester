@@ -1,4 +1,6 @@
 ﻿using BizTester.Libs;
+using System;
+using System.IO;
 
 namespace BizTester.Client
 {
@@ -16,7 +18,7 @@ namespace BizTester.Client
             this.folder = folder;
         }
 
-        public override void Start()
+        public override void Start(string data)
         {
             string filename = $"{Guid.NewGuid()}.hl7v2";
             string path = Path.Combine(folder, filename);
@@ -25,11 +27,11 @@ namespace BizTester.Client
                 filename = $"{Guid.NewGuid()}.hl7v2";
                 path = Path.Combine(folder, filename);
             }
-            string data = Simulator.GetHL7Message();
+
             try
             {
                 File.WriteAllText(path, data);
-                logger.Info($"Created file {filename}");
+                logger.Info($"Created file {filename}", data);
             }
             catch (Exception ex)
             {
