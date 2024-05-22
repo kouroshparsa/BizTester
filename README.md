@@ -1,11 +1,14 @@
 # BiztalkTester
 
-This is a Windows GUI app for testing Biztalk apps.
+This is a Windows GUI app for testing Biztalk apps with HL7v2 messages.
 You can download the installer from <a href="https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi">https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi</a>
 
 # Usage
+This tool allows you to receive HL7 (v2 or v3) responses and send HL7v2 messages either from a given file or automatically generate a message to send. 
 As shown below, you have the server (listener) settings on the left side and the client (sender) settings on the right side.
 ![MainForm](Documentation/Images/img1.png)
+
+Note that the MLLP server has the ability to send back acknowledgement message if the message received indicates that it requires a response.
 
 Currently, the tool only allows access to localhost meaning that you need to run it on the system where Biztalk is installed and you can set the MLLP host to 127.0.0.1 and for MSMQ you'd create a private queue on localhost.
 You have two options for the source:
