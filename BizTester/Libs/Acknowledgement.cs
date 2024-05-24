@@ -1,4 +1,5 @@
 ﻿using BizTester.Client;
+using BizTester.Libs;
 using HL7.Dotnetcore;
 using System;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Biztalk.Libs
 
     public class Acknowledgement
     {
-        public static bool RequiresAcknowledgement(string msg)
+        public static bool RequiresAcknowledgement(string msg, CustomLogger logger)
         {
             const string HL7V3_ACK = "<MSH.15_AcceptAcknowledgmentType>";
             if (msg.Contains(HL7V3_ACK))// HL7 v3
@@ -19,11 +20,19 @@ namespace Biztalk.Libs
 
             }else // HL7 v2
             {
-                var message = new Message(msg);
-                message.ParseMessage();
-                var acceptAcknowledgeType = message.GetValue("MSH.15");
-                return acceptAcknowledgeType.Length > 0;
+                try
+                {
+                    var message = new Message(msg);
+                    message.ParseMessage();
+                    var acceptAcknowledgeType = message.GetValue("MSH.15");
+                    return acceptAcknowledgeType.Length > 0;
+                }
+                catch
+                {
+                    logger.Error("Failed to parse response message so will assume no acknowledgement is needed", msg);
+                }
             }
+            return false;
         }
 
         private static string Get_HL7v3_AcknowledgementMessage(string msg)

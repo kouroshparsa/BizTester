@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace BizTester.Libs
 {
-    internal class CustomLogger
+    public class CustomLogger
     {
         internal DataGridView dataGridView;
         private enum LogTypes

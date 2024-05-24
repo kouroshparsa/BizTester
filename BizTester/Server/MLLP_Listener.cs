@@ -108,7 +108,7 @@ namespace BizTester.Server
                     string msg = messageData.ToString();
                     messageData.Clear();
                     logger.Info("MLLP Received message", msg);
-                    if (Acknowledgement.RequiresAcknowledgement(msg))
+                    if (Acknowledgement.RequiresAcknowledgement(msg, logger))
                     {
                         logger.Info("Message expects an acknowledgement.");
                         SendAck(msg, clientStream);
@@ -129,7 +129,7 @@ namespace BizTester.Server
             }
             catch(Exception ex)
             {
-                logger.Error("Failed to create achnowledgement for the message.", msg);
+                logger.Error($"Failed to create achnowledgement for the message. {ex.Message}", msg);
                 return;
             }
             
