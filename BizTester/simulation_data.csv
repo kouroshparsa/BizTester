@@ -10,10 +10,10 @@ MSH.16,NE,application_acknowledgment_type
 EVN.1,A03,event type code
 EVN.2,{now},Recorded Date/Time
 EVN.4,ENDISRCR,event reason code
-EVN5.1,1,Event id
-EVN5.2,{random_last_name},Family name
-EVN5.3,{random_first_name},Given name
-EVN5.7,{now},event date/time
+EVN.5.1,1,Event id
+EVN.5.2,{random_last_name},Family name
+EVN.5.3,{random_first_name},Given name
+EVN.5.7,{now},event date/time
 PID.1,{random_num},patient set id
 PID.3,{random_num},patient identifier list
 PID.5.1,{random_last_name},Patient family name

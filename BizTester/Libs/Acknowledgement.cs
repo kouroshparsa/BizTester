@@ -27,9 +27,9 @@ namespace Biztalk.Libs
                     var acceptAcknowledgeType = message.GetValue("MSH.15");
                     return acceptAcknowledgeType.Length > 0;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    logger.Error("Failed to parse response message so will assume no acknowledgement is needed", msg);
+                    logger.Error($"Failed to parse response message so will assume no acknowledgement is needed. {ex.Message}", msg);
                 }
             }
             return false;

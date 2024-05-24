@@ -42,7 +42,6 @@ namespace BizTester.Server
             {
                 tcpListener = new TcpListener(IPAddress.Any, this.port);
                 tcpListener.Start();
-                tcpListener.Start();
                 logger.Info("Server started. Waiting for connections...");
 
                 while (isListening)
@@ -117,6 +116,7 @@ namespace BizTester.Server
                 
             }
 
+            clientStream.Close();
             tcpClient.Close();
         }
 
@@ -135,6 +135,7 @@ namespace BizTester.Server
             
             var buffer = Encoding.UTF8.GetBytes(ackMessage);
             clientStream.Write(buffer, 0, buffer.Length);
+            clientStream.Flush();
             logger.Info("Ack message was sent back to the client.", ackMessage);
 
         }

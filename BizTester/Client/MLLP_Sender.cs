@@ -38,7 +38,6 @@ namespace BizTester.Client
         }
         public async Task SendAsync(int port, string data)
         {
-            var messageToTransmit = Simulator.GetHL7Message(simSpec);
             var tcpClient = new TcpClient();
             try
             {
@@ -56,7 +55,7 @@ namespace BizTester.Client
             var stream = tcpClient.GetStream();
 
             //use UTF-8 and either 8-bit encoding due to MLLP-related recommendations
-            var byteBuffer = Encoding.UTF8.GetBytes(messageToTransmit);
+            var byteBuffer = Encoding.UTF8.GetBytes(data);
 
             //send a message through this connection using the IO stream
             stream.Write(byteBuffer, 0, byteBuffer.Length);
@@ -64,7 +63,7 @@ namespace BizTester.Client
             logger.Info("Data was sent to server successfully.");
 
             NetworkStreamReader reader = new NetworkStreamReader();
-            const int TIMEOUT = 2;// seconds
+            const int TIMEOUT = 4;// seconds
             try
             {
                 string result = await reader.ReadStringWithTimeout(stream, TIMEOUT * 1000); // Read with a timeout of 2 seconds
@@ -73,6 +72,9 @@ namespace BizTester.Client
             catch (TimeoutException)
             {
                 logger.Info($"Did not receive acknowledgement after {TIMEOUT} seconds.");
+            }catch(Exception ex)
+            {
+                logger.Error($"Client failed to read Ack: {ex.Message}");
             }
         }
     }
