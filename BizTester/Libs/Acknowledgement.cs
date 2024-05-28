@@ -1,5 +1,4 @@
-﻿using BizTester.Client;
-using BizTester.Libs;
+﻿using BizTester.Libs;
 using HL7.Dotnetcore;
 using System;
 using System.Linq;
@@ -22,6 +21,7 @@ namespace Biztalk.Libs
             {
                 try
                 {
+                    msg = HL7Helper.CleanHL7(msg);
                     var message = new Message(msg);
                     message.ParseMessage();
                     var acceptAcknowledgeType = message.GetValue("MSH.15");

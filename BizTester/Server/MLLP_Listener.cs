@@ -104,9 +104,9 @@ namespace BizTester.Server
 
                 if (messageData.Length > 0)
                 {
-                    string msg = messageData.ToString();
+                    string msg = HL7Helper.CleanHL7(messageData.ToString());
                     messageData.Clear();
-                    logger.Info("MLLP Received message", msg);
+                    logger.Info("Received MLLP message", msg);
                     if (Acknowledgement.RequiresAcknowledgement(msg, logger))
                     {
                         logger.Info("Message expects an acknowledgement.");

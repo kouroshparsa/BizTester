@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using BizTester.Simulation;
+using System.IO;
 
 namespace BizTester.Client
 {
@@ -51,22 +52,29 @@ namespace BizTester.Client
 
             logger.Info("Connected to server.");
 
+            
             //get the IO stream on this connection to write to
             var stream = tcpClient.GetStream();
+
+            if (!data.StartsWith(HL7Helper.BEGIN_MSG))
+                data = $"{HL7Helper.BEGIN_MSG}{data}";
+
+            if (!data.EndsWith(HL7Helper.END_MSG))
+                data = $"{data}{HL7Helper.END_MSG}";
 
             //use UTF-8 and either 8-bit encoding due to MLLP-related recommendations
             var byteBuffer = Encoding.UTF8.GetBytes(data);
 
             //send a message through this connection using the IO stream
             stream.Write(byteBuffer, 0, byteBuffer.Length);
-
+            
             logger.Info("Data was sent to server successfully.");
 
             NetworkStreamReader reader = new NetworkStreamReader();
             const int TIMEOUT = 4;// seconds
             try
             {
-                string result = await reader.ReadStringWithTimeout(stream, TIMEOUT * 1000); // Read with a timeout of 2 seconds
+                string result = await reader.ReadStringWithTimeout(tcpClient.GetStream(), TIMEOUT * 1000); // Read with a timeout of 2 seconds
                 logger.Info("Receive acknowledgement.");
             }
             catch (TimeoutException)

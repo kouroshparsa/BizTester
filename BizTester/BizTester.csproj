@@ -159,6 +159,7 @@
     <Compile Include="Client\MLLP_Sender.cs" />
     <Compile Include="Client\MSMQ_Sender.cs" />
     <Compile Include="Client\Sender.cs" />
+    <Compile Include="Libs\HL7Helper.cs" />
     <Compile Include="Simulation\SimulationSpec.cs" />
     <Compile Include="Simulation\Simulator.cs" />
     <Compile Include="FormSimulationSettings.cs">
@@ -208,7 +209,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Scripts\jquery-2.1.1.min.map" />
     <None Include="simulation_data.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -218,10 +218,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="flask-icon.ico" />
-    <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
-    <Content Include="Scripts\jquery-2.1.1.js" />
-    <Content Include="Scripts\jquery-2.1.1.min.js" />
-    <Content Include="Scripts\nugetexample.js" />
     <None Include="Resources\flask-icon.ico" />
   </ItemGroup>
   <ItemGroup>

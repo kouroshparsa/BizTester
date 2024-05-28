@@ -20,7 +20,13 @@ namespace BizTester.Libs
         {
             if (dataGridView.InvokeRequired)
             {
-                dataGridView.Invoke(new Action<string, string, string>(UpdateDataGridView), type, msg, data);
+                try
+                {
+                    dataGridView.Invoke(new Action<string, string, string>(UpdateDataGridView), type, msg, data);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             else
             {
