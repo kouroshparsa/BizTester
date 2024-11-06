@@ -10,8 +10,10 @@ namespace BizTester.Server
     {
         public string path { get; }
         private static HashSet<string> failedFileNames = new HashSet<string>();
-        public Folder_Listener(CustomLogger logger, string path)
+        public Folder_Listener(string path, CustomLogger logger=null)
         {
+            if (logger == null)
+                logger = new CustomLogger();
             this.logger = logger;
             if (!Directory.Exists(path))
                 throw new Exception($"Invalid folder {path}");

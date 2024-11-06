@@ -1,6 +1,7 @@
 ﻿using Biztalk.Libs;
 using BizTester.Libs;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,12 +12,30 @@ namespace BizTester.Server
     internal class MLLP_Listener : Listener
     {
         private TcpListener tcpListener;
+        public Thread clientThread;
 
         public int port { get; }
+        public bool sendAck { get; set; }
 
-        public MLLP_Listener(CustomLogger logger, string port_text)
+        public string ackCode { get; set; }
+        public MLLP_Listener(int port, bool sendAck, string ackCode, CustomLogger logger = null)
         {
+            if (logger == null)
+                logger = new CustomLogger();
             this.logger = logger;
+            if(port < 1)
+                throw new Exception("Invalid port");
+            this.port = port;
+            this.sendAck = sendAck;
+            this.ackCode = ackCode;
+        }
+        public MLLP_Listener(string port_text, bool sendAck, string ackCode, CustomLogger logger)
+        {
+            if (logger == null)
+                logger = new CustomLogger();
+            this.logger = logger;
+            this.sendAck = sendAck;
+            this.ackCode = ackCode;
             int p;
             bool success = int.TryParse(port_text, out p);
             if (success)
@@ -31,7 +50,7 @@ namespace BizTester.Server
         public override void Stop()
         {
             isListening = false;
-            listenThread.Join();
+            listenThread.Join(1000);
             tcpListener.Stop();
             base.Stop();
         }
@@ -48,9 +67,9 @@ namespace BizTester.Server
                 {
                     if (tcpListener.Pending()) // Check if there are pending connection requests
                     {
-                        TcpClient client = tcpListener.AcceptTcpClient();
+                        TcpClient client = tcpListener.AcceptTcpClient();// blocks until someone connects to TCP port
                         logger.Info("Connected to a client");
-                        Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
+                        this.clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
                         clientThread.Start(client);
                     }
                     else
@@ -64,10 +83,11 @@ namespace BizTester.Server
                 logger.Error(ex.Message);
             }
         }
-
+        
         public override void Start()
         {
             listenThread = new Thread(new ThreadStart(ListenForClients));
+            listenThread.Priority = ThreadPriority.Highest;
             listenThread.Start();
         }
         private void HandleClientComm(object client)
@@ -80,37 +100,47 @@ namespace BizTester.Server
             while (isListening)
             {
                 int bytesRead = 0;
-                    do
+                do
+                {
+                    try {
+                        bytesRead = clientStream.Read(buffer, 0, buffer.Length);
+                    }
+                    catch (Exception)// timeout
                     {
-                        try {
-                            bytesRead = clientStream.Read(buffer, 0, buffer.Length);
-                        }
-                        catch (Exception)// timeout
-                        {
-                            if(bytesRead > 0)
-                        {
-                            string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                            messageData.Append(chunk);
-                            break;// due to timeout, there is no more data so end listening in this thread
-                        }
+                        if(bytesRead > 0)
+                    {
+                        string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        messageData.Append(chunk);
+                        break;// due to timeout, there is no more data so end listening in this thread
+                    }
                         
-                        }
-                        if (bytesRead > 0)
-                        {
-                            string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                            messageData.Append(chunk);
-                        }
-                    } while (bytesRead > 0 && isListening);
+                    }
+                    if (bytesRead > 0)
+                    {
+                        string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        messageData.Append(chunk);
+                    }
+                } while (bytesRead > 0 && isListening);
 
                 if (messageData.Length > 0)
                 {
                     string msg = HL7Helper.CleanHL7(messageData.ToString());
                     messageData.Clear();
                     logger.Info("Received MLLP message", msg);
-                    if (Acknowledgement.RequiresAcknowledgement(msg, logger))
+                    if(this.messageQueue != null)
+                    {
+                        this.messageQueue.Enqueue(msg);
+                    }
+                    //if (Acknowledgement.RequiresAcknowledgement(msg, logger))
+                    if(sendAck)
                     {
                         logger.Info("Message expects an acknowledgement.");
-                        SendAck(msg, clientStream);
+                        SendAck(msg, ref clientStream);
+                    }
+
+                    if (!msg.StartsWith("MSH"))
+                    {
+                        SendSoapResponse(ref clientStream);
                     }
                 }
                 
@@ -120,23 +150,29 @@ namespace BizTester.Server
             tcpClient.Close();
         }
 
-        private void SendAck(string msg, NetworkStream clientStream)
+        private void SendSoapResponse(ref NetworkStream clientStream)
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\v3_HCIM_IN_FindCandidatesResponse.xml");
+            string soapResponse = File.ReadAllText(filePath);
+
+            byte[] responseBytes = Encoding.UTF8.GetBytes(soapResponse);
+            clientStream.Write(responseBytes, 0, responseBytes.Length);
+        }
+        private void SendAck(string msg, ref NetworkStream clientStream)
         {
             string ackMessage;
             try
             {
-                ackMessage = Acknowledgement.GetAcknowledgementMessage(msg);
+                ackMessage = Acknowledgement.GetAcknowledgementMessage(msg, this.ackCode);
             }
             catch(Exception ex)
             {
                 logger.Error($"Failed to create achnowledgement for the message. {ex.Message}", msg);
                 return;
             }
-            
-            var buffer = Encoding.UTF8.GetBytes(ackMessage);
-            clientStream.Write(buffer, 0, buffer.Length);
-            clientStream.Flush();
-            logger.Info("Ack message was sent back to the client.", ackMessage);
+
+            StreamHelper.WriteToStream(clientStream, ackMessage);
+            logger.Info("Ack message was sent back to the client.", ackMessage.Trim());
 
         }
 

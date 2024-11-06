@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using BizTester.Simulation;
 using System.IO;
+using BizTester.Libs;
 
 namespace BizTester
 {
@@ -23,7 +24,8 @@ namespace BizTester
         public SimulationSpec Spec
         {
             get { return spec; }
-            set {
+            set
+            {
                 spec = value;
                 textBoxSourceFilePath.Text = value.settingsPath;
                 LoadDataIntoDataGrid();
@@ -40,6 +42,7 @@ namespace BizTester
                 {
                     dataGridView1.Rows.Add(record.Field, record.Value, record.Description);
                 }
+                richTextBoxSample.Text = spec.sampleData;
             }
             catch (Exception ex)
             {
@@ -49,16 +52,18 @@ namespace BizTester
         public FormSimulationSettings(SimulationSpec _spec)
         {
             InitializeComponent();
-            if(_spec == null)
+            if (_spec == null)
             {
                 this.spec = new SimulationSpec();
-            }else
+            }
+            else
             {
                 this.spec = _spec;
             }
 
             textBoxSourceFilePath.Text = spec.settingsPath;
             LoadDataIntoDataGrid();
+
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -70,26 +75,30 @@ namespace BizTester
         {
             this.spec = new SimulationSpec();
             this.spec.settingsPath = textBoxSourceFilePath.Text;
+            this.spec.sampleData = richTextBoxSample.Text;
             using (StreamWriter outputFile = new StreamWriter(textBoxSourceFilePath.Text))
             {
                 outputFile.WriteLine("Field,Value,Description");
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
-                    if(row.Cells[0].Value != null &&
+                    if (row.Cells[0].Value != null &&
                         row.Cells[0].Value.ToString().Length > 0 &&
                         row.Cells[1].Value.ToString().Length > 0)
                     {
                         string field = row.Cells[0].Value.ToString();
                         string val = row.Cells[1].Value.ToString();
                         string description = "";
-                        if (row.Cells[2].Value.ToString().Length > 0)
+                        if (row.Cells[2].Value != null && row.Cells[2].Value.ToString().Length > 0)
                         {
                             description = row.Cells[2].Value.ToString();
                         }
                         outputFile.WriteLine($"{field},{val},{description}");
-                        this.spec.records.Add(new Simulation.SimulationSpec.Record(field, val, description));
+                        this.spec.records.Add(new SimulationSpec.Record(field, val, description));
                     }
                 }
+
+                outputFile.WriteLine("---");
+                outputFile.WriteLine(this.spec.sampleData);
             }
         }
 
@@ -100,7 +109,7 @@ namespace BizTester
                 SaveSettingsToFile();
                 MessageBox.Show("Saved successfully.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
@@ -119,10 +128,11 @@ namespace BizTester
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if(spec == null)
+            if (spec == null)
                 spec = new SimulationSpec();
 
             spec.settingsPath = textBoxSourceFilePath.Text;
+            richTextBoxSample.Text = spec.sampleData;
             LoadDataIntoDataGrid();
         }
 
@@ -141,8 +151,8 @@ namespace BizTester
                 var relativeMousePosition = dataGridView1.PointToClient(Cursor.Position);
 
                 // Show the context menu
-                this.contextMenuStrip1.Show(dataGridView1, relativeMousePosition);
-                
+                this.contextMenuStripSimulationDataGrid.Show(dataGridView1, relativeMousePosition);
+
             }
         }
 
@@ -153,5 +163,26 @@ namespace BizTester
                 this.dataGridView1.Rows.RemoveAt(this.rowIndex);
             }
         }
-    }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBoxSample.Clear();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBoxSample.Text = Clipboard.GetText();
+        }
+
+        private void loadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog of = new OpenFileDialog())
+            {
+                if (of.ShowDialog() == DialogResult.OK)
+                {
+                    richTextBoxSample.Text = HL7Helper.GetMessageFromFile(of.FileName);
+                }
+            }
+        }
+    }       
 }

@@ -1,10 +1,7 @@
 ﻿using HL7.Dotnetcore;
 using RandomNameGeneratorLibrary;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using static BizTester.Simulation.SimulationSpec;
 
@@ -15,11 +12,6 @@ namespace BizTester.Simulation
         private static readonly Random getrandom = new Random();
         private static int count = 0;
         
-        public static string GetMessageFromFile(string path)
-        {
-            string content = File.ReadAllText(path, Encoding.GetEncoding("UTF-8"));
-            return content;
-        }
         private static int GetRandomNumber(int min, int max)
         {
             lock (getrandom) // synchronize
@@ -43,8 +35,77 @@ namespace BizTester.Simulation
                 return val.Replace("{count}", count.ToString());
             return val;
 
-        }  
+        }
+
         public static string GetHL7Message(SimulationSpec spec)
+        {
+            if(spec.sampleData.Length < 1)
+            {
+                return GetHL7Message_NoSample(spec.records);
+            }
+            return GetHL7Message_WithSample(spec.records, spec.sampleData);
+        }
+        public static string GetHL7Message_WithSample(List<Record> records, string sampleData)
+        {
+            count += 1;
+            var msg = new Message(sampleData);
+            if (!msg.ParseMessage())
+            {
+                throw new Exception("Invalid sample HL7 for Simulator.");
+            }
+
+            foreach (Record record in records)
+            {
+                string val = GetRecordValue(record.Value);
+                string segName = record.Field.Split('.')[0];
+                if (msg.Segments(segName).Count > 0)
+                {
+                    var parts = record.Field.Split('.');
+                    int fieldIndex = 0;
+                    int componentIndex = 0;
+                    if (parts.Length > 1)
+                    {
+                        fieldIndex = int.Parse(parts[1]);
+                        if (parts.Length > 2)
+                        {
+                            componentIndex = int.Parse(parts[2]);
+                        }
+                    }
+
+                    foreach (Segment seg in msg.Segments(segName)) {
+                        var fields = seg.GetAllFields();
+                        if(fieldIndex > 0)
+                        {
+                            Field field = seg.Fields(fieldIndex);
+                            if (field == null) {
+                                field = new Field($"{segName}.{fieldIndex}", new HL7Encoding());
+                                seg.AddNewField(field, fieldIndex);
+                            }
+                            // Get or create the component PID.5.1
+                            if(componentIndex > 0)
+                            {
+                                if (field.Components().Count < componentIndex)
+                                {
+                                    field.AddNewComponent(new Component(val, new HL7Encoding()));
+                                }
+                                else
+                                {
+                                    field.Components(componentIndex).Value = val;
+                                }
+                            }else
+                            {
+                                field.Value = val;
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            return msg.SerializeMessage(false);
+
+        }
+        public static string GetHL7Message_NoSample(List<Record>records)
         {
             count += 1;
             var msg = new Message();
@@ -64,7 +125,7 @@ namespace BizTester.Simulation
             List<Record> headerCustomData = new List<Record>();
             bool isHeaderAdded = false;
 
-            foreach (Record record in spec.records)
+            foreach (Record record in records)
             {
                 string val = GetRecordValue(record.Value);
                 if (record.Field.StartsWith("MSH."))

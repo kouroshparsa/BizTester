@@ -22,10 +22,7 @@ namespace BizTester.Client
         public override void Start(string data)
         {
             var messageToSend = new Message();
-            StreamWriter streamWriter = new StreamWriter(messageToSend.BodyStream, Encoding.Unicode);
-            streamWriter.Write(data);
-            streamWriter.Flush();
-            
+            StreamHelper.WriteToStream(messageToSend.BodyStream, data);
             using (MessageQueue queue = new MessageQueue(QueueName))
             {
                 queue.Send(messageToSend, "", MessageQueueTransactionType.Single);

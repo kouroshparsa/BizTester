@@ -1,6 +1,7 @@
-# BiztalkTester
+# BizTester
 
-This is a Windows GUI app for testing Biztalk apps with HL7v2 messages.
+This is a Windows GUI app for testing HL7v2 messages with various protocols such as File/MLLP/Message Queue.
+
 You can download the installer from <a href="https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi">https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi</a>
 
 # Usage
@@ -25,6 +26,13 @@ There are a number of dynamic value you can use that are listed below:
 | {random_num}          | Generates a random 6 digit number        |
 | {random_first_name}          | Generates a random first name        |
 | {random_last_name}          | Generates a random last name        |
+| {count}          | Generates an integer that increments everytime you send  new message. To reset it, you'll need to restart the app        |
+
+You can create messages using the simulator. Optionally you can specify the source of the HL7 data as shown below.
+![Simulation](Documentation/Images/img3.png)
+
+Either paste your message there or right click and select load from file.
+Then use the data grid below that to substitude values on top of that.
 
 # Development
 Please feel free to send requests for features or report issues on Github.

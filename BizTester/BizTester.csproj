@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,8 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationVersion>3.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -67,6 +67,10 @@
     </Reference>
     <Reference Include="MSMQ.Messaging, Version=1.0.4.0, Culture=neutral, PublicKeyToken=5305dff8ee1dd9b9, processorArchitecture=MSIL">
       <HintPath>..\packages\MSMQ.Messaging.1.0.4\lib\net461\MSMQ.Messaging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RandomNameGeneratorLibrary, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -160,6 +164,27 @@
     <Compile Include="Client\MSMQ_Sender.cs" />
     <Compile Include="Client\Sender.cs" />
     <Compile Include="Libs\HL7Helper.cs" />
+    <Compile Include="Libs\StreamHelper.cs" />
+    <Compile Include="Libs\TestRunner.cs" />
+    <Compile Include="Libs\TreeNodeHelper.cs" />
+    <Compile Include="Models\Protocol.cs" />
+    <Compile Include="Models\TestBase.cs" />
+    <Compile Include="Models\TestOutput.cs" />
+    <Compile Include="Models\TestInput.cs" />
+    <Compile Include="Models\TestSpec.cs" />
+    <Compile Include="Models\Validation.cs" />
+    <Compile Include="ValidationEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ValidationEditorForm.Designer.cs">
+      <DependentUpon>ValidationEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestEditorForm.Designer.cs">
+      <DependentUpon>TestEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Simulation\SimulationSpec.cs" />
     <Compile Include="Simulation\Simulator.cs" />
     <Compile Include="FormSimulationSettings.cs">
@@ -188,6 +213,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValidationEditorForm.resx">
+      <DependentUpon>ValidationEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestEditorForm.resx">
+      <DependentUpon>TestEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -218,6 +249,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="flask-icon.ico" />
+    <Content Include="Resources\v3_HCIM_IN_FindCandidatesResponse.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\flask-icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +265,35 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

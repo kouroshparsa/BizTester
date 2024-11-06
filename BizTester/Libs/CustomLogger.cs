@@ -16,6 +16,10 @@ namespace BizTester.Libs
             this.dataGridView = view;
         }
 
+        public CustomLogger()
+        {
+        }
+
         private void UpdateDataGridView(string type, string msg, string data)
         {
             if (dataGridView.InvokeRequired)
@@ -23,7 +27,8 @@ namespace BizTester.Libs
                 try
                 {
                     dataGridView.Invoke(new Action<string, string, string>(UpdateDataGridView), type, msg, data);
-                }catch(Exception ex)
+                    //Console.WriteLine(msg);
+                } catch(Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
@@ -37,12 +42,24 @@ namespace BizTester.Libs
 
         public void Info(string message, string data=null)
         {
-            UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.INFO), message, data);
+            if (this.dataGridView == null)
+                Console.WriteLine(message);
+            else
+                UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.INFO), message, data);
         }
 
         public void Error(string message, string data=null)
         {
-            UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.ERROR), message, data);
+            if (this.dataGridView == null)
+                Console.WriteLine(message);
+            else
+                UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.ERROR), message, data);
+        }
+
+        public void Flush()
+        {
+            if(this.dataGridView != null)
+                this.dataGridView.Refresh();
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using BizTester.Libs;
 using MSMQ.Messaging;
 using System;
-using System.IO;
-using System.Text;
 using System.Threading;
 
 namespace BizTester.Server
@@ -11,8 +9,10 @@ namespace BizTester.Server
     {
         public string QueueName { get; }
 
-        public MSMQ_Listener(CustomLogger logger, string queue)
+        public MSMQ_Listener(string queue, CustomLogger logger=null)
         {
+            if (logger == null)
+                logger = new CustomLogger();
             this.logger = logger;
             if (!MessageQueue.Exists(queue))
             {
@@ -20,7 +20,7 @@ namespace BizTester.Server
             }
             this.QueueName = queue;
         }
-
+        
         private void ListenForQueuedItems()
         {
             while (isListening)
@@ -31,12 +31,11 @@ namespace BizTester.Server
                     var msg = queue.Receive(TimeSpan.FromSeconds(1));
                     if (msg != null)
                     {
-                        string result;
-                        using (var streamReader = new StreamReader(msg.BodyStream, Encoding.Unicode))
+                        string result = StreamHelper.ReadStream(msg.BodyStream);
+                        if(this.messageQueue != null)
                         {
-                            result = streamReader.ReadToEnd();
+                            this.messageQueue.Enqueue(result);
                         }
-                        
                         logger.Info($"Received message from queue.", result);
                     }
                 }

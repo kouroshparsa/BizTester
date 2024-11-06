@@ -1,4 +1,5 @@
 ﻿using BizTester.Libs;
+using System.Collections.Concurrent;
 using System.Threading;
 
 namespace BizTester.Server
@@ -8,6 +9,8 @@ namespace BizTester.Server
         internal bool isListening = true;
         internal Thread listenThread;
         internal CustomLogger logger;
+        internal ConcurrentQueue<string> messageQueue;
+
         public virtual void Start() { }
         public virtual void Stop()
         {
@@ -17,5 +20,6 @@ namespace BizTester.Server
             }
             logger.Info("Server is stopped.");
         }
+        
     }
 }

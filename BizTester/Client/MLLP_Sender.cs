@@ -7,17 +7,26 @@ using System.Text;
 using System.Threading.Tasks;
 using BizTester.Simulation;
 using System.IO;
+using System.Threading;
 
 namespace BizTester.Client
 {
     internal class MLLP_Sender : Sender
     {
         public int port { get; }
+        public string ip { get; }
         public SimulationSpec simSpec;
 
-        public MLLP_Sender(CustomLogger logger, string port_text)
+        public MLLP_Sender(CustomLogger logger, int port, string ip)
         {
             this.logger = logger;
+            this.port = port;
+            this.ip = ip;
+        }
+        public MLLP_Sender(CustomLogger logger, string port_text, string ip)
+        {
+            this.logger = logger;
+            this.ip = ip;
             int p;
             bool success = int.TryParse(port_text, out p);
             if (success)
@@ -35,14 +44,20 @@ namespace BizTester.Client
 
         public override void Start(string data)
         {
-            var task = SendAsync(this.port, data);
+            Task task = SendAsync(this.port, data);
+            task.Wait(4000);
         }
         public async Task SendAsync(int port, string data)
         {
             var tcpClient = new TcpClient();
             try
             {
-                tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, port));
+                IPAddress ipAddress = IPAddress.Loopback;
+                if (this.ip.Contains("."))
+                {
+                   ipAddress = IPAddress.Parse(this.ip);
+                }
+                tcpClient.Connect(new IPEndPoint(ipAddress, port));
             }
             catch (Exception ex)
             {
@@ -62,24 +77,22 @@ namespace BizTester.Client
             if (!data.EndsWith(HL7Helper.END_MSG))
                 data = $"{data}{HL7Helper.END_MSG}";
 
-            //use UTF-8 and either 8-bit encoding due to MLLP-related recommendations
-            var byteBuffer = Encoding.UTF8.GetBytes(data);
+            StreamHelper.WriteToStream(stream, data);          
+            logger.Info("Data was sent to server successfully.", data);
 
-            //send a message through this connection using the IO stream
-            stream.Write(byteBuffer, 0, byteBuffer.Length);
-            
-            logger.Info("Data was sent to server successfully.");
+            if (!HL7Helper.MessageRequiresAcknolwdgement(data))
+                return;
 
-            NetworkStreamReader reader = new NetworkStreamReader();
-            const int TIMEOUT = 4;// seconds
+            const int TIMEOUT = 4000;// milli-seconds
             try
             {
-                string result = await reader.ReadStringWithTimeout(tcpClient.GetStream(), TIMEOUT * 1000); // Read with a timeout of 2 seconds
-                logger.Info("Receive acknowledgement.");
+                Task<string> task = StreamHelper.AsyncReadStream(stream, TIMEOUT);
+                await task;
+                logger.Info("Receive acknowledgement.", task.Result);
             }
             catch (TimeoutException)
             {
-                logger.Info($"Did not receive acknowledgement after {TIMEOUT} seconds.");
+                logger.Info($"Did not receive acknowledgement after {TIMEOUT} milliseconds.");
             }catch(Exception ex)
             {
                 logger.Error($"Client failed to read Ack: {ex.Message}");

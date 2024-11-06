@@ -9,6 +9,9 @@ namespace Biztalk.Libs
 
     public class Acknowledgement
     {
+        private const string START_BLOCK = "\x0b";
+        private const string END_BLOCK = "\x1c\x0d";
+
         public static bool RequiresAcknowledgement(string msg, CustomLogger logger)
         {
             const string HL7V3_ACK = "<MSH.15_AcceptAcknowledgmentType>";
@@ -80,7 +83,7 @@ namespace Biztalk.Libs
             msg = doc.ToString(SaveOptions.DisableFormatting);
             return msg;
         }
-        public static string GetAcknowledgementMessage(string incomingHl7Message)
+        public static string GetAcknowledgementMessage(string incomingHl7Message, string ackCode="AA")
         {
             if (string.IsNullOrEmpty(incomingHl7Message))
                 throw new ApplicationException("Invalid HL7 message for parsing operation. Please check your inputs");
@@ -93,8 +96,9 @@ namespace Biztalk.Libs
             message.ParseMessage();
             var messageControlId = message.GetValue("MSH.10");
             var ack = message.GetACK();
+            ack.SetValue("MSA.1", ackCode);
             string msg = ack.SerializeMessage(false);
-            return msg;
+            return START_BLOCK + msg + END_BLOCK;
         }
     }
 }

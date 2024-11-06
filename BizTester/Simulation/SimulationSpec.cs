@@ -6,7 +6,7 @@ namespace BizTester.Simulation
 {
     public class SimulationSpec
     {
-
+        public string sampleData;
         public string settingsPath = Path.GetFullPath("./simulation_data.csv");
 
         public List<Record> records = new List<Record>();
@@ -56,6 +56,10 @@ namespace BizTester.Simulation
                             parts[1].Trim().Length > 0)
                         {
                             records.Add(new Record(parts));
+                        }else if (s.Equals("---"))
+                        {
+                            this.sampleData = sr.ReadToEnd();
+                            break;
                         }
                     } 
                     
