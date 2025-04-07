@@ -1,11 +1,11 @@
 # Introduction
 
 `BizTester` is a Windows GUI app for testing Biztalk apps with HL7v2 messages.
-You can download the installer from <a href="https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi">https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi</a>
+
 
 # Installation
 
-To install, you can grab the installer from the Installer folder of this repository.
+To install, you can download the installer from the `Installer` folder of this repository.
 
 # Usage
 This tool allows you to receive HL7 (v2 or v3) responses and send HL7v2 messages either from a given file or automatically generate a message to send. 
