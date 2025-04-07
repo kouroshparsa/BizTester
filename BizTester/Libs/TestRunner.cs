@@ -65,21 +65,22 @@ namespace BizTester.Libs
                         logger.Error("Missing source file path. Skipping the test");
                         continue;
                     }
+
                     string data = HL7Helper.GetMessageFromFile(input.data_file);
 
                     if (input.protocol == Protocol.File)
                     {
                         File_Sender fs = new File_Sender(logger, input.path);
-                        fs.Start(input.path);
+                        fs.Send(input.path);
                     }
                     else if (input.protocol == Protocol.MLLP) {
                         MLLP_Sender ms = new MLLP_Sender(logger, input.port, input.ip);
-                        ms.Start(data);
+                        ms.Send(data);
                     }
                     else if (input.protocol == Protocol.MSMQ)
                     {
                         MSMQ_Sender ms = new MSMQ_Sender(logger, input.queue);
-                        ms.Start(data);
+                        ms.Send(data);
                     }
                 }
                 

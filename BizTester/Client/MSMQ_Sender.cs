@@ -3,6 +3,7 @@ using MSMQ.Messaging;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BizTester.Client
 {
@@ -19,7 +20,15 @@ namespace BizTester.Client
             }
             this.QueueName = queue;
         }
-        public override void Start(string data)
+
+        public override void Send(string data)
+        {
+            Task.Run(() =>
+            {
+                SendMessage(data);
+            });
+        }
+        private void SendMessage(string data)
         {
             var messageToSend = new Message();
             StreamHelper.WriteToStream(messageToSend.BodyStream, data);

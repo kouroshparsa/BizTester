@@ -13,6 +13,7 @@ namespace BizTester.Server
     {
         private TcpListener tcpListener;
         public Thread clientThread;
+        const int IDLE_DELAY = 1000;
 
         public int port { get; }
         public bool sendAck { get; set; }
@@ -77,6 +78,8 @@ namespace BizTester.Server
                         Thread.Sleep(100); // Wait for a short while to avoid busy waiting
                     }
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -94,56 +97,77 @@ namespace BizTester.Server
         {
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
-            clientStream.ReadTimeout = 500;// you must set the timeout otherwise the Read operation keeps the thread running forever.
+            // TODO: put this timeout in settings
+            clientStream.ReadTimeout = 8000;// you must set the timeout otherwise the Read operation keeps the thread running forever.
             byte[] buffer = new byte[4096];
-            StringBuilder messageData = new StringBuilder();
+            MemoryStream messageBuffer = new MemoryStream();
+            bool insideMessage = false;
             while (isListening)
             {
                 int bytesRead = 0;
-                do
-                {
-                    try {
-                        bytesRead = clientStream.Read(buffer, 0, buffer.Length);
-                    }
-                    catch (Exception)// timeout
-                    {
-                        if(bytesRead > 0)
-                    {
-                        string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        messageData.Append(chunk);
-                        break;// due to timeout, there is no more data so end listening in this thread
-                    }
-                        
-                    }
-                    if (bytesRead > 0)
-                    {
-                        string chunk = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                        messageData.Append(chunk);
-                    }
-                } while (bytesRead > 0 && isListening);
 
-                if (messageData.Length > 0)
+                try
                 {
-                    string msg = HL7Helper.CleanHL7(messageData.ToString());
-                    messageData.Clear();
-                    logger.Info("Received MLLP message", msg);
-                    if(this.messageQueue != null)
-                    {
-                        this.messageQueue.Enqueue(msg);
-                    }
-                    //if (Acknowledgement.RequiresAcknowledgement(msg, logger))
-                    if(sendAck)
-                    {
-                        logger.Info("Message expects an acknowledgement.");
-                        SendAck(msg, ref clientStream);
-                    }
-
-                    if (!msg.StartsWith("MSH"))
-                    {
-                        SendSoapResponse(ref clientStream);
-                    }
+                    bytesRead = clientStream.Read(buffer, 0, buffer.Length);
                 }
-                
+                catch (IOException) // Handle timeout
+                {
+                    continue; // Just loop again if there's no data
+                }
+
+                if (bytesRead > 0)
+                {
+                    for (int i = 0; i < bytesRead; i++)
+                    {
+                        byte b = buffer[i];
+
+                        if (b == HL7Helper.BEGIN_MSG_INT) // Start of message (VT)
+                        {
+                            messageBuffer.SetLength(0); // Clear buffer
+                            insideMessage = true;
+                            continue;
+                        }
+
+                        if (b == HL7Helper.END_MSG_INT) // End of message (FS)
+                        {
+                            insideMessage = false;
+                            continue;
+                        }
+
+                        if (b == 0x0D && !insideMessage) // Ignore trailing CR after FS
+                        {
+                            string msg = Encoding.UTF8.GetString(messageBuffer.ToArray());
+                            messageBuffer.SetLength(0); // Clear buffer after processing
+
+                            msg = HL7Helper.CleanHL7(msg);
+                            logger.Info("Received MLLP message", msg.Trim());
+
+                            if (this.messageQueue != null)
+                            {
+                                this.messageQueue.Enqueue(msg);
+                            }
+
+                            if (sendAck)
+                            {
+                                logger.Info("Message expects an acknowledgement.");
+                                SendAck(msg, ref clientStream);
+                                Thread.Sleep(2000); // Allow client to read ACK
+                            }
+
+                            if (!msg.Trim().StartsWith("MSH"))
+                            {
+                                SendSoapResponse(ref clientStream);
+                            }
+                        }
+                        else if (insideMessage) // Add valid message content
+                        {
+                            messageBuffer.WriteByte(b);
+                        }
+                    }
+                }else
+                {
+                    Thread.Sleep(IDLE_DELAY); // if you do not specify IDLE_DELAY, sometimes when it no longer receive messages it loops into the false part fast causing over-consumption of CPU
+                }
             }
 
             clientStream.Close();
@@ -171,9 +195,14 @@ namespace BizTester.Server
                 return;
             }
 
-            StreamHelper.WriteToStream(clientStream, ackMessage);
-            logger.Info("Ack message was sent back to the client.", ackMessage.Trim());
-
+            try
+            {
+                StreamHelper.WriteToStream(clientStream, ackMessage);
+                logger.Info("Ack message was sent back to the client.", ackMessage.Trim());
+            }catch(Exception ex)
+            {
+                logger.Error("Failed to send ack message." + ex.Message, msg);
+            }
         }
 
     }

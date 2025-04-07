@@ -1,13 +1,8 @@
 ﻿using BizTester.Libs;
-using BizTester.Server;
 using System;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
-using BizTester.Simulation;
-using System.IO;
-using System.Threading;
+using System.Net.Sockets;
 
 namespace BizTester.Client
 {
@@ -15,7 +10,6 @@ namespace BizTester.Client
     {
         public int port { get; }
         public string ip { get; }
-        public SimulationSpec simSpec;
 
         public MLLP_Sender(CustomLogger logger, int port, string ip)
         {
@@ -42,13 +36,16 @@ namespace BizTester.Client
 
         }
 
-        public override void Start(string data)
+        public override void Send(string data)
         {
-            Task task = SendAsync(this.port, data);
-            task.Wait(4000);
+            Task.Run(() =>
+            {
+                SendMessage(data);
+            });
         }
-        public async Task SendAsync(int port, string data)
+        private void SendMessage(string data)
         {
+
             var tcpClient = new TcpClient();
             try
             {
@@ -67,36 +64,43 @@ namespace BizTester.Client
 
             logger.Info("Connected to server.");
 
-            
-            //get the IO stream on this connection to write to
-            var stream = tcpClient.GetStream();
 
-            if (!data.StartsWith(HL7Helper.BEGIN_MSG))
-                data = $"{HL7Helper.BEGIN_MSG}{data}";
-
-            if (!data.EndsWith(HL7Helper.END_MSG))
-                data = $"{data}{HL7Helper.END_MSG}";
-
-            StreamHelper.WriteToStream(stream, data);          
-            logger.Info("Data was sent to server successfully.", data);
-
-            if (!HL7Helper.MessageRequiresAcknolwdgement(data))
-                return;
-
-            const int TIMEOUT = 4000;// milli-seconds
-            try
+            // Get the IO stream on this connection to write to
+            using (var stream = tcpClient.GetStream())
             {
-                Task<string> task = StreamHelper.AsyncReadStream(stream, TIMEOUT);
-                await task;
-                logger.Info("Receive acknowledgement.", task.Result);
+                // TODO: put this timeout in settings
+                stream.ReadTimeout = 4000;// you must set the timeout otherwise the Read operation keeps the thread running forever.
+
+                if (!data.StartsWith(HL7Helper.BEGIN_MSG))
+                    data = $"{HL7Helper.BEGIN_MSG}{data}";
+
+                if (!data.EndsWith(HL7Helper.END_MSG))
+                    data = $"{data}{HL7Helper.END_MSG}";
+
+                StreamHelper.WriteToStream(stream, data);
+                logger.Info("Data was sent to server successfully.", data.Trim());
+
+                if (!HL7Helper.MessageRequiresAcknolwdgement(data))
+                {
+                    logger.Info("The HL7 message does not require an ACK.");
+                    return;
+                }
+                   
+                try
+                {
+                    string res = StreamHelper.ReadStream(stream);
+                    logger.Info("Receive acknowledgement.", res);
+                }
+                catch (TimeoutException)
+                {
+                    logger.Info($"Did not receive acknowledgement.");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"Client failed to read Ack: {ex.Message}");
+                }
             }
-            catch (TimeoutException)
-            {
-                logger.Info($"Did not receive acknowledgement after {TIMEOUT} milliseconds.");
-            }catch(Exception ex)
-            {
-                logger.Error($"Client failed to read Ack: {ex.Message}");
-            }
+
         }
     }
 }

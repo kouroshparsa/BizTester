@@ -39,20 +39,19 @@ namespace BizTester.Simulation
 
         public static string GetHL7Message(SimulationSpec spec)
         {
-            if(spec.sampleData.Length < 1)
-            {
-                return GetHL7Message_NoSample(spec.records);
-            }
-            return GetHL7Message_WithSample(spec.records, spec.sampleData);
+            string sampleData = GetHL7Message_NoSample(spec.records);
+            return GetHL7Message_WithSample(spec.records, sampleData);
         }
         public static string GetHL7Message_WithSample(List<Record> records, string sampleData)
         {
+            sampleData = sampleData.Trim();
+            if (sampleData.Length < 1)
+            {
+                throw new Exception("You need to specify a sample HL7 seed file.");
+            }
             count += 1;
             var msg = new Message(sampleData);
-            if (!msg.ParseMessage())
-            {
-                throw new Exception("Invalid sample HL7 for Simulator.");
-            }
+            msg.ParseMessage();// Do not check the result. It sometimes returns false for valid messages
 
             foreach (Record record in records)
             {
@@ -107,7 +106,7 @@ namespace BizTester.Simulation
         }
         public static string GetHL7Message_NoSample(List<Record>records)
         {
-            count += 1;
+            // Do not subsitute value in this method. Let GetHL7Message_WithSample do the substitution
             var msg = new Message();
             var segments = new Dictionary<string, Segment>();
             var fields = new Dictionary<string, Field>();
@@ -127,7 +126,7 @@ namespace BizTester.Simulation
 
             foreach (Record record in records)
             {
-                string val = GetRecordValue(record.Value);
+                string val = record.Value;
                 if (record.Field.StartsWith("MSH."))
                 {
                     switch (record.Field)

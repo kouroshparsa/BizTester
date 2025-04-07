@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using BizTester.Models;
 using Excel = Microsoft.Office.Interop.Excel;
 
-
 namespace BizTester
 {
     public partial class MainForm : Form
@@ -39,7 +38,7 @@ namespace BizTester
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-            
+           
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -82,6 +81,11 @@ namespace BizTester
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
+                    btnStart.Text.Contains("Start Listening");
+                    foreach (Control con in groupBoxServerControls.Controls)
+                    {
+                        con.Enabled = true;
+                    }
                 }
 
 
@@ -90,12 +94,21 @@ namespace BizTester
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            if(textBoxSourcePath.Text.Length < 1)
+            {
+                MessageBox.Show("Please enter a file or folder path");
+                return;
+            }
+
+            string[] files = null;
             int count = 1;
+            string data = null;
             if(!int.TryParse(textBoxClientCount.Text, out count))
             {
                 MessageBox.Show("Invalid count. It must be an integer.");
                 return;
             }
+
             if (count < 1)
             {
                 MessageBox.Show("Invalid count. It must be a positive integer greater than 1.");
@@ -104,19 +117,24 @@ namespace BizTester
 
             try
             {
-                string data;
                 if (radioButtonGenFromFile.Checked)
                 {
-                    if (!File.Exists(textBoxSourceFilePath.Text))
+                    if (!File.Exists(textBoxSourcePath.Text))
                     {
                         logger.Error("Missing source file path");
                         return;
                     }
-                    data = HL7Helper.GetMessageFromFile(textBoxSourceFilePath.Text);
-                }
-                else
-                {
-                    data = Simulator.GetHL7Message(simSpec);
+                    files = new string[1]{ textBoxSourcePath.Text };
+
+                }else if (radioButtonGenFromFolder.Checked){
+
+                    if (!Directory.Exists(textBoxSourcePath.Text))
+                    {
+                        logger.Error("Missing source folder path");
+                        return;
+                    }
+                    files = Directory.GetFiles(textBoxSourcePath.Text, "*", SearchOption.AllDirectories);
+
                 }
                 
                 if (radioButtonClientFiles.Checked)
@@ -132,14 +150,18 @@ namespace BizTester
                     client = new MSMQ_Sender(logger, textBoxClientQueue.Text);
                 }
 
-                for(int counter=0; counter<count; counter++)
+                if(files != null)
                 {
-                    client.Start(data);
-                    if(count-counter > 1 && radioButtonSimulate.Checked)
+                    foreach (string filePath in files)
                     {
-                        data = Simulator.GetHL7Message(simSpec);
+                        for (int counter = 0; counter < count; counter++)
+                        {
+                            data = HL7Helper.GetMessageFromFile(filePath, simSpec);
+                            client.Send(data);
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -189,13 +211,31 @@ namespace BizTester
 
         private void btnOpenFileDialog_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog of = new OpenFileDialog())
+            if (radioButtonGenFromFile.Checked)
             {
-                if (of.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog of = new OpenFileDialog())
                 {
-                    textBoxSourceFilePath.Text = of.FileName;
+                    if (of.ShowDialog() == DialogResult.OK)
+                    {
+                        textBoxSourcePath.Text = of.FileName;
+                    }
                 }
             }
+            else if (radioButtonGenFromFolder.Checked)
+            {
+                using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+                {
+                    if (fbd.ShowDialog() == DialogResult.OK)
+                    {
+                        textBoxSourcePath.Text = fbd.SelectedPath;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select either a file or a folder source.");
+            }
+            
         }
 
         private void radioButtonGenFromFile_CheckedChanged(object sender, EventArgs e)
@@ -224,8 +264,9 @@ namespace BizTester
 
         private void btnSimSettings_Click(object sender, EventArgs e)
         {
-            var form = new FormSimulationSettings(this.simSpec);
+            var form = new FormSimulationSettings(simSpec);
             form.ShowDialog();
+            int x = form.Spec.records.Count;
             this.simSpec = form.Spec;
         }
 
@@ -370,12 +411,6 @@ namespace BizTester
             btnRunTests.Enabled = true;
         }
 
-        private void radioButtonSimulate_CheckedChanged(object sender, EventArgs e)
-        {
-            textBoxSourceFilePath.Enabled = radioButtonGenFromFile.Checked;
-            btnOpenFileDialog.Enabled = radioButtonGenFromFile.Checked;
-        }
-
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dataGridViewATLogs.Rows.Clear();
@@ -437,5 +472,26 @@ namespace BizTester
                 MessageBox.Show("Data Exported Successfully!", "Info");
             }
         }
+
+        private void radioButtonGenFromFolder_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonGenFromFolder.Checked)
+            {
+                textBoxClientCount.Text = "1";
+                textBoxClientCount.Enabled = false;
+            }
+            else
+            {
+                textBoxClientCount.Enabled = true;
+            }
+            
+
+        }
+
+        private void radioButtonGenFromFile_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+        
     }
 }

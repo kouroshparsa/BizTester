@@ -75,10 +75,10 @@
             this.radioButtonClientMSMQ = new System.Windows.Forms.RadioButton();
             this.radioButtonClientFiles = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btnOpenFileDialog = new System.Windows.Forms.Button();
-            this.textBoxSourceFilePath = new System.Windows.Forms.TextBox();
+            this.radioButtonGenFromFolder = new System.Windows.Forms.RadioButton();
+            this.btnOpenDialog = new System.Windows.Forms.Button();
+            this.textBoxSourcePath = new System.Windows.Forms.TextBox();
             this.radioButtonGenFromFile = new System.Windows.Forms.RadioButton();
-            this.radioButtonSimulate = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewATLogs = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -162,7 +162,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(585, 464);
-            this.tabControl1.TabIndex = 3;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -188,10 +188,10 @@
             this.Message,
             this.Data});
             this.dataGridViewMT.ContextMenuStrip = this.contextMenuStripMT;
-            this.dataGridViewMT.Location = new System.Drawing.Point(6, 213);
+            this.dataGridViewMT.Location = new System.Drawing.Point(6, 223);
             this.dataGridViewMT.Name = "dataGridViewMT";
-            this.dataGridViewMT.Size = new System.Drawing.Size(568, 218);
-            this.dataGridViewMT.TabIndex = 4;
+            this.dataGridViewMT.Size = new System.Drawing.Size(568, 208);
+            this.dataGridViewMT.TabIndex = 15;
             // 
             // Timestamp
             // 
@@ -229,8 +229,8 @@
             this.tabControl2.Location = new System.Drawing.Point(3, 6);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(568, 205);
-            this.tabControl2.TabIndex = 3;
+            this.tabControl2.Size = new System.Drawing.Size(568, 211);
+            this.tabControl2.TabIndex = 1;
             // 
             // tabPage3
             // 
@@ -238,7 +238,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(560, 179);
+            this.tabPage3.Size = new System.Drawing.Size(560, 185);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Server";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -278,7 +278,7 @@
             this.comboBoxAckCode.Location = new System.Drawing.Point(246, 98);
             this.comboBoxAckCode.Name = "comboBoxAckCode";
             this.comboBoxAckCode.Size = new System.Drawing.Size(77, 21);
-            this.comboBoxAckCode.TabIndex = 13;
+            this.comboBoxAckCode.TabIndex = 7;
             // 
             // label9
             // 
@@ -297,7 +297,7 @@
             this.checkBoxServerAck.Location = new System.Drawing.Point(13, 102);
             this.checkBoxServerAck.Name = "checkBoxServerAck";
             this.checkBoxServerAck.Size = new System.Drawing.Size(141, 17);
-            this.checkBoxServerAck.TabIndex = 11;
+            this.checkBoxServerAck.TabIndex = 6;
             this.checkBoxServerAck.Text = "Send acknowledgement";
             this.checkBoxServerAck.UseVisualStyleBackColor = true;
             this.checkBoxServerAck.CheckedChanged += new System.EventHandler(this.checkBoxServerAck_CheckedChanged);
@@ -307,7 +307,7 @@
             this.btnStart.Location = new System.Drawing.Point(13, 137);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(104, 27);
-            this.btnStart.TabIndex = 10;
+            this.btnStart.TabIndex = 8;
             this.btnStart.Text = "Start Listening";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
@@ -317,14 +317,14 @@
             this.textBoxServerPort.Location = new System.Drawing.Point(135, 69);
             this.textBoxServerPort.Name = "textBoxServerPort";
             this.textBoxServerPort.Size = new System.Drawing.Size(79, 20);
-            this.textBoxServerPort.TabIndex = 8;
+            this.textBoxServerPort.TabIndex = 5;
             // 
             // textBoxServerQueue
             // 
             this.textBoxServerQueue.Location = new System.Drawing.Point(135, 44);
             this.textBoxServerQueue.Name = "textBoxServerQueue";
             this.textBoxServerQueue.Size = new System.Drawing.Size(402, 20);
-            this.textBoxServerQueue.TabIndex = 7;
+            this.textBoxServerQueue.TabIndex = 4;
             this.textBoxServerQueue.Text = ".\\private$\\test";
             // 
             // textBoxServerPath
@@ -332,7 +332,7 @@
             this.textBoxServerPath.Location = new System.Drawing.Point(135, 20);
             this.textBoxServerPath.Name = "textBoxServerPath";
             this.textBoxServerPath.Size = new System.Drawing.Size(402, 20);
-            this.textBoxServerPath.TabIndex = 6;
+            this.textBoxServerPath.TabIndex = 3;
             // 
             // label3
             // 
@@ -389,7 +389,7 @@
             this.radioButtonServerFolder.Location = new System.Drawing.Point(13, 20);
             this.radioButtonServerFolder.Name = "radioButtonServerFolder";
             this.radioButtonServerFolder.Size = new System.Drawing.Size(54, 17);
-            this.radioButtonServerFolder.TabIndex = 0;
+            this.radioButtonServerFolder.TabIndex = 2;
             this.radioButtonServerFolder.Text = "Folder";
             this.radioButtonServerFolder.UseVisualStyleBackColor = true;
             // 
@@ -399,7 +399,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(560, 179);
+            this.tabPage4.Size = new System.Drawing.Size(560, 185);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Client";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -424,7 +424,7 @@
             this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Location = new System.Drawing.Point(11, 4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(543, 171);
+            this.groupBox2.Size = new System.Drawing.Size(543, 172);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Client (Generator)";
@@ -432,7 +432,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(169, 146);
+            this.label8.Location = new System.Drawing.Point(324, 144);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 21;
@@ -440,10 +440,10 @@
             // 
             // textBoxClientCount
             // 
-            this.textBoxClientCount.Location = new System.Drawing.Point(210, 143);
+            this.textBoxClientCount.Location = new System.Drawing.Point(365, 141);
             this.textBoxClientCount.Name = "textBoxClientCount";
             this.textBoxClientCount.Size = new System.Drawing.Size(64, 20);
-            this.textBoxClientCount.TabIndex = 20;
+            this.textBoxClientCount.TabIndex = 13;
             this.textBoxClientCount.Text = "1";
             // 
             // textBoxClientIP
@@ -451,7 +451,7 @@
             this.textBoxClientIP.Location = new System.Drawing.Point(236, 64);
             this.textBoxClientIP.Name = "textBoxClientIP";
             this.textBoxClientIP.Size = new System.Drawing.Size(136, 20);
-            this.textBoxClientIP.TabIndex = 19;
+            this.textBoxClientIP.TabIndex = 6;
             this.textBoxClientIP.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label7
@@ -466,20 +466,20 @@
             // 
             // btnSimSettings
             // 
-            this.btnSimSettings.Location = new System.Drawing.Point(7, 136);
+            this.btnSimSettings.Location = new System.Drawing.Point(6, 137);
             this.btnSimSettings.Name = "btnSimSettings";
             this.btnSimSettings.Size = new System.Drawing.Size(109, 27);
-            this.btnSimSettings.TabIndex = 17;
-            this.btnSimSettings.Text = "Simulation Settings";
+            this.btnSimSettings.TabIndex = 12;
+            this.btnSimSettings.Text = "Data Overwrites";
             this.btnSimSettings.UseVisualStyleBackColor = true;
             this.btnSimSettings.Click += new System.EventHandler(this.btnSimSettings_Click);
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(281, 137);
+            this.btnSend.Location = new System.Drawing.Point(446, 137);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(91, 28);
-            this.btnSend.TabIndex = 15;
+            this.btnSend.TabIndex = 14;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
@@ -489,14 +489,14 @@
             this.textBoxClientPort.Location = new System.Drawing.Point(138, 64);
             this.textBoxClientPort.Name = "textBoxClientPort";
             this.textBoxClientPort.Size = new System.Drawing.Size(73, 20);
-            this.textBoxClientPort.TabIndex = 14;
+            this.textBoxClientPort.TabIndex = 5;
             // 
             // textBoxClientQueue
             // 
             this.textBoxClientQueue.Location = new System.Drawing.Point(138, 40);
             this.textBoxClientQueue.Name = "textBoxClientQueue";
             this.textBoxClientQueue.Size = new System.Drawing.Size(399, 20);
-            this.textBoxClientQueue.TabIndex = 13;
+            this.textBoxClientQueue.TabIndex = 4;
             this.textBoxClientQueue.Text = ".\\private$\\test";
             // 
             // textBoxClientFolder
@@ -504,7 +504,7 @@
             this.textBoxClientFolder.Location = new System.Drawing.Point(138, 16);
             this.textBoxClientFolder.Name = "textBoxClientFolder";
             this.textBoxClientFolder.Size = new System.Drawing.Size(399, 20);
-            this.textBoxClientFolder.TabIndex = 12;
+            this.textBoxClientFolder.TabIndex = 3;
             // 
             // label4
             // 
@@ -567,10 +567,10 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.btnOpenFileDialog);
-            this.groupBox3.Controls.Add(this.textBoxSourceFilePath);
+            this.groupBox3.Controls.Add(this.radioButtonGenFromFolder);
+            this.groupBox3.Controls.Add(this.btnOpenDialog);
+            this.groupBox3.Controls.Add(this.textBoxSourcePath);
             this.groupBox3.Controls.Add(this.radioButtonGenFromFile);
-            this.groupBox3.Controls.Add(this.radioButtonSimulate);
             this.groupBox3.Location = new System.Drawing.Point(7, 86);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(530, 45);
@@ -578,48 +578,46 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Source";
             // 
-            // btnOpenFileDialog
+            // radioButtonGenFromFolder
             // 
-            this.btnOpenFileDialog.Enabled = false;
-            this.btnOpenFileDialog.Location = new System.Drawing.Point(489, 15);
-            this.btnOpenFileDialog.Name = "btnOpenFileDialog";
-            this.btnOpenFileDialog.Size = new System.Drawing.Size(35, 23);
-            this.btnOpenFileDialog.TabIndex = 3;
-            this.btnOpenFileDialog.Text = "<";
-            this.btnOpenFileDialog.UseVisualStyleBackColor = true;
-            this.btnOpenFileDialog.Click += new System.EventHandler(this.btnOpenFileDialog_Click);
+            this.radioButtonGenFromFolder.AutoSize = true;
+            this.radioButtonGenFromFolder.Location = new System.Drawing.Point(53, 15);
+            this.radioButtonGenFromFolder.Name = "radioButtonGenFromFolder";
+            this.radioButtonGenFromFolder.Size = new System.Drawing.Size(54, 17);
+            this.radioButtonGenFromFolder.TabIndex = 9;
+            this.radioButtonGenFromFolder.Text = "Folder";
+            this.radioButtonGenFromFolder.UseVisualStyleBackColor = true;
+            this.radioButtonGenFromFolder.CheckedChanged += new System.EventHandler(this.radioButtonGenFromFolder_CheckedChanged);
             // 
-            // textBoxSourceFilePath
+            // btnOpenDialog
             // 
-            this.textBoxSourceFilePath.Enabled = false;
-            this.textBoxSourceFilePath.Location = new System.Drawing.Point(167, 16);
-            this.textBoxSourceFilePath.Name = "textBoxSourceFilePath";
-            this.textBoxSourceFilePath.Size = new System.Drawing.Size(316, 20);
-            this.textBoxSourceFilePath.TabIndex = 2;
+            this.btnOpenDialog.Location = new System.Drawing.Point(489, 15);
+            this.btnOpenDialog.Name = "btnOpenDialog";
+            this.btnOpenDialog.Size = new System.Drawing.Size(35, 23);
+            this.btnOpenDialog.TabIndex = 11;
+            this.btnOpenDialog.Text = "<";
+            this.btnOpenDialog.UseVisualStyleBackColor = true;
+            this.btnOpenDialog.Click += new System.EventHandler(this.btnOpenFileDialog_Click);
+            // 
+            // textBoxSourcePath
+            // 
+            this.textBoxSourcePath.Location = new System.Drawing.Point(113, 16);
+            this.textBoxSourcePath.Name = "textBoxSourcePath";
+            this.textBoxSourcePath.Size = new System.Drawing.Size(370, 20);
+            this.textBoxSourcePath.TabIndex = 10;
             // 
             // radioButtonGenFromFile
             // 
             this.radioButtonGenFromFile.AutoSize = true;
-            this.radioButtonGenFromFile.Location = new System.Drawing.Point(86, 18);
+            this.radioButtonGenFromFile.Checked = true;
+            this.radioButtonGenFromFile.Location = new System.Drawing.Point(6, 16);
             this.radioButtonGenFromFile.Name = "radioButtonGenFromFile";
-            this.radioButtonGenFromFile.Size = new System.Drawing.Size(82, 17);
-            this.radioButtonGenFromFile.TabIndex = 1;
+            this.radioButtonGenFromFile.Size = new System.Drawing.Size(41, 17);
+            this.radioButtonGenFromFile.TabIndex = 8;
             this.radioButtonGenFromFile.TabStop = true;
-            this.radioButtonGenFromFile.Text = "Specific file:";
+            this.radioButtonGenFromFile.Text = "File";
             this.radioButtonGenFromFile.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonSimulate
-            // 
-            this.radioButtonSimulate.AutoSize = true;
-            this.radioButtonSimulate.Checked = true;
-            this.radioButtonSimulate.Location = new System.Drawing.Point(9, 17);
-            this.radioButtonSimulate.Name = "radioButtonSimulate";
-            this.radioButtonSimulate.Size = new System.Drawing.Size(65, 17);
-            this.radioButtonSimulate.TabIndex = 0;
-            this.radioButtonSimulate.TabStop = true;
-            this.radioButtonSimulate.Text = "Simulate";
-            this.radioButtonSimulate.UseVisualStyleBackColor = true;
-            this.radioButtonSimulate.CheckedChanged += new System.EventHandler(this.radioButtonSimulate_CheckedChanged);
+            this.radioButtonGenFromFile.CheckedChanged += new System.EventHandler(this.radioButtonGenFromFile_CheckedChanged_1);
             // 
             // tabPage2
             // 
@@ -847,7 +845,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripTestToolbar;
             this.Name = "MainForm";
-            this.Text = "BizTester 3.0.0";
+            this.Text = "BizTester 4.0.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStripMT.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -911,10 +909,9 @@
         private System.Windows.Forms.RadioButton radioButtonClientMSMQ;
         private System.Windows.Forms.RadioButton radioButtonClientFiles;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button btnOpenFileDialog;
-        private System.Windows.Forms.TextBox textBoxSourceFilePath;
+        private System.Windows.Forms.Button btnOpenDialog;
+        private System.Windows.Forms.TextBox textBoxSourcePath;
         private System.Windows.Forms.RadioButton radioButtonGenFromFile;
-        private System.Windows.Forms.RadioButton radioButtonSimulate;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ToolStripMenuItem openTestSuiteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newTestToolStripMenuItem;
@@ -948,6 +945,7 @@
         private System.Windows.Forms.ComboBox comboBoxAckCode;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.RadioButton radioButtonGenFromFolder;
     }
 }
 

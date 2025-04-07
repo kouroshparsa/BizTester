@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0</ApplicationVersion>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -173,6 +173,12 @@
     <Compile Include="Models\TestInput.cs" />
     <Compile Include="Models\TestSpec.cs" />
     <Compile Include="Models\Validation.cs" />
+    <Compile Include="SimulationSettingsHelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SimulationSettingsHelpForm.Designer.cs">
+      <DependentUpon>SimulationSettingsHelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ValidationEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +220,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SimulationSettingsHelpForm.resx">
+      <DependentUpon>SimulationSettingsHelpForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ValidationEditorForm.resx">
       <DependentUpon>ValidationEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -240,9 +249,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="simulation_data.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

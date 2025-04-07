@@ -1,38 +1,36 @@
-# BizTester
+# Introduction
 
-This is a Windows GUI app for testing HL7v2 messages with various protocols such as File/MLLP/Message Queue.
-
+`BizTester` is a Windows GUI app for testing Biztalk apps with HL7v2 messages.
 You can download the installer from <a href="https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi">https://github.com/kouroshparsa/BizTester/blob/main/Installer/BizTesterSetup.msi</a>
+
+# Installation
+
+To install, you can grab the installer from the Installer folder of this repository.
 
 # Usage
 This tool allows you to receive HL7 (v2 or v3) responses and send HL7v2 messages either from a given file or automatically generate a message to send. 
 As shown below, you have the server (listener) settings on the left side and the client (sender) settings on the right side.
-![MainForm](Documentation/Images/img1.png)
+![MainForm](Documentation/Images/server.png)
+![MainForm](Documentation/Images/client.png)
 
-Note that the MLLP server has the ability to send back acknowledgement message if the message received indicates that it requires a response.
+As you can see the following protocols are supported:
+- File
+- MLLP
+- MSMQ
 
-Currently, the tool only allows access to localhost meaning that you need to run it on the system where Biztalk is installed and you can set the MLLP host to 127.0.0.1 and for MSMQ you'd create a private queue on localhost.
-You have two options for the source:
-- Simulate
-- Specific file
+The MLLP server has the ability to send back acknowledgement message if the message received indicates that it requires a response (if MSH.15 = 'AL').
 
-Simulation automatically generates HL7v2 data based on specifications. You can view and modify the specifications by clicking the "Simulation Settings" button as shown below:
-![Simulation](Documentation/Images/img2.png)
+`BizTester` also allows you to overwrite field values.
+By clicking the "Data Overwrites" button, you can either specify static values or even dynamic values:
+![Simulation](Documentation/Images/overwrites.png)
 
-There are a number of dynamic value you can use that are listed below:
+There are a number of dynamic values you can use that are listed below:
 | Value    | Description |
 | --------- | ------- |
 | {now}     | Inserts the current date/time         |
 | {random_num}          | Generates a random 6 digit number        |
 | {random_first_name}          | Generates a random first name        |
 | {random_last_name}          | Generates a random last name        |
-| {count}          | Generates an integer that increments everytime you send  new message. To reset it, you'll need to restart the app        |
-
-You can create messages using the simulator. Optionally you can specify the source of the HL7 data as shown below.
-![Simulation](Documentation/Images/img3.png)
-
-Either paste your message there or right click and select load from file.
-Then use the data grid below that to substitude values on top of that.
 
 # Development
 Please feel free to send requests for features or report issues on Github.

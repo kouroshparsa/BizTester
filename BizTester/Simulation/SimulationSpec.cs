@@ -6,8 +6,7 @@ namespace BizTester.Simulation
 {
     public class SimulationSpec
     {
-        public string sampleData;
-        public string settingsPath = Path.GetFullPath("./simulation_data.csv");
+        public string settingsPath { get; set; }
 
         public List<Record> records = new List<Record>();
 
@@ -39,8 +38,11 @@ namespace BizTester.Simulation
 
         public void LoadSettingsFromFile()
         {
-            records = new List<Record>();
-            using (StreamReader sr = File.OpenText(settingsPath))
+            if (settingsPath == null)
+                return;
+
+            records.Clear();
+            using (StreamReader sr = File.OpenText(this.settingsPath))
             {
                 string s;
                 bool isHeader = true;
@@ -52,14 +54,9 @@ namespace BizTester.Simulation
                     {
                         string[] parts = s.Split(',');
                         if (parts.Length >= 2 &&
-                            parts[0].Trim().Length > 0 &&
-                            parts[1].Trim().Length > 0)
+                            parts[0].Trim().Length > 0)
                         {
                             records.Add(new Record(parts));
-                        }else if (s.Equals("---"))
-                        {
-                            this.sampleData = sr.ReadToEnd();
-                            break;
                         }
                     } 
                     

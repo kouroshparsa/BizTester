@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,10 +18,14 @@ namespace BizTester.Libs
             stream.Flush();
         }
 
-        public static string ReadStream(Stream stream)
+        public static string ReadStream(Stream stream, int timeoutMilliseconds=40000)
         {
             string res;
-            using(StreamReader reader = new StreamReader(stream))
+            if (stream.CanTimeout)
+            {// MSMQ stream cannot timeout
+                stream.ReadTimeout = timeoutMilliseconds;
+            }
+            using (StreamReader reader = new StreamReader(stream))
             {
                 res = reader.ReadToEnd();
             }

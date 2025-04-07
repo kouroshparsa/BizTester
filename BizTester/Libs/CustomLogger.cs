@@ -9,6 +9,7 @@ namespace BizTester.Libs
         private enum LogTypes
         {
             INFO,
+            WARN,
             ERROR
         }
         public CustomLogger(DataGridView view)
@@ -46,6 +47,14 @@ namespace BizTester.Libs
                 Console.WriteLine(message);
             else
                 UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.INFO), message, data);
+        }
+
+        public void Warn(string message, string data = null)
+        {
+            if (this.dataGridView == null)
+                Console.WriteLine(message);
+            else
+                UpdateDataGridView(Enum.GetName(typeof(LogTypes), LogTypes.WARN), message, data);
         }
 
         public void Error(string message, string data=null)

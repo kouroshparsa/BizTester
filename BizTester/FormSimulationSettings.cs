@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using BizTester.Simulation;
 using System.IO;
-using BizTester.Libs;
 
 namespace BizTester
 {
@@ -36,13 +35,12 @@ namespace BizTester
         {
             try
             {
-                dataGridView1.Rows.Clear();
+                dataGridViewOverwrites.Rows.Clear();
                 spec.LoadSettingsFromFile();
                 foreach (var record in spec.records)
                 {
-                    dataGridView1.Rows.Add(record.Field, record.Value, record.Description);
+                    dataGridViewOverwrites.Rows.Add(record.Field, record.Value, record.Description);
                 }
-                richTextBoxSample.Text = spec.sampleData;
             }
             catch (Exception ex)
             {
@@ -66,39 +64,52 @@ namespace BizTester
 
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
         public void SaveSettingsToFile()
         {
+            if(textBoxSourceFilePath.Text.Length < 1)
+            {
+                SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                saveFileDialog1.Filter = "CSV|*.csv";
+                saveFileDialog1.Title = "Save Settings File";
+                saveFileDialog1.ShowDialog();
+
+                if (saveFileDialog1.FileName == "")
+                {
+                    throw new Exception("Aborted since you did not specify where to save the settings.");
+                }
+
+                textBoxSourceFilePath.Text = saveFileDialog1.FileName;
+            }
             this.spec = new SimulationSpec();
             this.spec.settingsPath = textBoxSourceFilePath.Text;
-            this.spec.sampleData = richTextBoxSample.Text;
             using (StreamWriter outputFile = new StreamWriter(textBoxSourceFilePath.Text))
             {
                 outputFile.WriteLine("Field,Value,Description");
-                foreach (DataGridViewRow row in dataGridView1.Rows)
+                foreach (DataGridViewRow row in dataGridViewOverwrites.Rows)
                 {
                     if (row.Cells[0].Value != null &&
-                        row.Cells[0].Value.ToString().Length > 0 &&
-                        row.Cells[1].Value.ToString().Length > 0)
+                        row.Cells[0].Value.ToString().Length > 0)
                     {
                         string field = row.Cells[0].Value.ToString();
-                        string val = row.Cells[1].Value.ToString();
+                        string val = "";
+                        if(row.Cells[1].Value != null)
+                            val = row.Cells[1].Value.ToString();
+
                         string description = "";
                         if (row.Cells[2].Value != null && row.Cells[2].Value.ToString().Length > 0)
                         {
                             description = row.Cells[2].Value.ToString();
                         }
                         outputFile.WriteLine($"{field},{val},{description}");
-                        this.spec.records.Add(new SimulationSpec.Record(field, val, description));
+                        spec.records.Add(new SimulationSpec.Record(field, val, description));
                     }
                 }
-
-                outputFile.WriteLine("---");
-                outputFile.WriteLine(this.spec.sampleData);
+                
             }
         }
 
@@ -108,6 +119,7 @@ namespace BizTester
             {
                 SaveSettingsToFile();
                 MessageBox.Show("Saved successfully.");
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -122,20 +134,23 @@ namespace BizTester
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     textBoxSourceFilePath.Text = of.FileName;
+                    LoadSettings();
                 }
             }
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+        }
+
+        private void LoadSettings()
+        {
             if (spec == null)
                 spec = new SimulationSpec();
 
             spec.settingsPath = textBoxSourceFilePath.Text;
-            richTextBoxSample.Text = spec.sampleData;
             LoadDataIntoDataGrid();
         }
-
         private void dataGridView1_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             // Ignore if a column or row header is clicked
@@ -145,43 +160,47 @@ namespace BizTester
                 this.rowIndex = e.RowIndex;
 
                 // Here you can do whatever you want with the cell
-                this.dataGridView1.CurrentCell = clickedCell;  // Select the clicked cell, for instance
+                this.dataGridViewOverwrites.CurrentCell = clickedCell;  // Select the clicked cell, for instance
 
                 // Get mouse position relative to the vehicles grid
-                var relativeMousePosition = dataGridView1.PointToClient(Cursor.Position);
+                var relativeMousePosition = dataGridViewOverwrites.PointToClient(Cursor.Position);
 
                 // Show the context menu
-                this.contextMenuStripSimulationDataGrid.Show(dataGridView1, relativeMousePosition);
+                this.contextMenuStripSimulationDataGrid.Show(dataGridViewOverwrites, relativeMousePosition);
 
             }
         }
 
         private void deleteRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.rowIndex >= 0 && !this.dataGridView1.Rows[this.rowIndex].IsNewRow)
+            for (int i = dataGridViewOverwrites.SelectedRows.Count - 1; i >= 0; i--)
             {
-                this.dataGridView1.Rows.RemoveAt(this.rowIndex);
-            }
-        }
+                DataGridViewRow selectedRow = dataGridViewOverwrites.SelectedRows[i];
 
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            richTextBoxSample.Clear();
-        }
-
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            richTextBoxSample.Text = Clipboard.GetText();
-        }
-
-        private void loadFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog of = new OpenFileDialog())
-            {
-                if (of.ShowDialog() == DialogResult.OK)
+                if (!selectedRow.IsNewRow)
                 {
-                    richTextBoxSample.Text = HL7Helper.GetMessageFromFile(of.FileName);
+                    dataGridViewOverwrites.Rows.RemoveAt(selectedRow.Index);
                 }
+            }
+
+        }
+
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataGridViewOverwrites.Rows.Clear();
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            var form = new SimulationSettingsHelpForm();
+            form.ShowDialog();
+        }
+
+        private void textBoxSourceFilePath_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter && textBoxSourceFilePath.Text.Length > 0)
+            {
+                LoadSettings();
             }
         }
     }       

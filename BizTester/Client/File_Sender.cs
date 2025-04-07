@@ -1,6 +1,7 @@
 ﻿using BizTester.Libs;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace BizTester.Client
 {
@@ -18,7 +19,14 @@ namespace BizTester.Client
             this.folder = folder;
         }
 
-        public override void Start(string data)
+        public override void Send(string data)
+        {
+            Task.Run(() =>
+            {
+                SendMessage(data);
+            });
+        }
+        private void SendMessage(string data)
         {
             string filename = $"{Guid.NewGuid()}.hl7v2";
             string path = Path.Combine(folder, filename);
