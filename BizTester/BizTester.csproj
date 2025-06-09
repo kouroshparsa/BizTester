@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>4.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -173,6 +173,7 @@
     <Compile Include="Models\TestInput.cs" />
     <Compile Include="Models\TestSpec.cs" />
     <Compile Include="Models\Validation.cs" />
+    <Compile Include="Server\MLLP_Listener_Array.cs" />
     <Compile Include="SimulationSettingsHelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -251,7 +252,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="flask-icon.ico" />

@@ -72,7 +72,14 @@ namespace BizTester
                     }
                     else// MLLP
                     {
-                        listener = new MLLP_Listener(textBoxServerPort.Text, checkBoxServerAck.Checked, comboBoxAckCode.Text, logger);
+                        if (textBoxServerPort.Text.Contains(","))
+                        {
+                            listener = new MLLP_Listener_Array(textBoxServerPort.Text, checkBoxServerAck.Checked, comboBoxAckCode.Text, logger);
+                        }
+                        else
+                        {
+                            listener = new MLLP_Listener(textBoxServerPort.Text, checkBoxServerAck.Checked, comboBoxAckCode.Text, logger);
+                        }
                     }
 
                     listener.Start();

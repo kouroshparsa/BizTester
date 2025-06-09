@@ -14,10 +14,6 @@ namespace BizTester.Server
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;
-            if (!MessageQueue.Exists(queue))
-            {
-                throw new Exception($"Invalid queue {queue}");
-            }
             this.QueueName = queue;
         }
         

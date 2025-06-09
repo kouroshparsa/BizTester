@@ -14,10 +14,6 @@ namespace BizTester.Client
         public MSMQ_Sender(CustomLogger logger, string queue)
         {
             this.logger = logger;
-            if (!MessageQueue.Exists(queue))
-            {
-                throw new Exception($"Invalid queue {queue}");
-            }
             this.QueueName = queue;
         }
 
@@ -31,13 +27,18 @@ namespace BizTester.Client
         private void SendMessage(string data)
         {
             var messageToSend = new Message();
-            StreamHelper.WriteToStream(messageToSend.BodyStream, data);
-            using (MessageQueue queue = new MessageQueue(QueueName))
+            try
             {
-                queue.Send(messageToSend, "", MessageQueueTransactionType.Single);
+                StreamHelper.WriteToStream(messageToSend.BodyStream, data);
+                using (MessageQueue queue = new MessageQueue(QueueName))
+                {
+                    queue.Send(messageToSend, "", MessageQueueTransactionType.Single);
+                }
+                logger.Info("Message sent to Queue.", data);
+            }catch(Exception ex)
+            {
+                logger.Error($"Failed to send to the queue. {ex}");
             }
-            logger.Info("Message sent to Queue.", data);
-            
         }
 
     }

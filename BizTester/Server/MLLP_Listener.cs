@@ -140,7 +140,7 @@ namespace BizTester.Server
                             messageBuffer.SetLength(0); // Clear buffer after processing
 
                             msg = HL7Helper.CleanHL7(msg);
-                            logger.Info("Received MLLP message", msg.Trim());
+                            logger.Info($"Received MLLP message on port {port}", msg.Trim());
 
                             if (this.messageQueue != null)
                             {
@@ -156,7 +156,14 @@ namespace BizTester.Server
 
                             if (!msg.Trim().StartsWith("MSH"))
                             {
-                                SendSoapResponse(ref clientStream);
+                                try
+                                {
+                                    SendSoapResponse(ref clientStream);
+                                }catch(Exception ex)
+                                {
+                                    string stackTrace = ex.StackTrace;
+                                    logger.Error($"The message does not seem to be a HL7v2 message. SendSoapResponse failed. {ex}. {stackTrace}", msg);
+                                }
                             }
                         }
                         else if (insideMessage) // Add valid message content

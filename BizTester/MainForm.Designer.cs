@@ -845,7 +845,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripTestToolbar;
             this.Name = "MainForm";
-            this.Text = "BizTester 4.0.0";
+            this.Text = "BizTester 4.1.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStripMT.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
