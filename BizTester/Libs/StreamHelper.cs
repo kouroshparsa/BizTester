@@ -18,18 +18,59 @@ namespace BizTester.Libs
             stream.Flush();
         }
 
-        public static string ReadStream(Stream stream, int timeoutMilliseconds=40000)
+        public static string ReadStream(Stream stream, int timeoutMilliseconds=8000)
         {
-            string res;
             if (stream.CanTimeout)
             {// MSMQ stream cannot timeout
                 stream.ReadTimeout = timeoutMilliseconds;
             }
-            using (StreamReader reader = new StreamReader(stream))
+
+            var messageBuffer = new MemoryStream();
+            var buffer = new byte[1];
+
+            bool insideMessage = false;
+
+            while (true)
             {
-                res = reader.ReadToEnd();
+                int bytesRead = stream.Read(buffer, 0, 1); // Read byte by byte
+                if (bytesRead == 0)
+                    break; // Connection closed
+
+                byte b = buffer[0];
+
+                if (b == HL7Helper.BEGIN_MSG_INT) // VT
+                {
+                    messageBuffer.SetLength(0);
+                    insideMessage = true;
+                    continue;
+                }
+
+                if (b == HL7Helper.END_MSG_INT) // FS
+                {
+                    // Expect next byte to be CR
+                    int crByte = stream.ReadByte();
+                    if (crByte == 0x0D) // CR
+                    {
+                        break; // End of message
+                    }
+                    else
+                    {
+                        throw new Exception("Malformed MLLP message: missing CR after FS");
+                    }
+                }
+
+                if (insideMessage)
+                {
+                    messageBuffer.WriteByte(b);
+                }
             }
-            return res;
+
+            messageBuffer.Flush();
+            messageBuffer.Position = 0;
+            using (StreamReader reader = new StreamReader(messageBuffer, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         public static async Task<string> AsyncReadStream(Stream stream, int timeout=4000)

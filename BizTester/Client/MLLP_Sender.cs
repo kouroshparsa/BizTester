@@ -89,7 +89,7 @@ namespace BizTester.Client
                 try
                 {
                     string res = StreamHelper.ReadStream(stream);
-                    logger.Info("Receive acknowledgement.", res);
+                    logger.Info("Received acknowledgement.", res);
                 }
                 catch (TimeoutException)
                 {

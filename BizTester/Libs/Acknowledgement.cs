@@ -97,7 +97,7 @@ namespace Biztalk.Libs
             var messageControlId = message.GetValue("MSH.10");
             var ack = message.GetACK();
             ack.SetValue("MSA.1", ackCode);
-            string msg = ack.SerializeMessage(false);
+            string msg = ack.SerializeMessage(false).Trim();
             return START_BLOCK + msg + END_BLOCK;
         }
     }

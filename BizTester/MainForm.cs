@@ -494,11 +494,11 @@ namespace BizTester
             
 
         }
-
-        private void radioButtonGenFromFile_CheckedChanged_1(object sender, EventArgs e)
-        {
-
-        }
         
+
+        private void createReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReportController.Create(dataGridViewMT);
+        }
     }
 }

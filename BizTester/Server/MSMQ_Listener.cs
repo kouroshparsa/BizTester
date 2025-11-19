@@ -19,16 +19,18 @@ namespace BizTester.Server
         
         private void ListenForQueuedItems()
         {
+            bool showError = true;
             while (isListening)
             {
                 var queue = new MessageQueue(QueueName);
                 try
                 {
                     var msg = queue.Receive(TimeSpan.FromSeconds(1));
+                    showError = true;
                     if (msg != null)
                     {
                         string result = StreamHelper.ReadStream(msg.BodyStream);
-                        if(this.messageQueue != null)
+                        if (this.messageQueue != null)
                         {
                             this.messageQueue.Enqueue(result);
                         }
@@ -37,12 +39,20 @@ namespace BizTester.Server
                 }
                 catch (MessageQueueException mqEx)
                 {
-                    if (!mqEx.MessageQueueErrorCode.Equals(MessageQueueErrorCode.IOTimeout))
+                    if (showError && !mqEx.MessageQueueErrorCode.Equals(MessageQueueErrorCode.IOTimeout))
+                    {// timeout error is normal. It happens when there is no message
                         logger.Error($"MessageQueueException: {mqEx.Message}");
+                        showError = false;
+                        Thread.Sleep(1000);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    logger.Error($"Exception: {ex.Message}");
+                    if (showError) {
+                        logger.Error($"Error: {ex.Message}");
+                        showError = false;
+                        Thread.Sleep(1000);
+                    }
                 }
             }
         }

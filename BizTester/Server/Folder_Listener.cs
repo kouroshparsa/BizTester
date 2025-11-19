@@ -40,7 +40,7 @@ namespace BizTester.Server
                         if (!failedFileNames.Contains(filename))
                         {
                             string content = ReadHL7File(file);
-                            logger.Info($"Detected {filename} data.", content);
+                            logger.Info($"Detected data file: {filename}", content);
                             File.Delete(file);
                             logger.Info($"Deleted file {filename}");
                         }

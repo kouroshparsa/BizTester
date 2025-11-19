@@ -34,7 +34,7 @@ namespace BizTester.Client
                 {
                     queue.Send(messageToSend, "", MessageQueueTransactionType.Single);
                 }
-                logger.Info("Message sent to Queue.", data);
+                logger.Info("Data was sent to Queue successfully.", data);
             }catch(Exception ex)
             {
                 logger.Error($"Failed to send to the queue. {ex}");

@@ -205,7 +205,7 @@ namespace BizTester.Server
             try
             {
                 StreamHelper.WriteToStream(clientStream, ackMessage);
-                logger.Info("Ack message was sent back to the client.", ackMessage.Trim());
+                logger.Info("Server sent Ack.", ackMessage.Trim());
             }catch(Exception ex)
             {
                 logger.Error("Failed to send ack message." + ex.Message, msg);

@@ -164,10 +164,12 @@
     <Compile Include="Client\MSMQ_Sender.cs" />
     <Compile Include="Client\Sender.cs" />
     <Compile Include="Libs\HL7Helper.cs" />
+    <Compile Include="Libs\ReportController.cs" />
     <Compile Include="Libs\StreamHelper.cs" />
     <Compile Include="Libs\TestRunner.cs" />
     <Compile Include="Libs\TreeNodeHelper.cs" />
     <Compile Include="Models\Protocol.cs" />
+    <Compile Include="Models\Report.cs" />
     <Compile Include="Models\TestBase.cs" />
     <Compile Include="Models\TestOutput.cs" />
     <Compile Include="Models\TestInput.cs" />
