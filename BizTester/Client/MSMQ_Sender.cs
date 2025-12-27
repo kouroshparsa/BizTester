@@ -1,8 +1,6 @@
-﻿using BizTester.Libs;
+﻿using BizTester.Helpers;
 using MSMQ.Messaging;
 using System;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BizTester.Client

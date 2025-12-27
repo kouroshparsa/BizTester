@@ -37,6 +37,12 @@ namespace BizTester.Models
                     if (data_cell.Value != null && data_cell.Value.ToString().Trim().StartsWith("MSH"))
                     {
                         string hl7 = data_cell.Value.ToString().Replace("\r\n\u001c\r\n", "\u001c\r");
+                        hl7 = hl7
+                            .Trim('\u000b') // VT
+                            .Trim('\u001c') // FS
+                            .Trim('\r', '\n');
+                        hl7 = hl7.Replace(@"\T\\R\", @"\R\");
+
                         var msg = new HL7.Dotnetcore.Message(hl7);
                         msg.ParseMessage();
                         string msgControlId = msg.Segments("MSH")[0].Fields(10).Value.ToString();
@@ -56,8 +62,8 @@ namespace BizTester.Models
                                 m.receivedOn = dt;
                                 messages.Add(msgControlId, m);
                             }
-                        }else if (description.StartsWith("Data was sent to server successfully") ||
-                            description.StartsWith("Data was sent to Queue successfully"))
+                        }else if ((description.StartsWith("Data was sent to server successfully") ||
+                            description.StartsWith("Data was sent to Queue successfully")) && !messages.ContainsKey(msgControlId))
                         {
                             m.sentOn = dt;
                             messages.Add(msgControlId, m);
@@ -67,7 +73,7 @@ namespace BizTester.Models
                             {
                                 messages[msgControlId].ackedOn = dt;
                             }
-                            else
+                            else if(!messages.ContainsKey(msgControlId))
                             {
                                 m.ackedOn = dt;
                                 messages.Add(msgControlId, m);

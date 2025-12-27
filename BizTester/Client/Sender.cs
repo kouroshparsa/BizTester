@@ -1,4 +1,4 @@
-﻿using BizTester.Libs;
+﻿using BizTester.Helpers;
 using System.Threading;
 
 namespace BizTester.Client

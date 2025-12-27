@@ -1,4 +1,4 @@
-﻿using BizTester.Libs;
+﻿using BizTester.Helpers;
 using MSMQ.Messaging;
 using System;
 using System.Threading;
@@ -20,16 +20,16 @@ namespace BizTester.Server
         private void ListenForQueuedItems()
         {
             bool showError = true;
+            var queue = new MessageQueue(QueueName);
             while (isListening)
             {
-                var queue = new MessageQueue(QueueName);
                 try
                 {
                     var msg = queue.Receive(TimeSpan.FromSeconds(1));
                     showError = true;
                     if (msg != null)
                     {
-                        string result = StreamHelper.ReadStream(msg.BodyStream);
+                        string result = StreamHelper.ReadQueueStream(msg.BodyStream);
                         if (this.messageQueue != null)
                         {
                             this.messageQueue.Enqueue(result);

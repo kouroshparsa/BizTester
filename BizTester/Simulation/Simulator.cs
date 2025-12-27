@@ -2,6 +2,7 @@
 using RandomNameGeneratorLibrary;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using static BizTester.Simulation.SimulationSpec;
 
@@ -42,6 +43,7 @@ namespace BizTester.Simulation
             string sampleData = GetHL7Message_NoSample(spec.records);
             return GetHL7Message_WithSample(spec.records, sampleData);
         }
+
         public static string GetHL7Message_WithSample(List<Record> records, string sampleData)
         {
             sampleData = sampleData.Trim();

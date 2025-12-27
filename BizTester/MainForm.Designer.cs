@@ -37,6 +37,7 @@
             this.toolStripMenuItemClear = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnColumns = new System.Windows.Forms.Button();
             this.dataGridViewMT = new System.Windows.Forms.DataGridView();
             this.Timestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,10 +77,8 @@
             this.radioButtonClientMSMQ = new System.Windows.Forms.RadioButton();
             this.radioButtonClientFiles = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButtonGenFromFolder = new System.Windows.Forms.RadioButton();
             this.btnOpenDialog = new System.Windows.Forms.Button();
             this.textBoxSourcePath = new System.Windows.Forms.TextBox();
-            this.radioButtonGenFromFile = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridViewATLogs = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -102,9 +101,30 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.btnGenerateExpOutputs = new System.Windows.Forms.Button();
+            this.comboBoxDllFolder = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.btnBrowseBTMFile = new System.Windows.Forms.Button();
+            this.textBoxMapFolder = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.dataGridViewMapTestResult = new System.Windows.Forms.DataGridView();
+            this.btnRunMapTests = new System.Windows.Forms.Button();
+            this.menuStripMapTest = new System.Windows.Forms.MenuStrip();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.openTestSuiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TestStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TestMsg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TestMap = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TestInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TestExpOutput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TestObsOutput = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStripMT.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -120,6 +140,9 @@
             this.contextMenuStripATLogs.SuspendLayout();
             this.contextMenuStripTreeNodeOptions.SuspendLayout();
             this.menuStripTestToolbar.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMapTestResult)).BeginInit();
+            this.menuStripMapTest.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripMT
@@ -131,33 +154,33 @@
             this.createReportToolStripMenuItem,
             this.toolStripMenuItemClear});
             this.contextMenuStripMT.Name = "contextMenuStrip1";
-            this.contextMenuStripMT.Size = new System.Drawing.Size(199, 157);
+            this.contextMenuStripMT.Size = new System.Drawing.Size(147, 92);
             // 
             // toolStripMenuItemCopy
             // 
             this.toolStripMenuItemCopy.Name = "toolStripMenuItemCopy";
-            this.toolStripMenuItemCopy.Size = new System.Drawing.Size(198, 30);
+            this.toolStripMenuItemCopy.Size = new System.Drawing.Size(146, 22);
             this.toolStripMenuItemCopy.Text = "Copy Data";
             this.toolStripMenuItemCopy.Click += new System.EventHandler(this.toolStripMenuItemCopy_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(198, 30);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportToolStripMenuItem.Text = "Export Data";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
             // createReportToolStripMenuItem
             // 
             this.createReportToolStripMenuItem.Name = "createReportToolStripMenuItem";
-            this.createReportToolStripMenuItem.Size = new System.Drawing.Size(198, 30);
+            this.createReportToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.createReportToolStripMenuItem.Text = "Create Report";
             this.createReportToolStripMenuItem.Click += new System.EventHandler(this.createReportToolStripMenuItem_Click);
             // 
             // toolStripMenuItemClear
             // 
             this.toolStripMenuItemClear.Name = "toolStripMenuItemClear";
-            this.toolStripMenuItemClear.Size = new System.Drawing.Size(198, 30);
+            this.toolStripMenuItemClear.Size = new System.Drawing.Size(146, 22);
             this.toolStripMenuItemClear.Text = "Clear all logs";
             this.toolStripMenuItemClear.Click += new System.EventHandler(this.toolStripMenuItemClear_Click);
             // 
@@ -168,23 +191,35 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(0, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(585, 464);
+            this.tabControl1.Size = new System.Drawing.Size(676, 464);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnColumns);
             this.tabPage1.Controls.Add(this.dataGridViewMT);
             this.tabPage1.Controls.Add(this.tabControl2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(577, 438);
+            this.tabPage1.Size = new System.Drawing.Size(668, 438);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Manual Testing";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnColumns
+            // 
+            this.btnColumns.Location = new System.Drawing.Point(6, 219);
+            this.btnColumns.Name = "btnColumns";
+            this.btnColumns.Size = new System.Drawing.Size(75, 23);
+            this.btnColumns.TabIndex = 16;
+            this.btnColumns.Text = "Columns";
+            this.btnColumns.UseVisualStyleBackColor = true;
+            this.btnColumns.Click += new System.EventHandler(this.btnColumns_Click);
             // 
             // dataGridViewMT
             // 
@@ -198,9 +233,9 @@
             this.Message,
             this.Data});
             this.dataGridViewMT.ContextMenuStrip = this.contextMenuStripMT;
-            this.dataGridViewMT.Location = new System.Drawing.Point(6, 223);
+            this.dataGridViewMT.Location = new System.Drawing.Point(6, 248);
             this.dataGridViewMT.Name = "dataGridViewMT";
-            this.dataGridViewMT.Size = new System.Drawing.Size(568, 208);
+            this.dataGridViewMT.Size = new System.Drawing.Size(656, 183);
             this.dataGridViewMT.TabIndex = 15;
             // 
             // Timestamp
@@ -209,7 +244,7 @@
             this.Timestamp.HeaderText = "Timestamp";
             this.Timestamp.Name = "Timestamp";
             this.Timestamp.ReadOnly = true;
-            this.Timestamp.Width = 92;
+            this.Timestamp.Width = 81;
             // 
             // Type
             // 
@@ -217,7 +252,7 @@
             this.Type.HeaderText = "Type";
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
-            this.Type.Width = 65;
+            this.Type.Width = 54;
             // 
             // Message
             // 
@@ -227,19 +262,21 @@
             // 
             // Data
             // 
-            this.Data.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Data.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Data.HeaderText = "Data";
             this.Data.Name = "Data";
             this.Data.ReadOnly = true;
             // 
             // tabControl2
             // 
+            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl2.Controls.Add(this.tabPage3);
             this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Location = new System.Drawing.Point(3, 6);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(568, 211);
+            this.tabControl2.Size = new System.Drawing.Size(660, 211);
             this.tabControl2.TabIndex = 1;
             // 
             // tabPage3
@@ -248,13 +285,15 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(560, 185);
+            this.tabPage3.Size = new System.Drawing.Size(652, 185);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Server";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBoxServerControls
             // 
+            this.groupBoxServerControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxServerControls.Controls.Add(this.comboBoxAckCode);
             this.groupBoxServerControls.Controls.Add(this.label9);
             this.groupBoxServerControls.Controls.Add(this.checkBoxServerAck);
@@ -270,7 +309,7 @@
             this.groupBoxServerControls.Controls.Add(this.radioButtonServerFolder);
             this.groupBoxServerControls.Location = new System.Drawing.Point(11, 4);
             this.groupBoxServerControls.Name = "groupBoxServerControls";
-            this.groupBoxServerControls.Size = new System.Drawing.Size(543, 171);
+            this.groupBoxServerControls.Size = new System.Drawing.Size(636, 171);
             this.groupBoxServerControls.TabIndex = 1;
             this.groupBoxServerControls.TabStop = false;
             this.groupBoxServerControls.Text = "Server (Consumer)";
@@ -306,7 +345,7 @@
             this.checkBoxServerAck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxServerAck.Location = new System.Drawing.Point(13, 102);
             this.checkBoxServerAck.Name = "checkBoxServerAck";
-            this.checkBoxServerAck.Size = new System.Drawing.Size(148, 21);
+            this.checkBoxServerAck.Size = new System.Drawing.Size(141, 17);
             this.checkBoxServerAck.TabIndex = 6;
             this.checkBoxServerAck.Text = "Send acknowledgement";
             this.checkBoxServerAck.UseVisualStyleBackColor = true;
@@ -331,17 +370,21 @@
             // 
             // textBoxServerQueue
             // 
+            this.textBoxServerQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxServerQueue.Location = new System.Drawing.Point(135, 44);
             this.textBoxServerQueue.Name = "textBoxServerQueue";
-            this.textBoxServerQueue.Size = new System.Drawing.Size(402, 20);
+            this.textBoxServerQueue.Size = new System.Drawing.Size(495, 20);
             this.textBoxServerQueue.TabIndex = 4;
             this.textBoxServerQueue.Text = ".\\private$\\test";
             // 
             // textBoxServerPath
             // 
+            this.textBoxServerPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxServerPath.Location = new System.Drawing.Point(135, 20);
             this.textBoxServerPath.Name = "textBoxServerPath";
-            this.textBoxServerPath.Size = new System.Drawing.Size(402, 20);
+            this.textBoxServerPath.Size = new System.Drawing.Size(495, 20);
             this.textBoxServerPath.TabIndex = 3;
             // 
             // label3
@@ -376,10 +419,11 @@
             this.radioButtonServerMLLP.AutoSize = true;
             this.radioButtonServerMLLP.Location = new System.Drawing.Point(13, 68);
             this.radioButtonServerMLLP.Name = "radioButtonServerMLLP";
-            this.radioButtonServerMLLP.Size = new System.Drawing.Size(60, 20);
+            this.radioButtonServerMLLP.Size = new System.Drawing.Size(53, 17);
             this.radioButtonServerMLLP.TabIndex = 2;
             this.radioButtonServerMLLP.Text = "MLLP";
             this.radioButtonServerMLLP.UseVisualStyleBackColor = true;
+            this.radioButtonServerMLLP.CheckedChanged += new System.EventHandler(this.radioButtonServerMLLP_CheckedChanged);
             // 
             // radioButtonServerMSMQ
             // 
@@ -387,21 +431,23 @@
             this.radioButtonServerMSMQ.Checked = true;
             this.radioButtonServerMSMQ.Location = new System.Drawing.Point(13, 44);
             this.radioButtonServerMSMQ.Name = "radioButtonServerMSMQ";
-            this.radioButtonServerMSMQ.Size = new System.Drawing.Size(65, 20);
+            this.radioButtonServerMSMQ.Size = new System.Drawing.Size(58, 17);
             this.radioButtonServerMSMQ.TabIndex = 1;
             this.radioButtonServerMSMQ.TabStop = true;
             this.radioButtonServerMSMQ.Text = "MSMQ";
             this.radioButtonServerMSMQ.UseVisualStyleBackColor = true;
+            this.radioButtonServerMSMQ.CheckedChanged += new System.EventHandler(this.radioButtonServerMSMQ_CheckedChanged);
             // 
             // radioButtonServerFolder
             // 
             this.radioButtonServerFolder.AutoSize = true;
             this.radioButtonServerFolder.Location = new System.Drawing.Point(13, 20);
             this.radioButtonServerFolder.Name = "radioButtonServerFolder";
-            this.radioButtonServerFolder.Size = new System.Drawing.Size(61, 20);
+            this.radioButtonServerFolder.Size = new System.Drawing.Size(54, 17);
             this.radioButtonServerFolder.TabIndex = 2;
             this.radioButtonServerFolder.Text = "Folder";
             this.radioButtonServerFolder.UseVisualStyleBackColor = true;
+            this.radioButtonServerFolder.CheckedChanged += new System.EventHandler(this.radioButtonServerFolder_CheckedChanged);
             // 
             // tabPage4
             // 
@@ -409,13 +455,15 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(560, 185);
+            this.tabPage4.Size = new System.Drawing.Size(559, 185);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Client";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.textBoxClientCount);
             this.groupBox2.Controls.Add(this.textBoxClientIP);
@@ -442,7 +490,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(324, 144);
+            this.label8.Location = new System.Drawing.Point(135, 144);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 21;
@@ -450,7 +498,7 @@
             // 
             // textBoxClientCount
             // 
-            this.textBoxClientCount.Location = new System.Drawing.Point(365, 141);
+            this.textBoxClientCount.Location = new System.Drawing.Point(173, 142);
             this.textBoxClientCount.Name = "textBoxClientCount";
             this.textBoxClientCount.Size = new System.Drawing.Size(64, 20);
             this.textBoxClientCount.TabIndex = 13;
@@ -486,9 +534,10 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(446, 137);
+            this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSend.Location = new System.Drawing.Point(469, 137);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(91, 28);
+            this.btnSend.Size = new System.Drawing.Size(62, 28);
             this.btnSend.TabIndex = 14;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -503,6 +552,8 @@
             // 
             // textBoxClientQueue
             // 
+            this.textBoxClientQueue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClientQueue.Location = new System.Drawing.Point(138, 40);
             this.textBoxClientQueue.Name = "textBoxClientQueue";
             this.textBoxClientQueue.Size = new System.Drawing.Size(399, 20);
@@ -511,6 +562,8 @@
             // 
             // textBoxClientFolder
             // 
+            this.textBoxClientFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClientFolder.Location = new System.Drawing.Point(138, 16);
             this.textBoxClientFolder.Name = "textBoxClientFolder";
             this.textBoxClientFolder.Size = new System.Drawing.Size(399, 20);
@@ -548,10 +601,11 @@
             this.radioButtonClientMLLP.AutoSize = true;
             this.radioButtonClientMLLP.Location = new System.Drawing.Point(7, 62);
             this.radioButtonClientMLLP.Name = "radioButtonClientMLLP";
-            this.radioButtonClientMLLP.Size = new System.Drawing.Size(60, 20);
+            this.radioButtonClientMLLP.Size = new System.Drawing.Size(53, 17);
             this.radioButtonClientMLLP.TabIndex = 2;
             this.radioButtonClientMLLP.Text = "MLLP";
             this.radioButtonClientMLLP.UseVisualStyleBackColor = true;
+            this.radioButtonClientMLLP.CheckedChanged += new System.EventHandler(this.radioButtonClientMLLP_CheckedChanged);
             // 
             // radioButtonClientMSMQ
             // 
@@ -559,28 +613,28 @@
             this.radioButtonClientMSMQ.Checked = true;
             this.radioButtonClientMSMQ.Location = new System.Drawing.Point(7, 38);
             this.radioButtonClientMSMQ.Name = "radioButtonClientMSMQ";
-            this.radioButtonClientMSMQ.Size = new System.Drawing.Size(65, 20);
+            this.radioButtonClientMSMQ.Size = new System.Drawing.Size(58, 17);
             this.radioButtonClientMSMQ.TabIndex = 1;
             this.radioButtonClientMSMQ.TabStop = true;
             this.radioButtonClientMSMQ.Text = "MSMQ";
             this.radioButtonClientMSMQ.UseVisualStyleBackColor = true;
+            this.radioButtonClientMSMQ.CheckedChanged += new System.EventHandler(this.radioButtonClientMSMQ_CheckedChanged);
             // 
             // radioButtonClientFiles
             // 
             this.radioButtonClientFiles.AutoSize = true;
             this.radioButtonClientFiles.Location = new System.Drawing.Point(7, 14);
             this.radioButtonClientFiles.Name = "radioButtonClientFiles";
-            this.radioButtonClientFiles.Size = new System.Drawing.Size(48, 20);
+            this.radioButtonClientFiles.Size = new System.Drawing.Size(41, 17);
             this.radioButtonClientFiles.TabIndex = 0;
             this.radioButtonClientFiles.Text = "File";
             this.radioButtonClientFiles.UseVisualStyleBackColor = true;
+            this.radioButtonClientFiles.CheckedChanged += new System.EventHandler(this.radioButtonClientFiles_CheckedChanged);
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.radioButtonGenFromFolder);
             this.groupBox3.Controls.Add(this.btnOpenDialog);
             this.groupBox3.Controls.Add(this.textBoxSourcePath);
-            this.groupBox3.Controls.Add(this.radioButtonGenFromFile);
             this.groupBox3.Location = new System.Drawing.Point(7, 86);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(530, 45);
@@ -588,45 +642,25 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Source";
             // 
-            // radioButtonGenFromFolder
-            // 
-            this.radioButtonGenFromFolder.AutoSize = true;
-            this.radioButtonGenFromFolder.Location = new System.Drawing.Point(53, 15);
-            this.radioButtonGenFromFolder.Name = "radioButtonGenFromFolder";
-            this.radioButtonGenFromFolder.Size = new System.Drawing.Size(61, 20);
-            this.radioButtonGenFromFolder.TabIndex = 9;
-            this.radioButtonGenFromFolder.Text = "Folder";
-            this.radioButtonGenFromFolder.UseVisualStyleBackColor = true;
-            this.radioButtonGenFromFolder.CheckedChanged += new System.EventHandler(this.radioButtonGenFromFolder_CheckedChanged);
-            // 
             // btnOpenDialog
             // 
-            this.btnOpenDialog.Location = new System.Drawing.Point(489, 15);
+            this.btnOpenDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpenDialog.Location = new System.Drawing.Point(462, 15);
             this.btnOpenDialog.Name = "btnOpenDialog";
-            this.btnOpenDialog.Size = new System.Drawing.Size(35, 23);
+            this.btnOpenDialog.Size = new System.Drawing.Size(62, 23);
             this.btnOpenDialog.TabIndex = 11;
-            this.btnOpenDialog.Text = "<";
+            this.btnOpenDialog.Text = "Select";
             this.btnOpenDialog.UseVisualStyleBackColor = true;
             this.btnOpenDialog.Click += new System.EventHandler(this.btnOpenFileDialog_Click);
             // 
             // textBoxSourcePath
             // 
-            this.textBoxSourcePath.Location = new System.Drawing.Point(113, 16);
+            this.textBoxSourcePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSourcePath.Location = new System.Drawing.Point(6, 16);
             this.textBoxSourcePath.Name = "textBoxSourcePath";
-            this.textBoxSourcePath.Size = new System.Drawing.Size(370, 20);
+            this.textBoxSourcePath.Size = new System.Drawing.Size(450, 20);
             this.textBoxSourcePath.TabIndex = 10;
-            // 
-            // radioButtonGenFromFile
-            // 
-            this.radioButtonGenFromFile.AutoSize = true;
-            this.radioButtonGenFromFile.Checked = true;
-            this.radioButtonGenFromFile.Location = new System.Drawing.Point(6, 16);
-            this.radioButtonGenFromFile.Name = "radioButtonGenFromFile";
-            this.radioButtonGenFromFile.Size = new System.Drawing.Size(48, 20);
-            this.radioButtonGenFromFile.TabIndex = 8;
-            this.radioButtonGenFromFile.TabStop = true;
-            this.radioButtonGenFromFile.Text = "File";
-            this.radioButtonGenFromFile.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -638,7 +672,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(577, 438);
+            this.tabPage2.Size = new System.Drawing.Size(668, 438);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Automated Testing";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -657,7 +691,7 @@
             this.dataGridViewATLogs.ContextMenuStrip = this.contextMenuStripATLogs;
             this.dataGridViewATLogs.Location = new System.Drawing.Point(4, 246);
             this.dataGridViewATLogs.Name = "dataGridViewATLogs";
-            this.dataGridViewATLogs.Size = new System.Drawing.Size(568, 186);
+            this.dataGridViewATLogs.Size = new System.Drawing.Size(658, 186);
             this.dataGridViewATLogs.TabIndex = 9;
             // 
             // dataGridViewTextBoxColumn1
@@ -666,7 +700,7 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Timestamp";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 92;
+            this.dataGridViewTextBoxColumn1.Width = 81;
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -674,7 +708,7 @@
             this.dataGridViewTextBoxColumn2.HeaderText = "Type";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 65;
+            this.dataGridViewTextBoxColumn2.Width = 54;
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -695,19 +729,19 @@
             this.contextMenuStripATLogs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearToolStripMenuItem});
             this.contextMenuStripATLogs.Name = "contextMenuStripATLogs";
-            this.contextMenuStripATLogs.Size = new System.Drawing.Size(124, 34);
+            this.contextMenuStripATLogs.Size = new System.Drawing.Size(102, 26);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(123, 30);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // btnRunTests
             // 
             this.btnRunTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRunTests.Location = new System.Drawing.Point(496, 27);
+            this.btnRunTests.Location = new System.Drawing.Point(588, 28);
             this.btnRunTests.Name = "btnRunTests";
             this.btnRunTests.Size = new System.Drawing.Size(75, 23);
             this.btnRunTests.TabIndex = 8;
@@ -721,7 +755,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTestSpecPath.Location = new System.Drawing.Point(6, 30);
             this.textBoxTestSpecPath.Name = "textBoxTestSpecPath";
-            this.textBoxTestSpecPath.Size = new System.Drawing.Size(484, 20);
+            this.textBoxTestSpecPath.Size = new System.Drawing.Size(576, 20);
             this.textBoxTestSpecPath.TabIndex = 7;
             this.textBoxTestSpecPath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBoxTestSpecPath_MouseClick);
             this.textBoxTestSpecPath.TextChanged += new System.EventHandler(this.textBoxTestSpecPath_TextChanged);
@@ -733,7 +767,7 @@
             this.treeView1.ContextMenuStrip = this.contextMenuStripTreeNodeOptions;
             this.treeView1.Location = new System.Drawing.Point(6, 56);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(565, 184);
+            this.treeView1.Size = new System.Drawing.Size(656, 184);
             this.treeView1.TabIndex = 2;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -746,33 +780,33 @@
             this.deleteToolStripMenuItem,
             this.expandAllNodesToolStripMenuItem});
             this.contextMenuStripTreeNodeOptions.Name = "contextMenuStripTreeNodeOptions";
-            this.contextMenuStripTreeNodeOptions.Size = new System.Drawing.Size(219, 124);
+            this.contextMenuStripTreeNodeOptions.Size = new System.Drawing.Size(163, 92);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // modifyToolStripMenuItem
             // 
             this.modifyToolStripMenuItem.Name = "modifyToolStripMenuItem";
-            this.modifyToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.modifyToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.modifyToolStripMenuItem.Text = "Modify";
             this.modifyToolStripMenuItem.Click += new System.EventHandler(this.modifyToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // expandAllNodesToolStripMenuItem
             // 
             this.expandAllNodesToolStripMenuItem.Name = "expandAllNodesToolStripMenuItem";
-            this.expandAllNodesToolStripMenuItem.Size = new System.Drawing.Size(218, 30);
+            this.expandAllNodesToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.expandAllNodesToolStripMenuItem.Text = "Expand all nodes";
             this.expandAllNodesToolStripMenuItem.Click += new System.EventHandler(this.expandAllNodesToolStripMenuItem_Click);
             // 
@@ -783,7 +817,7 @@
             this.toolStripMenuItem1});
             this.menuStripTestToolbar.Location = new System.Drawing.Point(3, 3);
             this.menuStripTestToolbar.Name = "menuStripTestToolbar";
-            this.menuStripTestToolbar.Size = new System.Drawing.Size(571, 33);
+            this.menuStripTestToolbar.Size = new System.Drawing.Size(662, 24);
             this.menuStripTestToolbar.TabIndex = 0;
             this.menuStripTestToolbar.Text = "menuStrip1";
             this.menuStripTestToolbar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -796,37 +830,190 @@
             this.saveTestToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(50, 29);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "File";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openTestToolStripMenuItem_Click);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newTestToolStripMenuItem_Click);
             // 
             // saveTestToolStripMenuItem
             // 
             this.saveTestToolStripMenuItem.Name = "saveTestToolStripMenuItem";
-            this.saveTestToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.saveTestToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.saveTestToolStripMenuItem.Text = "Save";
             this.saveTestToolStripMenuItem.Click += new System.EventHandler(this.saveTestToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(210, 30);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.btnGenerateExpOutputs);
+            this.tabPage5.Controls.Add(this.comboBoxDllFolder);
+            this.tabPage5.Controls.Add(this.label10);
+            this.tabPage5.Controls.Add(this.btnBrowseBTMFile);
+            this.tabPage5.Controls.Add(this.textBoxMapFolder);
+            this.tabPage5.Controls.Add(this.label14);
+            this.tabPage5.Controls.Add(this.dataGridViewMapTestResult);
+            this.tabPage5.Controls.Add(this.btnRunMapTests);
+            this.tabPage5.Controls.Add(this.menuStripMapTest);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(668, 438);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "Map Testing";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // btnGenerateExpOutputs
+            // 
+            this.btnGenerateExpOutputs.Location = new System.Drawing.Point(231, 56);
+            this.btnGenerateExpOutputs.Name = "btnGenerateExpOutputs";
+            this.btnGenerateExpOutputs.Size = new System.Drawing.Size(177, 23);
+            this.btnGenerateExpOutputs.TabIndex = 23;
+            this.btnGenerateExpOutputs.Text = "Generate Expected outputs";
+            this.btnGenerateExpOutputs.UseVisualStyleBackColor = true;
+            this.btnGenerateExpOutputs.Click += new System.EventHandler(this.btnGenerateExpOutputs_Click);
+            // 
+            // comboBoxDllFolder
+            // 
+            this.comboBoxDllFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDllFolder.FormattingEnabled = true;
+            this.comboBoxDllFolder.Items.AddRange(new object[] {
+            "Debug",
+            "Release"});
+            this.comboBoxDllFolder.Location = new System.Drawing.Point(77, 53);
+            this.comboBoxDllFolder.Name = "comboBoxDllFolder";
+            this.comboBoxDllFolder.Size = new System.Drawing.Size(67, 21);
+            this.comboBoxDllFolder.TabIndex = 22;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(8, 61);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(54, 13);
+            this.label10.TabIndex = 21;
+            this.label10.Text = "Dll Folder:";
+            // 
+            // btnBrowseBTMFile
+            // 
+            this.btnBrowseBTMFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseBTMFile.Location = new System.Drawing.Point(587, 30);
+            this.btnBrowseBTMFile.Name = "btnBrowseBTMFile";
+            this.btnBrowseBTMFile.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowseBTMFile.TabIndex = 19;
+            this.btnBrowseBTMFile.Text = "Browse";
+            this.btnBrowseBTMFile.UseVisualStyleBackColor = true;
+            this.btnBrowseBTMFile.Click += new System.EventHandler(this.btnBrowseBTMFile_Click);
+            // 
+            // textBoxMapFolder
+            // 
+            this.textBoxMapFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxMapFolder.Location = new System.Drawing.Point(77, 30);
+            this.textBoxMapFolder.Name = "textBoxMapFolder";
+            this.textBoxMapFolder.Size = new System.Drawing.Size(504, 20);
+            this.textBoxMapFolder.TabIndex = 18;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 35);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(63, 13);
+            this.label14.TabIndex = 17;
+            this.label14.Text = "Map Folder:";
+            // 
+            // dataGridViewMapTestResult
+            // 
+            this.dataGridViewMapTestResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewMapTestResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewMapTestResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.TestStatus,
+            this.TestMsg,
+            this.TestMap,
+            this.TestInput,
+            this.TestExpOutput,
+            this.TestObsOutput});
+            this.dataGridViewMapTestResult.Location = new System.Drawing.Point(8, 91);
+            this.dataGridViewMapTestResult.Name = "dataGridViewMapTestResult";
+            this.dataGridViewMapTestResult.Size = new System.Drawing.Size(654, 344);
+            this.dataGridViewMapTestResult.TabIndex = 16;
+            // 
+            // btnRunMapTests
+            // 
+            this.btnRunMapTests.Location = new System.Drawing.Point(150, 56);
+            this.btnRunMapTests.Name = "btnRunMapTests";
+            this.btnRunMapTests.Size = new System.Drawing.Size(75, 23);
+            this.btnRunMapTests.TabIndex = 15;
+            this.btnRunMapTests.Text = "Run Tests";
+            this.btnRunMapTests.UseVisualStyleBackColor = true;
+            this.btnRunMapTests.Click += new System.EventHandler(this.btnRunMapTests_Click);
+            // 
+            // menuStripMapTest
+            // 
+            this.menuStripMapTest.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.menuStripMapTest.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2});
+            this.menuStripMapTest.Location = new System.Drawing.Point(3, 3);
+            this.menuStripMapTest.Name = "menuStripMapTest";
+            this.menuStripMapTest.Size = new System.Drawing.Size(662, 24);
+            this.menuStripMapTest.TabIndex = 14;
+            this.menuStripMapTest.Text = "menuStrip1";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem6});
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(37, 20);
+            this.toolStripMenuItem2.Text = "File";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(114, 22);
+            this.toolStripMenuItem3.Text = "Open";
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(114, 22);
+            this.toolStripMenuItem4.Text = "New";
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(114, 22);
+            this.toolStripMenuItem5.Text = "Save";
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(114, 22);
+            this.toolStripMenuItem6.Text = "Save As";
             // 
             // openTestSuiteToolStripMenuItem
             // 
@@ -848,16 +1035,52 @@
             this.openTestToolStripMenuItem.Text = "Open";
             this.openTestToolStripMenuItem.Click += new System.EventHandler(this.openTestToolStripMenuItem_Click);
             // 
+            // TestStatus
+            // 
+            this.TestStatus.HeaderText = "Status";
+            this.TestStatus.Name = "TestStatus";
+            this.TestStatus.ReadOnly = true;
+            // 
+            // TestMsg
+            // 
+            this.TestMsg.HeaderText = "Message";
+            this.TestMsg.Name = "TestMsg";
+            this.TestMsg.ReadOnly = true;
+            // 
+            // TestMap
+            // 
+            this.TestMap.HeaderText = "Map";
+            this.TestMap.Name = "TestMap";
+            this.TestMap.ReadOnly = true;
+            // 
+            // TestInput
+            // 
+            this.TestInput.HeaderText = "Input";
+            this.TestInput.Name = "TestInput";
+            this.TestInput.ReadOnly = true;
+            // 
+            // TestExpOutput
+            // 
+            this.TestExpOutput.HeaderText = "Expected Output";
+            this.TestExpOutput.Name = "TestExpOutput";
+            this.TestExpOutput.ReadOnly = true;
+            // 
+            // TestObsOutput
+            // 
+            this.TestObsOutput.HeaderText = "Observed Output";
+            this.TestObsOutput.Name = "TestObsOutput";
+            this.TestObsOutput.ReadOnly = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(588, 472);
+            this.ClientSize = new System.Drawing.Size(679, 472);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripTestToolbar;
             this.Name = "MainForm";
-            this.Text = "BizTester 4.3.0";
+            this.Text = "BizTester 5.0.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStripMT.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -879,6 +1102,11 @@
             this.contextMenuStripTreeNodeOptions.ResumeLayout(false);
             this.menuStripTestToolbar.ResumeLayout(false);
             this.menuStripTestToolbar.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMapTestResult)).EndInit();
+            this.menuStripMapTest.ResumeLayout(false);
+            this.menuStripMapTest.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -890,10 +1118,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.DataGridView dataGridViewMT;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Timestamp;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Data;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.GroupBox groupBoxServerControls;
@@ -923,7 +1147,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnOpenDialog;
         private System.Windows.Forms.TextBox textBoxSourcePath;
-        private System.Windows.Forms.RadioButton radioButtonGenFromFile;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ToolStripMenuItem openTestSuiteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newTestToolStripMenuItem;
@@ -957,8 +1180,33 @@
         private System.Windows.Forms.ComboBox comboBoxAckCode;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
-        private System.Windows.Forms.RadioButton radioButtonGenFromFolder;
         private System.Windows.Forms.ToolStripMenuItem createReportToolStripMenuItem;
+        private System.Windows.Forms.Button btnColumns;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Timestamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Data;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.MenuStrip menuStripMapTest;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.DataGridView dataGridViewMapTestResult;
+        private System.Windows.Forms.Button btnBrowseBTMFile;
+        private System.Windows.Forms.TextBox textBoxMapFolder;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btnRunMapTests;
+        private System.Windows.Forms.ComboBox comboBoxDllFolder;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnGenerateExpOutputs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestMsg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestMap;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestInput;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestExpOutput;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TestObsOutput;
     }
 }
 

@@ -1,5 +1,6 @@
-﻿using Biztalk.Libs;
-using BizTester.Libs;
+﻿using Biztalk.Helpers;
+using BizTester.Helpers;
+using BizTester.Helpers;
 using System;
 using System.IO;
 using System.Net;

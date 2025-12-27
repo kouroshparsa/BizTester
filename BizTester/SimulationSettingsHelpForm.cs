@@ -31,8 +31,8 @@ namespace BizTester
                 table.Rows.Add(row);
             }
             dataGridViewHelp.DataSource = table;
-            dataGridViewHelp.AutoResizeColumns(
-                DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+            dataGridViewHelp.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
 
         }
     }

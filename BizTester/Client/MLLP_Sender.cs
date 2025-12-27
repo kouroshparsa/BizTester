@@ -1,4 +1,4 @@
-﻿using BizTester.Libs;
+﻿using BizTester.Helpers;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -88,7 +88,7 @@ namespace BizTester.Client
                    
                 try
                 {
-                    string res = StreamHelper.ReadStream(stream);
+                    string res = StreamHelper.ReadMLLPStream(stream);
                     logger.Info("Received acknowledgement.", res);
                 }
                 catch (TimeoutException)
