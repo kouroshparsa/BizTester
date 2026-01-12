@@ -10,8 +10,10 @@ using BizTester.Models;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Drawing;
+using System.Threading.Tasks;
+using BizTester.reg_report;
+using System.Text;
 
 namespace BizTester
 {
@@ -25,7 +27,8 @@ namespace BizTester
         private string testPath = null;
         private bool isTestChanged = false;
         private string[] selectedClientFiles;
-        private HashSet<string> columns = new HashSet<string>();
+        private List<string> columns = new List<string>();
+        private HashSet<string> reg_rep_ignore_list = new HashSet<string>() { "MSH-7"};
 
         public MainForm()
         {
@@ -61,9 +64,10 @@ namespace BizTester
             columns.Add("MSH-9.1");
             columns.Add("MSH-9.2");
             columns.Add("MSH-10");
+            columns.Add("MSA-2");
             UpdateColumns();
+            UpdateReGRepIgnoreList();
 
-            
             try
             {
                 this.simSpec.LoadSettingsFromFile();
@@ -78,6 +82,7 @@ namespace BizTester
         {
             if (btnStart.Text.Contains("Stop"))// stopping
             {
+                progressBarServer.Style = ProgressBarStyle.Blocks;
                 btnStart.Text = "Start Listening";
                 listener.Stop();
                 
@@ -89,6 +94,7 @@ namespace BizTester
             }
             else// starting
             {
+                progressBarServer.Style = ProgressBarStyle.Marquee;
                 foreach (Control con in groupBoxServerControls.Controls)
                 {
                     if (con.Name != "btnStart")
@@ -151,6 +157,7 @@ namespace BizTester
                 return;
             }
 
+            progressBarClient.Style = ProgressBarStyle.Marquee;
             int count = 1;
             string data = null;
             if(!int.TryParse(textBoxClientCount.Text, out count))
@@ -200,6 +207,7 @@ namespace BizTester
             {
                 logger.Error(ex.Message);
             }
+            progressBarClient.Style = ProgressBarStyle.Blocks;
         }
         
 
@@ -222,6 +230,13 @@ namespace BizTester
             using (OpenFileDialog of = new OpenFileDialog())
             {
                 of.Multiselect = true;
+                try
+                {
+                    if (selectedClientFiles.Length > 0)
+                        of.InitialDirectory = Path.GetDirectoryName(selectedClientFiles[0]);
+                }
+                catch (Exception) { }
+
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     selectedClientFiles = of.FileNames;
@@ -567,35 +582,33 @@ namespace BizTester
 
         private void UpdateColumns()
         {
-            foreach (string col in columns)
+            int i = 4;
+            while(i<dataGridViewMT.Columns.Count)
             {
-                if (!dataGridViewMT.Columns.Contains(col))
+                if(i >= columns.Count)
                 {
-                    var column = new DataGridViewTextBoxColumn
-                    {
-                        Name = col,
-                        HeaderText = col,
-                        Width = 100
-                    };
-
-                    dataGridViewMT.Columns.Add(column);
+                    dataGridViewMT.Columns.RemoveAt(i);
+                }
+                else if (!dataGridViewMT.Columns[i].HeaderText.Equals(columns[i]))
+                {
+                    dataGridViewMT.Columns.RemoveAt(i);
+                }else
+                {
+                    i++;
                 }
             }
 
-            var ColsToDelete = new List<DataGridViewColumn>();
-            int ind = 0;
-            foreach (DataGridViewColumn col in dataGridViewMT.Columns)
+            foreach(string col in columns)
             {
-                if (ind > 3 && !columns.Contains(col.HeaderText)){
-                    ColsToDelete.Add(col);
-                }
-                ind++;
-            }
+                var column = new DataGridViewTextBoxColumn
+                {
+                    Name = col,
+                    HeaderText = col,
+                    Width = 100
+                };
 
-            foreach (DataGridViewColumn col in ColsToDelete) {
-                dataGridViewMT.Columns.Remove(col);
+                dataGridViewMT.Columns.Add(column);
             }
-
         }
 
         private string GetMapDllPath(string mapDir)
@@ -675,7 +688,7 @@ namespace BizTester
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + ex.StackTrace);
             }
             
 
@@ -772,5 +785,149 @@ namespace BizTester
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void compareSideBySideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string testExpOutput = dataGridViewMapTestResult.CurrentRow?
+                    .Cells["TestExpOutput"].Value?.ToString();
+            string testObsOutput = dataGridViewMapTestResult.CurrentRow?
+                .Cells["TestObsOutput"].Value?.ToString();
+            if(testExpOutput!=null && testObsOutput != null)
+            {
+                if(!File.Exists(testExpOutput))
+                {
+                    MessageBox.Show($"Error: The file is missing: {testExpOutput}");
+                    return;
+                }
+
+                if (!File.Exists(testObsOutput))
+                {
+                    MessageBox.Show($"Error: The file is missing: {TestObsOutput}");
+                    return;
+                }
+                WinMergeDiff.CompareWithWinMerge(testExpOutput, testObsOutput);
+            }
+            
+        }
+
+        private void btnEditRegRepIgnoreList_Click(object sender, EventArgs e)
+        {
+            var form = new FormRegRepIgnoreList(reg_rep_ignore_list);
+            form.ShowDialog();
+            reg_rep_ignore_list = form.fields;
+            UpdateReGRepIgnoreList();
+        }
+
+        private void UpdateReGRepIgnoreList()
+        {
+            listBoxRegressionReportIgnoreList.Items.Clear();
+            foreach (string item in reg_rep_ignore_list)
+                listBoxRegressionReportIgnoreList.Items.Add(item);
+        }
+
+        private async void btnGenerateReport_Click(object sender, EventArgs e)
+        {
+            textBoxRegressionReportStatus.Text = "";
+            if (string.IsNullOrEmpty(textBoxOldFolder.Text))
+            {
+                MessageBox.Show("Please enter the folder older data.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(textBoxNewFolder.Text))
+            {
+                MessageBox.Show("Please enter the folder newer data.");
+                return;
+            }
+
+            string oldFolder = textBoxOldFolder.Text;
+            string newFolder = textBoxNewFolder.Text;
+            if (!Directory.Exists(oldFolder))
+            {
+                MessageBox.Show("Invalid older folder path.");
+                return;
+            }
+
+            if (!Directory.Exists(newFolder))
+            {
+                MessageBox.Show("Invalid new folder path.");
+                return;
+            }
+
+            // Save the Excel file
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Pdf files (*.pdf)|*.pdf",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    await GenerateReport(oldFolder, newFolder, saveFileDialog.FileName, reg_rep_ignore_list);
+                   
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to generate report. {ex.Message} {ex.StackTrace}", "Error");
+                }
+            }
+
+        }
+
+        private async Task GenerateReport(string oldFolder, string newFolder, string pdfPath, HashSet<string>ignoreList)
+        {
+            progressBarReport.Style = ProgressBarStyle.Marquee;
+            var errors = new HashSet<string>();
+            ReportGenerator.CreatePdfReport(pdfPath, oldFolder, newFolder, ignoreList, errors);
+            var sb = new StringBuilder();
+            foreach(string err in errors)
+            {
+                sb.Append(err);
+            }
+            sb.Append($"Report was created Successfully: {pdfPath}");
+            textBoxRegressionReportStatus.Text = sb.ToString(); ;
+            progressBarReport.Style = ProgressBarStyle.Blocks;
+        }
+
+        private void btnOldFolderOpenDialog_Click(object sender, EventArgs e)
+        {
+            string folder = SelectFolder();
+            if (folder != null)
+            {
+                textBoxOldFolder.Text = folder;
+            }
+        }
+
+        private void btnNewFolderOpenDialog_Click(object sender, EventArgs e)
+        {
+            string folder = SelectFolder();
+            if (folder != null)
+                textBoxNewFolder.Text = folder;
+        }
+
+        public static string SelectFolder()
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.ValidateNames = false;
+                dialog.CheckFileExists = false;
+                dialog.CheckPathExists = true;
+
+                dialog.FileName = "Select Folder";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = Path.GetDirectoryName(dialog.FileName);
+                    return folderPath;
+                }
+            }
+            return null;
+        }
+
+
+
     }
 }

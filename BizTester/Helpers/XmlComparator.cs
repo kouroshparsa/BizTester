@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using System.Text;
 
 namespace BizTester.Helpers
 {
-    class XmlComparator
+    public class XmlComparator
     {
         public static void FilterOutIgnoreList(List<string>diffs, string ignoreListPath)
         {
@@ -37,9 +38,33 @@ namespace BizTester.Helpers
 
             return children;
         }
-        
+
+        private static int FindElementIndex(XmlElement element)
+        {
+            XmlNode parentNode = element.ParentNode;
+            if (parentNode is XmlDocument)
+            {
+                return 1;
+            }
+            XmlElement parent = (XmlElement)parentNode;
+            int index = 1;
+            foreach (XmlNode candidate in parent.ChildNodes)
+            {
+                if (candidate is XmlElement && candidate.Name == element.Name)
+                {
+                    if (candidate == element)
+                    {
+                        return index;
+                    }
+                    index++;
+                }
+            }
+            throw new ArgumentException("Couldn't find element within parent");
+        }
+
         private static void CompareNodes(XmlNode node1, XmlNode node2, string xpath, List<string> diffs)
         {
+
             if (node1 == null && node2 == null)
                 return;
 
@@ -120,18 +145,21 @@ namespace BizTester.Helpers
         }
 
 
-        public static List<string> CompareXmlFiles(string file1, string file2)
+        public static List<string> CompareXmls(XmlDocument doc1, XmlDocument doc2)
         {
-            var doc1 = new XmlDocument();
-            var doc2 = new XmlDocument();
-
-            doc1.Load(file1);
-            doc2.Load(file2);
-
             var diffs = new List<string>();
 
             CompareNodes(doc1.DocumentElement, doc2.DocumentElement, "/" + doc1.DocumentElement.Name, diffs);
             return diffs;
+        }
+        public static List<string> CompareXmlFiles(string file1, string file2)
+        {
+            var doc1 = new XmlDocument();
+            var doc2 = new XmlDocument();
+            doc1.Load(file1);
+            doc2.Load(file2);
+            return CompareXmls(doc1, doc2);
+            
         }
 
     }

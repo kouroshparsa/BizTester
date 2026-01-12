@@ -24,6 +24,11 @@ namespace BizTester.Client
         }
         private void SendMessage(string data)
         {
+            string res = HL7Helper.SanitizeHl7(data);
+            if (!string.IsNullOrEmpty(res))
+            {
+                logger.Warn($"The HL7 message seems to be malformatted: {res}", data);
+            }
             var messageToSend = new Message();
             try
             {

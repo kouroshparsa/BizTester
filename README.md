@@ -97,6 +97,15 @@ By adding it to the ignore list, you can omit comparison of that value:
 /ns1:ORU_MyApp_25_GLO_DEF/MSH[1]/MSH.7_DateTimeOfMessage
 ```
 
+If you have WinMerge installed, you can right click on the failed row and click on "compare side by side" to do a comparison with that tool.
+
+
+# Creating Regression Reports
+The regression report tab allows you to generate a regression report given that you specify 2 hl7 folders. It will parse the hl7 messsages inside these 2 folders and creates parses and compares them based on message id matches and generates a pdf report.
+![Report](Documentation/Images/regression-report.png)
+
+It also identifies missing or new data which can be result of a Biztalk filtering change.
+
 
 # Development
 Please feel free to send feature requests, ask questions or report issues on Github.

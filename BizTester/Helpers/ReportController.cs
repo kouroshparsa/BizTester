@@ -12,6 +12,10 @@ namespace BizTester.Helpers
         public static void Create(DataGridView dataGridViewMT)
         {
             var report = new Report(dataGridViewMT);
+            if (!string.IsNullOrEmpty(report.error))
+            {
+                MessageBox.Show(report.error, "Warning");
+            }
             Excel.Application excelApp = new Excel.Application();
             excelApp.Workbooks.Add();
             Excel._Worksheet worksheet = excelApp.ActiveSheet;

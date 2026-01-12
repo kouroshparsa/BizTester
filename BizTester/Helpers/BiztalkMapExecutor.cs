@@ -38,12 +38,98 @@ namespace BizTester.Helpers
             return assemblies;
         }
 
+        private static bool InheritsFromTransformBase(Type t)
+        {
+            while (t != null)
+            {
+                if (t.FullName == "Microsoft.XLANGs.BaseTypes.TransformBase")
+                    return true;
+                t = t.BaseType;
+            }
+            return false;
+        }
         public static void ApplyBizTalkMap(string inputXmlPath, string mapDllPath, string outputPath, string mapPath, string dllFolder)
         {
             var assemblies = GetHeplerAssemblies(mapPath, dllFolder);
             string inputXml = File.ReadAllText(inputXmlPath);
 
+            var xdoc = XDocument.Parse(inputXml);
+            var root = xdoc.Root;
+
+            string inputRootLocal = root.Name.LocalName;
+            string inputRootNs = root.Name.NamespaceName;
+
+            // Load Map Assembly
+            var asm = Assembly.LoadFrom(mapDllPath);
+
+            // Find all map types by inheritance *name*, not type identity
+            var mapTypes = asm.GetTypes()
+                .Where(t => !t.IsAbstract && InheritsFromTransformBase(t))
+                .ToList();
+
+            Type selectedMapType = null;
+            string selectedXslt = null;
+
+            foreach (var mapType in mapTypes)
+            {
+                // Create instance WITHOUT casting
+                var mapInstance = Activator.CreateInstance(mapType);
+
+                // Read XmlContent via reflection
+                var xmlContentProp = mapType.GetProperty(
+                    "XmlContent",
+                    BindingFlags.Public | BindingFlags.Instance
+                );
+
+                if (xmlContentProp == null)
+                    continue;
+
+                string xslt = xmlContentProp.GetValue(mapInstance) as string;
+
+                if (string.IsNullOrWhiteSpace(xslt))
+                    continue;
+
+                // Parse XSLT
+                var xsltDoc = XDocument.Parse(xslt);
+
+                var matches = xsltDoc
+                    .Descendants()
+                    .Where(e =>
+                        e.Name.LocalName == "template" &&
+                        e.Attribute("match") != null
+                    );
+
+                foreach (var match in matches)
+                {
+                    var matchValue = match.Attribute("match")?.Value;
+
+                    if (!string.IsNullOrEmpty(matchValue) &&
+                        matchValue.Contains(inputRootLocal))
+                    {
+                        selectedMapType = mapType;
+                        selectedXslt = xslt;
+
+                        Console.WriteLine($"Selected Map: {mapType.FullName}");
+                        break;
+                    }
+                }
+
+                if (selectedMapType != null)
+                    break;
+            }
+
+            if (selectedMapType == null || selectedXslt == null)
+            {
+                throw new Exception(
+                    $"No BizTalk map found that matches input XML root node.\n" +
+                    $"inputXmlPath={inputXmlPath}\n" +
+                    $"mapDllPath={mapDllPath}\n" +
+                    $"mapPath={mapPath}\n" +
+                    $"dllFolder={dllFolder}"
+                );
+            }
             // Load input XML to detect root node + namespace
+            /*
             var xdoc = XDocument.Parse(inputXml);
             var root = xdoc.Root;
 
@@ -55,16 +141,14 @@ namespace BizTester.Helpers
 
             // Find all TransformBase implementations
             var mapTypes = asm.GetTypes()
-                              .Where(t => typeof(TransformBase).IsAssignableFrom(t) && !t.IsAbstract)
-                              .ToList();
-
+                .Where(t => !t.IsAbstract && InheritsFromTransformBase(t))
+                .ToList();
             TransformBase selectedMap = null;
 
             foreach (var mapType in mapTypes)
             {
                 TransformBase mapInstance = (TransformBase)Activator.CreateInstance(mapType);
-
-                string xslt = mapInstance.XmlContent;  // Extract XSLT text
+               string xslt = mapInstance.XmlContent;  // Extract XSLT text
 
                 if (string.IsNullOrWhiteSpace(xslt))
                     continue;
@@ -128,12 +212,18 @@ namespace BizTester.Helpers
                 Directory.CreateDirectory(directory);
             }
 
+            var xmlSettings = transform.OutputSettings.Clone();
+            xmlSettings.Indent = true;
+            xmlSettings.IndentChars = "  ";   // or "\t"
+            xmlSettings.NewLineChars = Environment.NewLine;
+            xmlSettings.NewLineHandling = NewLineHandling.Replace;
+
             using (var inputReader = XmlReader.Create(inputXmlPath))
-            using (var writer = XmlWriter.Create(outputPath, transform.OutputSettings))
+            using (var writer = XmlWriter.Create(outputPath, xmlSettings))
             {
                 transform.Transform(inputReader, args, writer);
             }
-            
+            */
         }
 
     }

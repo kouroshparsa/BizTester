@@ -1,15 +1,11 @@
 ﻿using BizTester.Client;
 using BizTester.Models;
 using BizTester.Server;
-using BizTester.Simulation;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BizTester.Helpers
@@ -23,7 +19,7 @@ namespace BizTester.Helpers
         public TestRunner(TestSpec testSpec, DataGridView dataGridViewATLogs)
         {
             this.testSpec = testSpec;
-            var columns = new HashSet<string>();
+            var columns = new List<string>();
             logger = new CustomLogger(dataGridViewATLogs, columns);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace BizTester.Helpers
@@ -7,14 +8,14 @@ namespace BizTester.Helpers
     public class CustomLogger
     {
         internal DataGridView dataGridView;
-        internal HashSet<string> columns;
+        internal List<string> columns;
         private enum LogTypes
         {
             INFO,
             WARN,
             ERROR
         }
-        public CustomLogger(DataGridView view, HashSet<string> columns)
+        public CustomLogger(DataGridView view, List<string> columns)
         {
             this.dataGridView = view;
             this.columns = columns;
@@ -51,10 +52,47 @@ namespace BizTester.Helpers
                 }
                 catch (Exception) { }
 
-                dataGridView.Rows.Add(parameters.ToArray());
+                int rowIndex = dataGridView.Rows.Add(parameters.ToArray());
+                try
+                {
+                    ColorColumns(type, rowIndex, data);
+                }
+                catch (Exception) { }
             }
         }
 
+        private void ColorColumns(string type, int rowIndex, string data)
+        {
+            
+            if (type.Equals("ERROR"))
+            {
+                dataGridView.Rows[rowIndex]
+                    .Cells["Type"]
+                    .Style.BackColor = Color.Red;
+            }
+            else if (type.Equals("WARN"))
+            {
+                dataGridView.Rows[rowIndex]
+                    .Cells["Type"]
+                    .Style.BackColor = Color.Orange;
+            }
+
+            // color colorable columns:
+            if (!string.IsNullOrEmpty(data))
+            {
+                foreach (string col in new string[] { "MSH-10", "MSA-2" })
+                {
+                    if (columns.Contains(col))
+                    {
+                        Color color = ColorFromMessageId.FromMessageId(HL7Helper.GetHl7Value(data, col));
+                        dataGridView.Rows[rowIndex]
+                            .Cells[col]
+                            .Style.BackColor = color;
+                    }
+                }
+            }
+            
+        }
         public void Info(string message, string data=null)
         {
             if (this.dataGridView == null)

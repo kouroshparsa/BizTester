@@ -199,7 +199,7 @@ namespace BizTester.Server
             }
             catch(Exception ex)
             {
-                logger.Error($"Failed to create achnowledgement for the message. {ex.Message}", msg);
+                logger.Error($"Failed to create acknowledgement for the message. {ex.Message}", msg);
                 return;
             }
 

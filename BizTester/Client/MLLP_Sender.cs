@@ -45,7 +45,11 @@ namespace BizTester.Client
         }
         private void SendMessage(string data)
         {
-
+            string err = HL7Helper.SanitizeHl7(data);
+            if (!string.IsNullOrEmpty(err))
+            {
+                logger.Warn($"The HL7 message seems to be malformatted: {err}", data);
+            }
             var tcpClient = new TcpClient();
             try
             {

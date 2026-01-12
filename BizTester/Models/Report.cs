@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HL7.Dotnetcore;
 using System.Globalization;
 
 namespace BizTester.Models
@@ -17,13 +14,14 @@ namespace BizTester.Models
     }
     public class Report
     {
-
+        public string error { get; set; }
         internal Dictionary<string, ReportMsg> messages{ get; set; } // key: message control id, value: ?
 
         public Report(DataGridView dataGridViewMT)
         {
             const string format = "yyyy-MM-dd HH:mm:ss.fff";
             messages = new Dictionary<string, ReportMsg>();
+            var errors = new StringBuilder();
             for (int i = 0; i < dataGridViewMT.Rows.Count; i++)
             {
                 DataGridViewCell timestamp_cell = dataGridViewMT.Rows[i].Cells[0];
@@ -44,7 +42,14 @@ namespace BizTester.Models
                         hl7 = hl7.Replace(@"\T\\R\", @"\R\");
 
                         var msg = new HL7.Dotnetcore.Message(hl7);
-                        msg.ParseMessage();
+                        try
+                        {
+                            msg.ParseMessage();
+                        }catch(Exception ex)
+                        {
+                            errors.Append($"Failed to parse {hl7}. {ex.Message}");
+                            continue;
+                        }
                         string msgControlId = msg.Segments("MSH")[0].Fields(10).Value.ToString();
                         ReportMsg m = new ReportMsg();
                         m.msg = msg;
@@ -69,14 +74,15 @@ namespace BizTester.Models
                             messages.Add(msgControlId, m);
                         }else if(description.StartsWith("Received acknowledgement"))
                         {
-                            if (messages.ContainsKey(msgControlId))
+                            string ackMsgId = msg.Segments("MSA")[0].Fields(2).Value.ToString();
+                            if (messages.ContainsKey(ackMsgId))
                             {
-                                messages[msgControlId].ackedOn = dt;
+                                messages[ackMsgId].ackedOn = dt;
                             }
-                            else if(!messages.ContainsKey(msgControlId))
+                            else
                             {
                                 m.ackedOn = dt;
-                                messages.Add(msgControlId, m);
+                                messages.Add(ackMsgId, m);
                             }
                         }
 
@@ -85,6 +91,7 @@ namespace BizTester.Models
                     }
                 }
             }
+            this.error = errors.ToString();
         }
     }
 }

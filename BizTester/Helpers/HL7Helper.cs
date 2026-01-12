@@ -97,7 +97,7 @@ namespace BizTester.Helpers
             return field;
         }
 
-        internal static string[] GetFields(string data, HashSet<string> columns)
+        internal static string[] GetFields(string data, List<string> columns)
         {
             string[] result = new string[columns.Count];
             int ind = 0;
@@ -115,6 +115,19 @@ namespace BizTester.Helpers
             }
             return result;
             
+        }
+
+        public static string SanitizeHl7(string hl7)
+        {
+            try
+            {
+                var message = new Message(hl7);
+                message.ParseMessage();
+            }catch(Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+            return null;
         }
     }
 }

@@ -12,9 +12,9 @@ namespace BizTester
 {
     public partial class FormColumnSelector : Form
     {
-        private HashSet<string> columns;
+        private List<string> columns;
 
-        public FormColumnSelector(HashSet<string> columns)
+        public FormColumnSelector(List<string> columns)
         {
             this.columns = columns;
             InitializeComponent();
@@ -29,7 +29,7 @@ namespace BizTester
         {
             for (int i = listBoxColumns.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                columns.Remove(listBoxColumns.SelectedIndices[i].ToString());
+                columns.RemoveAt(i);
                 listBoxColumns.Items.RemoveAt(listBoxColumns.SelectedIndices[i]);
             }
         }
@@ -47,6 +47,37 @@ namespace BizTester
         public List<string> GetColumns()
         {
             return listBoxColumns.Items.Cast<string>().ToList();
+        }
+
+        private void btnMoveUp_Click(object sender, EventArgs e)
+        {
+            if(listBoxColumns.SelectedIndices.Count == 1 && listBoxColumns.SelectedIndices[0] > 0)
+            {
+                int ind = listBoxColumns.SelectedIndices[0];
+                string temp = listBoxColumns.Items[ind].ToString();
+                listBoxColumns.Items[ind] = listBoxColumns.Items[ind-1].ToString();
+                columns[ind] =  listBoxColumns.Items[ind-1].ToString();
+                listBoxColumns.Items[ind-1] = temp;
+                columns[ind-1] = temp;
+                listBoxColumns.SelectedIndex = listBoxColumns.SelectedIndices[0] - 1;
+                listBoxColumns.ClearSelected();
+                listBoxColumns.SelectedIndex = ind -1;
+            }
+        }
+
+        private void btnMoveDown_Click(object sender, EventArgs e)
+        {
+            if (listBoxColumns.SelectedIndices.Count == 1 && listBoxColumns.SelectedIndices[0] < listBoxColumns.Items.Count-1)
+            {
+                int ind = listBoxColumns.SelectedIndices[0];
+                string temp = listBoxColumns.Items[ind].ToString();
+                listBoxColumns.Items[ind] = listBoxColumns.Items[ind+1].ToString();
+                columns[ind] = listBoxColumns.Items[ind+1].ToString();
+                listBoxColumns.Items[ind + 1] = temp;
+                columns[ind + 1] = temp;
+                listBoxColumns.ClearSelected();
+                listBoxColumns.SelectedIndex = ind + 1;
+            }
         }
     }
 }

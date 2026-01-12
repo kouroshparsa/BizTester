@@ -1,6 +1,6 @@
 ﻿namespace BizTester
 {
-    partial class FormColumnSelector
+    partial class FormRegRepIgnoreList
     {
         /// <summary>
         /// Required designer variable.
@@ -30,11 +30,9 @@
         {
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.listBoxColumns = new System.Windows.Forms.ListBox();
+            this.listBoxFields = new System.Windows.Forms.ListBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.btnMoveUp = new System.Windows.Forms.Button();
-            this.btnMoveDown = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxName
@@ -49,18 +47,18 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Column Name:";
+            this.label1.Text = "Field Name:";
             // 
-            // listBoxColumns
+            // listBoxFields
             // 
-            this.listBoxColumns.FormattingEnabled = true;
-            this.listBoxColumns.Location = new System.Drawing.Point(15, 38);
-            this.listBoxColumns.Name = "listBoxColumns";
-            this.listBoxColumns.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxColumns.Size = new System.Drawing.Size(249, 199);
-            this.listBoxColumns.TabIndex = 2;
+            this.listBoxFields.FormattingEnabled = true;
+            this.listBoxFields.Location = new System.Drawing.Point(15, 38);
+            this.listBoxFields.Name = "listBoxFields";
+            this.listBoxFields.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxFields.Size = new System.Drawing.Size(249, 199);
+            this.listBoxFields.TabIndex = 2;
             // 
             // btnDelete
             // 
@@ -82,44 +80,22 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // btnMoveUp
-            // 
-            this.btnMoveUp.Location = new System.Drawing.Point(272, 97);
-            this.btnMoveUp.Name = "btnMoveUp";
-            this.btnMoveUp.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveUp.TabIndex = 5;
-            this.btnMoveUp.Text = "Move Up";
-            this.btnMoveUp.UseVisualStyleBackColor = true;
-            this.btnMoveUp.Click += new System.EventHandler(this.btnMoveUp_Click);
-            // 
-            // btnMoveDown
-            // 
-            this.btnMoveDown.Location = new System.Drawing.Point(272, 126);
-            this.btnMoveDown.Name = "btnMoveDown";
-            this.btnMoveDown.Size = new System.Drawing.Size(75, 23);
-            this.btnMoveDown.TabIndex = 6;
-            this.btnMoveDown.Text = "Move Down";
-            this.btnMoveDown.UseVisualStyleBackColor = true;
-            this.btnMoveDown.Click += new System.EventHandler(this.btnMoveDown_Click);
-            // 
-            // FormColumnSelector
+            // FormRegRepIgnoreList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(359, 242);
-            this.Controls.Add(this.btnMoveDown);
-            this.Controls.Add(this.btnMoveUp);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.listBoxColumns);
+            this.Controls.Add(this.listBoxFields);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormColumnSelector";
+            this.Name = "FormRegRepIgnoreList";
             this.ShowIcon = false;
-            this.Text = "Column Selector";
+            this.Text = "Ignore Liat";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,10 +105,8 @@
 
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox listBoxColumns;
+        private System.Windows.Forms.ListBox listBoxFields;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.Button btnMoveUp;
-        private System.Windows.Forms.Button btnMoveDown;
     }
 }

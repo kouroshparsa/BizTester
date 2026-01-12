@@ -46,6 +46,7 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBoxServerControls = new System.Windows.Forms.GroupBox();
+            this.progressBarServer = new System.Windows.Forms.ProgressBar();
             this.comboBoxAckCode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.checkBoxServerAck = new System.Windows.Forms.CheckBox();
@@ -61,6 +62,7 @@
             this.radioButtonServerFolder = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.progressBarClient = new System.Windows.Forms.ProgressBar();
             this.label8 = new System.Windows.Forms.Label();
             this.textBoxClientCount = new System.Windows.Forms.TextBox();
             this.textBoxClientIP = new System.Windows.Forms.TextBox();
@@ -109,22 +111,31 @@
             this.textBoxMapFolder = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.dataGridViewMapTestResult = new System.Windows.Forms.DataGridView();
-            this.btnRunMapTests = new System.Windows.Forms.Button();
-            this.menuStripMapTest = new System.Windows.Forms.MenuStrip();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.openTestSuiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TestStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TestMsg = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TestMap = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TestInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TestExpOutput = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TestObsOutput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStripMapTest = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.compareSideBySideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnRunMapTests = new System.Windows.Forms.Button();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.progressBarReport = new System.Windows.Forms.ProgressBar();
+            this.btnEditRegRepIgnoreList = new System.Windows.Forms.Button();
+            this.textBoxRegressionReportStatus = new System.Windows.Forms.TextBox();
+            this.listBoxRegressionReportIgnoreList = new System.Windows.Forms.ListBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnNewFolderOpenDialog = new System.Windows.Forms.Button();
+            this.btnOldFolderOpenDialog = new System.Windows.Forms.Button();
+            this.textBoxNewFolder = new System.Windows.Forms.TextBox();
+            this.textBoxOldFolder = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.btnGenerateReport = new System.Windows.Forms.Button();
+            this.openTestSuiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripMT.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -142,7 +153,8 @@
             this.menuStripTestToolbar.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMapTestResult)).BeginInit();
-            this.menuStripMapTest.SuspendLayout();
+            this.contextMenuStripMapTest.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStripMT
@@ -192,6 +204,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(0, 6);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -294,6 +307,7 @@
             // 
             this.groupBoxServerControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxServerControls.Controls.Add(this.progressBarServer);
             this.groupBoxServerControls.Controls.Add(this.comboBoxAckCode);
             this.groupBoxServerControls.Controls.Add(this.label9);
             this.groupBoxServerControls.Controls.Add(this.checkBoxServerAck);
@@ -313,6 +327,13 @@
             this.groupBoxServerControls.TabIndex = 1;
             this.groupBoxServerControls.TabStop = false;
             this.groupBoxServerControls.Text = "Server (Consumer)";
+            // 
+            // progressBarServer
+            // 
+            this.progressBarServer.Location = new System.Drawing.Point(127, 137);
+            this.progressBarServer.Name = "progressBarServer";
+            this.progressBarServer.Size = new System.Drawing.Size(178, 26);
+            this.progressBarServer.TabIndex = 13;
             // 
             // comboBoxAckCode
             // 
@@ -455,7 +476,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(559, 185);
+            this.tabPage4.Size = new System.Drawing.Size(652, 185);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Client";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -464,6 +485,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.progressBarClient);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.textBoxClientCount);
             this.groupBox2.Controls.Add(this.textBoxClientIP);
@@ -482,10 +504,17 @@
             this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Location = new System.Drawing.Point(11, 4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(543, 172);
+            this.groupBox2.Size = new System.Drawing.Size(636, 172);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Client (Generator)";
+            // 
+            // progressBarClient
+            // 
+            this.progressBarClient.Location = new System.Drawing.Point(378, 139);
+            this.progressBarClient.Name = "progressBarClient";
+            this.progressBarClient.Size = new System.Drawing.Size(178, 26);
+            this.progressBarClient.TabIndex = 22;
             // 
             // label8
             // 
@@ -535,7 +564,7 @@
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(469, 137);
+            this.btnSend.Location = new System.Drawing.Point(562, 137);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(62, 28);
             this.btnSend.TabIndex = 14;
@@ -556,7 +585,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClientQueue.Location = new System.Drawing.Point(138, 40);
             this.textBoxClientQueue.Name = "textBoxClientQueue";
-            this.textBoxClientQueue.Size = new System.Drawing.Size(399, 20);
+            this.textBoxClientQueue.Size = new System.Drawing.Size(492, 20);
             this.textBoxClientQueue.TabIndex = 4;
             this.textBoxClientQueue.Text = ".\\private$\\test";
             // 
@@ -566,7 +595,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxClientFolder.Location = new System.Drawing.Point(138, 16);
             this.textBoxClientFolder.Name = "textBoxClientFolder";
-            this.textBoxClientFolder.Size = new System.Drawing.Size(399, 20);
+            this.textBoxClientFolder.Size = new System.Drawing.Size(492, 20);
             this.textBoxClientFolder.TabIndex = 3;
             // 
             // label4
@@ -872,7 +901,6 @@
             this.tabPage5.Controls.Add(this.label14);
             this.tabPage5.Controls.Add(this.dataGridViewMapTestResult);
             this.tabPage5.Controls.Add(this.btnRunMapTests);
-            this.tabPage5.Controls.Add(this.menuStripMapTest);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
@@ -883,7 +911,7 @@
             // 
             // btnGenerateExpOutputs
             // 
-            this.btnGenerateExpOutputs.Location = new System.Drawing.Point(231, 56);
+            this.btnGenerateExpOutputs.Location = new System.Drawing.Point(231, 33);
             this.btnGenerateExpOutputs.Name = "btnGenerateExpOutputs";
             this.btnGenerateExpOutputs.Size = new System.Drawing.Size(177, 23);
             this.btnGenerateExpOutputs.TabIndex = 23;
@@ -898,7 +926,7 @@
             this.comboBoxDllFolder.Items.AddRange(new object[] {
             "Debug",
             "Release"});
-            this.comboBoxDllFolder.Location = new System.Drawing.Point(77, 53);
+            this.comboBoxDllFolder.Location = new System.Drawing.Point(77, 30);
             this.comboBoxDllFolder.Name = "comboBoxDllFolder";
             this.comboBoxDllFolder.Size = new System.Drawing.Size(67, 21);
             this.comboBoxDllFolder.TabIndex = 22;
@@ -906,7 +934,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(8, 61);
+            this.label10.Location = new System.Drawing.Point(8, 38);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(54, 13);
             this.label10.TabIndex = 21;
@@ -915,7 +943,7 @@
             // btnBrowseBTMFile
             // 
             this.btnBrowseBTMFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowseBTMFile.Location = new System.Drawing.Point(587, 30);
+            this.btnBrowseBTMFile.Location = new System.Drawing.Point(587, 7);
             this.btnBrowseBTMFile.Name = "btnBrowseBTMFile";
             this.btnBrowseBTMFile.Size = new System.Drawing.Size(75, 23);
             this.btnBrowseBTMFile.TabIndex = 19;
@@ -927,7 +955,7 @@
             // 
             this.textBoxMapFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxMapFolder.Location = new System.Drawing.Point(77, 30);
+            this.textBoxMapFolder.Location = new System.Drawing.Point(77, 7);
             this.textBoxMapFolder.Name = "textBoxMapFolder";
             this.textBoxMapFolder.Size = new System.Drawing.Size(504, 20);
             this.textBoxMapFolder.TabIndex = 18;
@@ -935,7 +963,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 35);
+            this.label14.Location = new System.Drawing.Point(8, 12);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(63, 13);
             this.label14.TabIndex = 17;
@@ -954,86 +982,11 @@
             this.TestInput,
             this.TestExpOutput,
             this.TestObsOutput});
-            this.dataGridViewMapTestResult.Location = new System.Drawing.Point(8, 91);
+            this.dataGridViewMapTestResult.ContextMenuStrip = this.contextMenuStripMapTest;
+            this.dataGridViewMapTestResult.Location = new System.Drawing.Point(8, 62);
             this.dataGridViewMapTestResult.Name = "dataGridViewMapTestResult";
-            this.dataGridViewMapTestResult.Size = new System.Drawing.Size(654, 344);
+            this.dataGridViewMapTestResult.Size = new System.Drawing.Size(654, 373);
             this.dataGridViewMapTestResult.TabIndex = 16;
-            // 
-            // btnRunMapTests
-            // 
-            this.btnRunMapTests.Location = new System.Drawing.Point(150, 56);
-            this.btnRunMapTests.Name = "btnRunMapTests";
-            this.btnRunMapTests.Size = new System.Drawing.Size(75, 23);
-            this.btnRunMapTests.TabIndex = 15;
-            this.btnRunMapTests.Text = "Run Tests";
-            this.btnRunMapTests.UseVisualStyleBackColor = true;
-            this.btnRunMapTests.Click += new System.EventHandler(this.btnRunMapTests_Click);
-            // 
-            // menuStripMapTest
-            // 
-            this.menuStripMapTest.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.menuStripMapTest.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2});
-            this.menuStripMapTest.Location = new System.Drawing.Point(3, 3);
-            this.menuStripMapTest.Name = "menuStripMapTest";
-            this.menuStripMapTest.Size = new System.Drawing.Size(662, 24);
-            this.menuStripMapTest.TabIndex = 14;
-            this.menuStripMapTest.Text = "menuStrip1";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem6});
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(37, 20);
-            this.toolStripMenuItem2.Text = "File";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(114, 22);
-            this.toolStripMenuItem3.Text = "Open";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(114, 22);
-            this.toolStripMenuItem4.Text = "New";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(114, 22);
-            this.toolStripMenuItem5.Text = "Save";
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(114, 22);
-            this.toolStripMenuItem6.Text = "Save As";
-            // 
-            // openTestSuiteToolStripMenuItem
-            // 
-            this.openTestSuiteToolStripMenuItem.Name = "openTestSuiteToolStripMenuItem";
-            this.openTestSuiteToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.openTestSuiteToolStripMenuItem.Text = "File";
-            // 
-            // newTestToolStripMenuItem
-            // 
-            this.newTestToolStripMenuItem.Name = "newTestToolStripMenuItem";
-            this.newTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.newTestToolStripMenuItem.Text = "New";
-            this.newTestToolStripMenuItem.Click += new System.EventHandler(this.newTestToolStripMenuItem_Click);
-            // 
-            // openTestToolStripMenuItem
-            // 
-            this.openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
-            this.openTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.openTestToolStripMenuItem.Text = "Open";
-            this.openTestToolStripMenuItem.Click += new System.EventHandler(this.openTestToolStripMenuItem_Click);
             // 
             // TestStatus
             // 
@@ -1071,6 +1024,184 @@
             this.TestObsOutput.Name = "TestObsOutput";
             this.TestObsOutput.ReadOnly = true;
             // 
+            // contextMenuStripMapTest
+            // 
+            this.contextMenuStripMapTest.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.compareSideBySideToolStripMenuItem});
+            this.contextMenuStripMapTest.Name = "contextMenuStripMapTest";
+            this.contextMenuStripMapTest.Size = new System.Drawing.Size(188, 26);
+            // 
+            // compareSideBySideToolStripMenuItem
+            // 
+            this.compareSideBySideToolStripMenuItem.Name = "compareSideBySideToolStripMenuItem";
+            this.compareSideBySideToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.compareSideBySideToolStripMenuItem.Text = "Compare side by side";
+            this.compareSideBySideToolStripMenuItem.Click += new System.EventHandler(this.compareSideBySideToolStripMenuItem_Click);
+            // 
+            // btnRunMapTests
+            // 
+            this.btnRunMapTests.Location = new System.Drawing.Point(150, 33);
+            this.btnRunMapTests.Name = "btnRunMapTests";
+            this.btnRunMapTests.Size = new System.Drawing.Size(75, 23);
+            this.btnRunMapTests.TabIndex = 15;
+            this.btnRunMapTests.Text = "Run Tests";
+            this.btnRunMapTests.UseVisualStyleBackColor = true;
+            this.btnRunMapTests.Click += new System.EventHandler(this.btnRunMapTests_Click);
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.progressBarReport);
+            this.tabPage6.Controls.Add(this.btnEditRegRepIgnoreList);
+            this.tabPage6.Controls.Add(this.textBoxRegressionReportStatus);
+            this.tabPage6.Controls.Add(this.listBoxRegressionReportIgnoreList);
+            this.tabPage6.Controls.Add(this.label13);
+            this.tabPage6.Controls.Add(this.btnNewFolderOpenDialog);
+            this.tabPage6.Controls.Add(this.btnOldFolderOpenDialog);
+            this.tabPage6.Controls.Add(this.textBoxNewFolder);
+            this.tabPage6.Controls.Add(this.textBoxOldFolder);
+            this.tabPage6.Controls.Add(this.label11);
+            this.tabPage6.Controls.Add(this.label12);
+            this.tabPage6.Controls.Add(this.btnGenerateReport);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(668, 438);
+            this.tabPage6.TabIndex = 3;
+            this.tabPage6.Text = "Regression Report";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // progressBarReport
+            // 
+            this.progressBarReport.Location = new System.Drawing.Point(515, 73);
+            this.progressBarReport.Name = "progressBarReport";
+            this.progressBarReport.Size = new System.Drawing.Size(138, 20);
+            this.progressBarReport.TabIndex = 19;
+            // 
+            // btnEditRegRepIgnoreList
+            // 
+            this.btnEditRegRepIgnoreList.Location = new System.Drawing.Point(12, 97);
+            this.btnEditRegRepIgnoreList.Name = "btnEditRegRepIgnoreList";
+            this.btnEditRegRepIgnoreList.Size = new System.Drawing.Size(58, 23);
+            this.btnEditRegRepIgnoreList.TabIndex = 18;
+            this.btnEditRegRepIgnoreList.Text = "Edit";
+            this.btnEditRegRepIgnoreList.UseVisualStyleBackColor = true;
+            this.btnEditRegRepIgnoreList.Click += new System.EventHandler(this.btnEditRegRepIgnoreList_Click);
+            // 
+            // textBoxRegressionReportStatus
+            // 
+            this.textBoxRegressionReportStatus.Location = new System.Drawing.Point(208, 73);
+            this.textBoxRegressionReportStatus.Multiline = true;
+            this.textBoxRegressionReportStatus.Name = "textBoxRegressionReportStatus";
+            this.textBoxRegressionReportStatus.ReadOnly = true;
+            this.textBoxRegressionReportStatus.Size = new System.Drawing.Size(301, 92);
+            this.textBoxRegressionReportStatus.TabIndex = 17;
+            // 
+            // listBoxRegressionReportIgnoreList
+            // 
+            this.listBoxRegressionReportIgnoreList.FormattingEnabled = true;
+            this.listBoxRegressionReportIgnoreList.Location = new System.Drawing.Point(76, 70);
+            this.listBoxRegressionReportIgnoreList.Name = "listBoxRegressionReportIgnoreList";
+            this.listBoxRegressionReportIgnoreList.Size = new System.Drawing.Size(120, 95);
+            this.listBoxRegressionReportIgnoreList.TabIndex = 16;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(15, 81);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(55, 13);
+            this.label13.TabIndex = 15;
+            this.label13.Text = "Ignore list:";
+            // 
+            // btnNewFolderOpenDialog
+            // 
+            this.btnNewFolderOpenDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNewFolderOpenDialog.Location = new System.Drawing.Point(626, 47);
+            this.btnNewFolderOpenDialog.Name = "btnNewFolderOpenDialog";
+            this.btnNewFolderOpenDialog.Size = new System.Drawing.Size(28, 20);
+            this.btnNewFolderOpenDialog.TabIndex = 14;
+            this.btnNewFolderOpenDialog.Text = "...";
+            this.btnNewFolderOpenDialog.UseVisualStyleBackColor = true;
+            this.btnNewFolderOpenDialog.Click += new System.EventHandler(this.btnNewFolderOpenDialog_Click);
+            // 
+            // btnOldFolderOpenDialog
+            // 
+            this.btnOldFolderOpenDialog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOldFolderOpenDialog.Location = new System.Drawing.Point(626, 15);
+            this.btnOldFolderOpenDialog.Name = "btnOldFolderOpenDialog";
+            this.btnOldFolderOpenDialog.Size = new System.Drawing.Size(28, 20);
+            this.btnOldFolderOpenDialog.TabIndex = 13;
+            this.btnOldFolderOpenDialog.Text = "...";
+            this.btnOldFolderOpenDialog.UseVisualStyleBackColor = true;
+            this.btnOldFolderOpenDialog.Click += new System.EventHandler(this.btnOldFolderOpenDialog_Click);
+            // 
+            // textBoxNewFolder
+            // 
+            this.textBoxNewFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxNewFolder.Location = new System.Drawing.Point(76, 47);
+            this.textBoxNewFolder.Name = "textBoxNewFolder";
+            this.textBoxNewFolder.Size = new System.Drawing.Size(544, 20);
+            this.textBoxNewFolder.TabIndex = 12;
+            // 
+            // textBoxOldFolder
+            // 
+            this.textBoxOldFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxOldFolder.Location = new System.Drawing.Point(76, 16);
+            this.textBoxOldFolder.Name = "textBoxOldFolder";
+            this.textBoxOldFolder.Size = new System.Drawing.Size(544, 20);
+            this.textBoxOldFolder.TabIndex = 11;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(9, 50);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(61, 13);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "New folder:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(15, 19);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Old folder:";
+            // 
+            // btnGenerateReport
+            // 
+            this.btnGenerateReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenerateReport.Location = new System.Drawing.Point(515, 97);
+            this.btnGenerateReport.Name = "btnGenerateReport";
+            this.btnGenerateReport.Size = new System.Drawing.Size(139, 21);
+            this.btnGenerateReport.TabIndex = 8;
+            this.btnGenerateReport.Text = "Generate Report";
+            this.btnGenerateReport.UseVisualStyleBackColor = true;
+            this.btnGenerateReport.Click += new System.EventHandler(this.btnGenerateReport_Click);
+            // 
+            // openTestSuiteToolStripMenuItem
+            // 
+            this.openTestSuiteToolStripMenuItem.Name = "openTestSuiteToolStripMenuItem";
+            this.openTestSuiteToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.openTestSuiteToolStripMenuItem.Text = "File";
+            // 
+            // newTestToolStripMenuItem
+            // 
+            this.newTestToolStripMenuItem.Name = "newTestToolStripMenuItem";
+            this.newTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newTestToolStripMenuItem.Text = "New";
+            this.newTestToolStripMenuItem.Click += new System.EventHandler(this.newTestToolStripMenuItem_Click);
+            // 
+            // openTestToolStripMenuItem
+            // 
+            this.openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
+            this.openTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openTestToolStripMenuItem.Text = "Open";
+            this.openTestToolStripMenuItem.Click += new System.EventHandler(this.openTestToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1080,7 +1211,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStripTestToolbar;
             this.Name = "MainForm";
-            this.Text = "BizTester 5.0.0";
+            this.Text = "BizTester 5.1.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStripMT.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -1105,8 +1236,9 @@
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMapTestResult)).EndInit();
-            this.menuStripMapTest.ResumeLayout(false);
-            this.menuStripMapTest.PerformLayout();
+            this.contextMenuStripMapTest.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1187,12 +1319,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
         private System.Windows.Forms.DataGridViewTextBoxColumn Data;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.MenuStrip menuStripMapTest;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.DataGridView dataGridViewMapTestResult;
         private System.Windows.Forms.Button btnBrowseBTMFile;
         private System.Windows.Forms.TextBox textBoxMapFolder;
@@ -1207,6 +1333,23 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TestInput;
         private System.Windows.Forms.DataGridViewTextBoxColumn TestExpOutput;
         private System.Windows.Forms.DataGridViewTextBoxColumn TestObsOutput;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMapTest;
+        private System.Windows.Forms.ToolStripMenuItem compareSideBySideToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.Button btnEditRegRepIgnoreList;
+        private System.Windows.Forms.TextBox textBoxRegressionReportStatus;
+        private System.Windows.Forms.ListBox listBoxRegressionReportIgnoreList;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnNewFolderOpenDialog;
+        private System.Windows.Forms.Button btnOldFolderOpenDialog;
+        private System.Windows.Forms.TextBox textBoxNewFolder;
+        private System.Windows.Forms.TextBox textBoxOldFolder;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button btnGenerateReport;
+        private System.Windows.Forms.ProgressBar progressBarReport;
+        private System.Windows.Forms.ProgressBar progressBarServer;
+        private System.Windows.Forms.ProgressBar progressBarClient;
     }
 }
 
