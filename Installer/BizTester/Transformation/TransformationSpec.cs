@@ -1,0 +1,76 @@
+﻿using System.IO;
+using System.Collections.Generic;
+
+namespace BizTester.Transformer
+{
+    public class TransformationSpec
+    {
+        public string settingsPath { get; set; }
+
+        public TransformationSpec(){ }
+        public TransformationSpec(string settingPath)
+        {
+            if(!string.IsNullOrEmpty(settingPath))
+            {
+                this.settingsPath = settingPath;
+            }
+        }
+
+
+        public List<Record> records = new List<Record>();
+
+        public class Record
+        {
+            public string Field { get; set; }
+            public string Value { get; set; }
+            public string Description { get; set; }
+
+            public Record(string field, string val, string description)
+            {
+                this.Field = field;
+                this.Value = val;
+                this.Description = description;
+            }
+            public Record(string[] parts)
+            {
+                this.Field = parts[0];
+                this.Value = parts[1];
+
+                if (parts.Length > 2)
+                {
+                    this.Description = parts[2];
+                }
+                else
+                    this.Description = "";
+            }
+        }
+
+        public void LoadSettingsFromFile()
+        {
+            if (string.IsNullOrEmpty(settingsPath))
+                return;
+
+            records.Clear();
+            using (StreamReader sr = File.OpenText(this.settingsPath))
+            {
+                string s;
+                bool isHeader = true;
+                while ((s = sr.ReadLine()) != null)
+                {
+                    if (isHeader)
+                        isHeader = false;
+                    else
+                    {
+                        string[] parts = s.Split(',');
+                        if (parts.Length >= 2 &&
+                            parts[0].Trim().Length > 0)
+                        {
+                            records.Add(new Record(parts));
+                        }
+                    } 
+                    
+                }
+            }
+        }
+    }
+}
