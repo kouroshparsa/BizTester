@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using HL7.Dotnetcore;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace BizTester.Models
 {
@@ -16,65 +18,44 @@ namespace BizTester.Models
             this.content = _content;
         }
 
-        public static Dictionary<string, HL7Data> GetFolderData(string folderPath, HashSet<string> ignoreList, HashSet<string>errors)
+        public static string GetMessageControlID(string path)
         {
-            var data = new Dictionary<string, HL7Data>();
-            foreach (string filePath in Directory.GetFiles(folderPath, "*"))
+            try
             {
-                try
+                foreach (var line in File.ReadLines(path))
                 {
-                    string fileName = Path.GetFileName(filePath);
-                    string content = File.ReadAllText(filePath);
-                    var msg = new Message(content);
-                    msg.ParseMessage();
-                    string msgControlId = msg.Segments("MSH")[0].Fields(10).Value.ToString();
-                    foreach(string field in ignoreList)
-                    {
-                        try
-                        {
-                            string[] parts = field.Split('-');
-                            string segment = parts[0];
-                            string field_ind_str = parts[1];
-                            int field_ind;
-                            int component_ind = -1;
-                            if (field_ind_str.Contains("."))
-                            {
-                                parts = field_ind_str.Split('.');
-                                field_ind = int.Parse(parts[0]);
-                                component_ind = int.Parse(parts[0]);
-                            }else
-                            {
-                                field_ind = int.Parse(field_ind_str);
-                            }
-
-                            foreach(var seg in msg.Segments(segment))
-                            {
-                                if (component_ind >= 0)
-                                {
-                                    seg.Fields(field_ind).Components(component_ind).Value = "***";
-                                }
-                                else
-                                {
-                                    seg.Fields(field_ind).Value = "***";
-                                }
-                                
-                            }
-                           
-                        }
-                        catch (Exception)
-                        {
-                            errors.Add($"Failed to mask {field}");
-                        }
-                        content = msg.SerializeMessage(false);
-                    }
-                    data.Add(msgControlId, new HL7Data(fileName, content));
+                    string[] parts = line.Split('|');
+                    if (parts[0].Trim().Equals("MSH"))
+                        return parts[9];
                 }
-                catch (Exception ex)
-                {
-                    errors.Add($"Invalid HL7 file: {filePath}: {ex.Message}");
-                }
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex);
             }
-            return data;
+            return null;
+        }
+        public static Dictionary<string, string> GetFolderData(string folderPath,
+            IProgress<string> progress, string statusPrefix, CancellationToken token)
+        {
+            var data = new ConcurrentDictionary<string, string>();
+            string[]files = Directory.GetFiles(folderPath);
+            int count = 0;
+            Parallel.ForEach(files,
+                new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount, CancellationToken = token },
+                file =>
+                {
+                    string id = GetMessageControlID(file);
+                    if(id != null)
+                    {
+                        data.TryAdd(id, Path.GetFileName(file));
+                        Interlocked.Increment(ref count);
+                        if (count % 100 == 0)
+                            progress.Report($"{statusPrefix}: %{Math.Round(100.0*count/files.Length)}");
+                    }
+
+                });
+            
+            return new Dictionary<string, string>(data);
         }
     }
 }

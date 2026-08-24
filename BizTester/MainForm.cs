@@ -1,19 +1,15 @@
 ﻿using BizTester.Client;
 using BizTester.Helpers;
-using BizTester.Server;
-using System;
-using System.IO;
-using System.Windows.Forms;
-using BizTester.Simulation;
-using Newtonsoft.Json;
 using BizTester.Models;
-using Excel = Microsoft.Office.Interop.Excel;
+using BizTester.Server;
+using BizTester.Transformer;
+using BizTester.UIHelpers;
+//using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
-using BizTester.reg_report;
-using System.Text;
+using System.Windows.Forms;
 
 namespace BizTester
 {
@@ -22,84 +18,48 @@ namespace BizTester
         private dynamic listener;
         private dynamic client;
         private CustomLogger logger;
-        private SimulationSpec simSpec;
-        private TestSpec testSpec;
-        private string testPath = null;
-        private bool isTestChanged = false;
+        private TransformationSpec trSpec;
         private string[] selectedClientFiles;
         private List<string> columns = new List<string>();
-        private HashSet<string> reg_rep_ignore_list = new HashSet<string>() { "MSH-7"};
+
 
         public MainForm()
         {
             InitializeComponent();
-            dataGridViewMT.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dataGridViewMT.MultiSelect = false;
-            logger = new CustomLogger(dataGridViewMT, columns);
-            dataGridViewMT.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dataGridViewMT.AllowUserToOrderColumns = true;
-
-            comboBoxDllFolder.SelectedIndex = 0;
-
-            dataGridViewMapTestResult.CellFormatting += dataGridViewMapTestResult_CellFormatting;
-
-            this.Icon = Properties.Resources.flask_icon;
-            this.simSpec = new SimulationSpec();
-            this.testSpec = new TestSpec();
-            this.comboBoxAckCode.SelectedItem = this.comboBoxAckCode.Items[0];
-            UpdateServerOptions();
-            ToolTip toolTipServerPort = new ToolTip();
-            toolTipServerPort.SetToolTip(textBoxServerPort, "You can enter multiple ports by separating them by comma");
-
-            UpdateClientOptions();
-            ToolTip toolTipClientPort = new ToolTip();
-            toolTipClientPort.SetToolTip(textBoxClientPort, "You can enter multiple ports by separating them by comma");
-            
-            ToolTip toolTipClientIP = new ToolTip();
-            toolTipClientIP.SetToolTip(textBoxClientIP, "This is optional. If blank, it will send it to the local server.");
-
-            ToolTip toolTipClientCount = new ToolTip();
-            toolTipClientCount.SetToolTip(textBoxClientCount, "Here you can specify a number if you want to send a message several times.");
-
-            columns.Add("MSH-9.1");
-            columns.Add("MSH-9.2");
-            columns.Add("MSH-10");
-            columns.Add("MSA-2");
-            UpdateColumns();
-            UpdateReGRepIgnoreList();
-
-            try
-            {
-                this.simSpec.LoadSettingsFromFile();
-            }catch(Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
-           
         }
 
+        private void UpdateGroupBox(GroupBox groupBox, bool enable)
+        {
+            foreach (Control con in groupBox.Controls)
+            {
+                if (con.Name != "btnStart")
+                {
+                    if (con is RadioButton rb)
+                        rb.AutoCheck = enable;
+                    else if (con is CheckBox cb)
+                        cb.AutoCheck = enable;
+                    else  if (con is TextBox tb)
+                        tb.ReadOnly = !enable;
+                }
+            }
+        }
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (btnStart.Text.Contains("Stop"))// stopping
             {
                 progressBarServer.Style = ProgressBarStyle.Blocks;
+                progressBarServer.Visible = false;
                 btnStart.Text = "Start Listening";
                 listener.Stop();
-                
-                foreach (Control con in groupBoxServerControls.Controls)
-                {
-                    con.Enabled = true;
-                }
+
+                UpdateGroupBox(groupBoxServerControls, true);
                 UpdateServerOptions();
             }
             else// starting
             {
                 progressBarServer.Style = ProgressBarStyle.Marquee;
-                foreach (Control con in groupBoxServerControls.Controls)
-                {
-                    if (con.Name != "btnStart")
-                        con.Enabled = false;
-                }
+                progressBarServer.Visible = true;
+                UpdateGroupBox(groupBoxServerControls, false);
 
                 try
                 {
@@ -129,18 +89,19 @@ namespace BizTester
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    btnStart.Text.Contains("Start Listening");
-                    foreach (Control con in groupBoxServerControls.Controls)
-                    {
-                        con.Enabled = true;
-                    }
+                    progressBarServer.Style = ProgressBarStyle.Blocks;
+                    progressBarServer.Visible = false;
+                    btnStart.Text = "Start Listening";
+                    btnStart.Enabled = true;
+                    UpdateGroupBox(groupBoxServerControls, true);
+                    UpdateServerOptions();
                 }
 
 
             }
         }
 
-        private void btnSend_Click(object sender, EventArgs e)
+        private async void btnSend_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(textBoxSourcePath.Text))
             {
@@ -158,14 +119,17 @@ namespace BizTester
             }
 
             progressBarClient.Style = ProgressBarStyle.Marquee;
+            progressBarClient.Visible = true;
+            HL7Helper.ResetCounter();
             int count = 1;
-            string data = null;
-            if(!int.TryParse(textBoxClientCount.Text, out count))
+            if(!int.TryParse(clientCount.Text, out count))
             {
                 MessageBox.Show("Invalid count. It must be an integer.");
                 return;
             }
 
+            decimal delay = clientDelay.Value;
+            
             if (count < 1)
             {
                 MessageBox.Show("Invalid count. It must be a positive integer greater than 1.");
@@ -193,14 +157,28 @@ namespace BizTester
                     client = new MSMQ_Sender(logger, textBoxClientQueue.Text);
                 }
 
-                foreach (string filePath in selectedClientFiles)
+                await Task.Run(async () =>
                 {
-                    for (int counter = 0; counter < count; counter++)
+                    foreach (string filePath in selectedClientFiles)
                     {
-                        data = HL7Helper.GetMessageFromFile(filePath, simSpec);
-                        client.Send(data);
+                        string parsedData = HL7Helper.GetMessageFromFile(filePath);
+                        string fileName = Path.GetFileName(filePath);
+                        for (int counter = 0; counter < count; counter++)
+                        {
+                            string data = parsedData;
+                            if (trSpec != null && trSpec.records.Count > 0)
+                            {
+                                data = HL7Helper.Transform(parsedData, trSpec);
+                            }
+                            client.Send(data, fileName);
+
+                            await Task.Delay(
+                                TimeSpan.FromSeconds((double)delay));
+
+                            logger.Flush();
+                        }
                     }
-                }
+                });
 
             }
             catch (Exception ex)
@@ -208,6 +186,7 @@ namespace BizTester
                 logger.Error(ex.Message);
             }
             progressBarClient.Style = ProgressBarStyle.Blocks;
+            progressBarClient.Visible = false;
         }
         
 
@@ -218,277 +197,70 @@ namespace BizTester
 
         private void toolStripMenuItemCopy_Click(object sender, EventArgs e)
         {
-            if (dataGridViewMT.CurrentCell.Value != null)
+            if (dataGridViewMT.SelectedCells.Count > 0)
             {
-                string data = dataGridViewMT.CurrentCell.Value.ToString().Trim();
-                Clipboard.SetDataObject(data, false);
+                int ind = dataGridViewMT.SelectedCells[0].RowIndex;
+                string data = dataGridViewMT.Rows[0].Cells[3].Value.ToString();
+                if (!string.IsNullOrEmpty(data))
+                {
+                    Clipboard.SetDataObject(data, false);
+                }
             }
         }
         
-        private void btnOpenFileDialog_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog of = new OpenFileDialog())
-            {
-                of.Multiselect = true;
-                try
-                {
-                    if (selectedClientFiles.Length > 0)
-                        of.InitialDirectory = Path.GetDirectoryName(selectedClientFiles[0]);
-                }
-                catch (Exception) { }
-
-                if (of.ShowDialog() == DialogResult.OK)
-                {
-                    selectedClientFiles = of.FileNames;
-                    if(selectedClientFiles.Length == 1)
-                    {
-                        textBoxSourcePath.Text = selectedClientFiles[0];
-                    }else
-                    {
-                        textBoxSourcePath.Text = $"{selectedClientFiles.Length} files selected";
-                    }
-                    
-                }
-            }
-
-        }
                 
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if(listener != null)
-            {
-                listener.Stop();
-            }
-
-            if(isTestChanged && testPath != null)
-            {
-                DialogResult dialogResult = MessageBox.Show($"Do you want to save the automated test before exit?",
-                    "Warning", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    SaveTests(testPath);
-                }
-            }
-        }
-
-        private void btnSimSettings_Click(object sender, EventArgs e)
-        {
-            var form = new FormSimulationSettings(simSpec);
-            form.ShowDialog();
-            int x = form.Spec.records.Count;
-            this.simSpec = form.Spec;
-        }
-
-        private void newTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (isTestChanged)
-            {
-                DialogResult dialogResult = MessageBox.Show($"Do you want to save the previous automated test?",
-                    "Warning", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    SaveTests(textBoxTestSpecPath.Text);
-                }
-            }
-            treeView1.Nodes.Clear();
-            textBoxTestSpecPath.Text = "";
-            this.testSpec = new TestSpec();
-            TreeNodeHelper.Add(treeView1, testSpec);
-            isTestChanged = true;
-        }
-
-        private void openTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenTestSpecFile();
-        }
-
-        private void OpenTestSpecFile()
-        {
-            using (OpenFileDialog of = new OpenFileDialog())
-            {
-                of.Filter = "Json files (Json)|*.json";
-                if (of.ShowDialog() == DialogResult.OK)
-                {
-                    this.testPath = of.FileName;
-                    using (StreamReader file = File.OpenText(of.FileName))
-                    {
-                        try
-                        {
-                            this.testSpec = JsonConvert.DeserializeObject<TestSpec>(file.ReadToEnd());
-                            TreeNodeHelper.DrawTree(this.treeView1, this.testSpec.tests);
-                            this.treeView1.ExpandAll();
-                            textBoxTestSpecPath.Text = this.testPath;
-                            isTestChanged = false;
-                        }catch(Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                    }
-
-                }
-            }
-        }
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-
-        }
-
-
-        private void textBoxTestSpecPath_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void textBoxTestSpecPath_MouseClick(object sender, MouseEventArgs e)
-        {
-            OpenTestSpecFile();
-        }
-
-        private void modifyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (testSpec != null)
-            {
-                TreeNodeHelper.Modify(treeView1, testSpec);
-                isTestChanged = true;
-            }
-        }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TreeNodeHelper.Delete(treeView1, testSpec);
-            isTestChanged = true;
-        }
-
-        private void addToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TreeNodeHelper.Add(treeView1, testSpec);
-            isTestChanged = true;
-        }
-
-        private void expandAllNodesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            treeView1.ExpandAll();
-        }
-
-        private void saveTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveTests(testPath);
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Json file|*.json";
-            sfd.Title = "Save test file";
-            sfd.ShowDialog();
-
-            if (sfd.FileName != "")
-            {
-                SaveTests(sfd.FileName);
-            }
-        }
-
-        public void SaveTests(string path)
-        {
-            if (path == null)
-                saveAsToolStripMenuItem_Click(null, null);
-            else
-                File.WriteAllText(path, JsonConvert.SerializeObject(this.testSpec));
-
-            textBoxTestSpecPath.Text = path;
-            isTestChanged = false;
-        }
-        private void btnRunTests_Click(object sender, EventArgs e)
-        {
-            if (testSpec == null)
-            {
-                MessageBox.Show("Please choose the test file to run.");
-                return;
-            }
-            btnRunTests.Enabled = false;
-            TestRunner tr = new TestRunner(testSpec, dataGridViewATLogs);
-            tr.Run();
-            btnRunTests.Enabled = true;
-        }
-
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            dataGridViewATLogs.Rows.Clear();
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void checkBoxServerAck_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxAckCode.Enabled = checkBoxServerAck.Checked;
         }
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportLogsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Excel.Application excelApp = new Excel.Application();
-            excelApp.Workbooks.Add();
-            Excel._Worksheet worksheet = excelApp.ActiveSheet;
-
-            // Add DataGridView column headers to Excel
-            for (int i = 1; i < dataGridViewMT.Columns.Count + 1; i++)
+            try
             {
-                worksheet.Cells[1, i] = dataGridViewMT.Columns[i - 1].HeaderText;
+                ReportController.ExportLogs(dataGridViewMT);
+                MessageBox.Show(
+                "Data Exported Successfully!",
+                "Info",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             }
-
-            // Add DataGridView rows to Excel
-            for (int i = 0; i < dataGridViewMT.Rows.Count; i++)
+            catch (Exception ex)
             {
-                for (int j = 0; j < dataGridViewMT.Columns.Count; j++)
-                {
-                    var row = dataGridViewMT.Rows[i];
-                    var cell = row.Cells[j];
-                    if(cell.Value != null) {
-                        worksheet.Cells[i + 2, j + 1] = cell.Value.ToString();
-                    }
-                    
-                }
-            }
-
-            // Save the Excel file
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Excel files (*.xlsx)|*.xlsx",
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                worksheet.SaveAs(saveFileDialog.FileName);
-                excelApp.Quit();
-                MessageBox.Show("Data Exported Successfully!", "Info");
+                MessageBox.Show(
+                    "Failed to export data: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
        
 
-        private void createReportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel files (*.xlsx)|*.xlsx",
+                FilterIndex = 1,
+                RestoreDirectory = true,
+                DefaultExt = "xlsx",
+                AddExtension = true
+            };
+
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
             try
             {
-                ReportController.Create(dataGridViewMT);
+                var report = ReportController.CreateReport(dataGridViewMT);
+                if (string.IsNullOrEmpty(report.error))
+                {
+                    ReportController.ExportReport(report, saveFileDialog.FileName);
+                }
+                else
+                {
+                    MessageBox.Show($"Failed to create report. {report.error}");
+                }
             }
             catch(Exception ex)
             {
@@ -576,358 +348,196 @@ namespace BizTester
         private void btnColumns_Click(object sender, EventArgs e)
         {
             var form = new FormColumnSelector(columns);
+            Theme.ApplyTheme(form);
             form.ShowDialog();
+            this.columns.Clear();
+            var cols = form.GetColumns();
+            foreach (string col in cols)
+                this.columns.Add(col);
+
             UpdateColumns();
         }
 
         private void UpdateColumns()
         {
             int i = 4;
-            while(i<dataGridViewMT.Columns.Count)
-            {
-                if(i >= columns.Count)
-                {
-                    dataGridViewMT.Columns.RemoveAt(i);
-                }
-                else if (!dataGridViewMT.Columns[i].HeaderText.Equals(columns[i]))
-                {
-                    dataGridViewMT.Columns.RemoveAt(i);
-                }else
-                {
-                    i++;
-                }
-            }
-
             foreach(string col in columns)
             {
-                var column = new DataGridViewTextBoxColumn
+                if(i == dataGridViewMT.Columns.Count)
                 {
-                    Name = col,
-                    HeaderText = col,
-                    Width = 100
-                };
+                    var column = new DataGridViewTextBoxColumn
+                    {
+                        Name = col,
+                        HeaderText = col,
+                        Width = 100
+                    };
 
-                dataGridViewMT.Columns.Add(column);
-            }
-        }
-
-        private string GetMapDllPath(string mapDir)
-        {
-            string dllFolder = comboBoxDllFolder.Text;
-            string dir = $"{mapDir}\\bin\\{dllFolder}";
-            if(!Directory.Exists(dir)){
-                throw new Exception("Could not find any mapping dlls. Please compile your maps.");
-            }
-            string[] mapDllVals = Directory.GetFiles(dir, "*.Maps.dll");
-            if(mapDllVals.Length < 1)
-            {
-                throw new Exception("Could not find any mapping dlls. Please compile your maps.");
-            }
-            return mapDllVals[0];
-        }
-
-        private HashSet<string> GetMapNames(string mapFolder)
-        {
-            return new HashSet<string>((Directory
-                .GetFiles(mapFolder, "*.btm")
-                .Select(Path.GetFileNameWithoutExtension)));
-        }
-
-        private void btnRunMapTests_Click(object sender, EventArgs e)
-        {
-            dataGridViewMapTestResult.Rows.Clear();
-            if (string.IsNullOrEmpty(textBoxMapFolder.Text) || !Directory.Exists(textBoxMapFolder.Text))
-            {
-                MessageBox.Show("Please specify the folder that has the mapping files");
-            }
-
-            string mapDir = textBoxMapFolder.Text;
-            try
-            {
-                var mapNames = GetMapNames(mapDir);
-                string mapDllPath = GetMapDllPath(mapDir);
-                foreach(string dir in Directory.GetDirectories(mapDir, "tests\\*"))
+                    dataGridViewMT.Columns.Add(column);
+                    i++;
+                }else
                 {
-                    string dirName = Path.GetFileNameWithoutExtension(dir);
-                    if (!mapNames.Contains(dirName))
+                    if (dataGridViewMT.Columns[i].HeaderText.Equals(col))
                     {
-                        dataGridViewMapTestResult.Rows.Add("Warning", $"The folder name {dirName} does not match any map. You should remove the folder.");
-                    }else
-                    {
-                        string dllFolder = Path.GetDirectoryName(mapDllPath);
-                        string mapPath = GetMapPath(mapDir, dirName);
-                        foreach (string inputPath in Directory.GetFiles($"{mapDir}\\tests\\{dirName}\\inputs", "*.xml"))
+                        i++;
+                    }else {
+                        dataGridViewMT.Columns.RemoveAt(i);
+                        var column = new DataGridViewTextBoxColumn
                         {
-                            string inputFileName = Path.GetFileName(inputPath);
-                            string expOutput = $"{mapDir}\\tests\\{dirName}\\expected_outputs\\{inputFileName}";
-                            string obsOutput = $"{mapDir}\\tests\\{dirName}\\observed_outputs\\{inputFileName}";
-                            if (File.Exists(expOutput))
-                            {
+                            Name = col,
+                            HeaderText = col,
+                            Width = 100
+                        };
 
-                                BiztalkMapExecutor.ApplyBizTalkMap(inputPath, mapDllPath, obsOutput, mapPath, dllFolder);
-                                List<string> diffs = XmlComparator.CompareXmlFiles(expOutput, obsOutput);
-                                XmlComparator.FilterOutIgnoreList(diffs, $"{mapDir}\\tests\\{dirName}\\ignore-list.txt");
-                                if (diffs.Count == 0)
-                                {
-                                    dataGridViewMapTestResult.Rows.Add("✅ Passed", "", dirName, inputFileName, expOutput, obsOutput);
-                                }
-                                foreach (string diff in diffs)
-                                {
-                                    dataGridViewMapTestResult.Rows.Add("❌ Failed", diff, dirName, inputFileName, expOutput, obsOutput);
-                                }
-                            }
-                            else
-                            {
-                                dataGridViewMapTestResult.Rows.Add("Warning", $"There was no expected output file at {expOutput}");
-                            }
-                        }
-                        
+                        dataGridViewMT.Columns.Insert(i, column);
+                        i++;
                     }
                 }
+            }
 
+            while(i < dataGridViewMT.Columns.Count)
+            {
+                dataGridViewMT.Columns.RemoveAt(i);
+            }
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Theme.ApplyTheme(this);
+            Theme.ApplyContextMenuTheme(contextMenuStripMT);
+            dataGridViewMT.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dataGridViewMT.MultiSelect = false;
+            logger = new CustomLogger(dataGridViewMT, columns);
+            dataGridViewMT.Columns[0].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dataGridViewMT.AllowUserToOrderColumns = true;
+
+            this.Icon = Properties.Resources.flask_icon;
+            this.trSpec = new TransformationSpec(Properties.Settings.Default.TransformationSourceFilePathValue);
+            textBoxSourcePath.Text = Properties.Settings.Default.SourcePathValue;
+            this.comboBoxAckCode.SelectedItem = this.comboBoxAckCode.Items[0];
+            UpdateServerOptions();
+            ToolTip toolTipServerPort = new ToolTip();
+            toolTipServerPort.SetToolTip(textBoxServerPort, "You can enter multiple ports by separating them by comma");
+
+            UpdateClientOptions();
+            ToolTip toolTipClientPort = new ToolTip();
+            toolTipClientPort.SetToolTip(textBoxClientPort, "You can enter multiple ports by separating them by comma");
+
+            ToolTip toolTipClientIP = new ToolTip();
+            toolTipClientIP.SetToolTip(textBoxClientIP, "This is optional. If blank, it will send it to the local server.");
+
+            ToolTip toolTipClientCount = new ToolTip();
+            toolTipClientCount.SetToolTip(clientCount, "Here you can specify a number if you want to send a message several times.");
+
+            columns.Add("MSH-9.1");
+            columns.Add("MSH-9.2");
+            columns.Add("MSH-10");
+            columns.Add("MSA-2");
+            UpdateColumns();
+            progressBarServer.Visible = false;
+            progressBarClient.Visible = false;
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text += " v" + version;
+            ResizeDataGridView();
+
+            try
+            {
+                this.trSpec.LoadSettingsFromFile();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + ex.StackTrace);
+                MessageBox.Show($"Error: {ex.Message}");
             }
-            
-
         }
 
-        private void dataGridViewMapTestResult_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void btnTransformation_Click(object sender, EventArgs e)
         {
-            // Status column index
-            if (e.ColumnIndex == 0 && e.Value != null)
-            {
-                string text = e.Value.ToString();
+            var form = new FormTransformerSettings(trSpec);
+            Theme.ApplyTheme(form);
+            form.ShowDialog();
+            this.trSpec = form.Spec;
+        }
 
-                if (text.Contains("Passed"))
+        private void btnOpenDialog_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog of = new OpenFileDialog())
+            {
+                of.Multiselect = true;
+                try
                 {
-                    e.CellStyle.ForeColor = Color.Green;
-                    e.CellStyle.SelectionForeColor = Color.Green;
-                    e.CellStyle.Font = new Font(dataGridViewMapTestResult.Font, FontStyle.Bold);
+                    if (selectedClientFiles != null && selectedClientFiles.Length > 0)
+                        of.InitialDirectory = Path.GetDirectoryName(selectedClientFiles[0]);
                 }
-                else if (text.Contains("Failed"))
+                catch (Exception) { }
+
+                if (of.ShowDialog() == DialogResult.OK)
                 {
-                    e.CellStyle.ForeColor = Color.Red;
-                    e.CellStyle.SelectionForeColor = Color.Red;
-                    e.CellStyle.Font = new Font(dataGridViewMapTestResult.Font, FontStyle.Bold);
-                }
-            }
-        }
-
-        private string GetMapPath(string mapDir, string mapName)
-        {
-            return Directory.GetFiles(mapDir, mapName + ".btm")[0];
-        }
-
-        private void btnBrowseBTMFile_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new OpenFileDialog())
-            {
-                dialog.ValidateNames = false;
-                dialog.CheckFileExists = false;
-                dialog.CheckPathExists = true;
-                dialog.FileName = "Select Folder";
-
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    textBoxMapFolder.Text = Path.GetDirectoryName(dialog.FileName);
-                }
-            }
-        }
-
-        private void btnGenerateExpOutputs_Click(object sender, EventArgs e)
-        {
-            dataGridViewMapTestResult.Rows.Clear();
-            if (string.IsNullOrEmpty(textBoxMapFolder.Text) || !Directory.Exists(textBoxMapFolder.Text))
-            {
-                MessageBox.Show("Please specify the folder that has the mapping files");
-            }
-
-            string mapDir = textBoxMapFolder.Text;
-            try
-            {
-                var mapNames = GetMapNames(mapDir);
-                string mapDllPath = GetMapDllPath(mapDir);
-                foreach (string dir in Directory.GetDirectories(mapDir, "tests\\*"))
-                {
-                    string dirName = Path.GetFileNameWithoutExtension(dir);
-                    if (!mapNames.Contains(dirName))
+                    selectedClientFiles = of.FileNames;
+                    if (selectedClientFiles.Length == 1)
                     {
-                        dataGridViewMapTestResult.Rows.Add("Warning", $"The folder name {dirName} does not match any map. You should remove the folder.");
+                        textBoxSourcePath.Text = selectedClientFiles[0];
                     }
                     else
                     {
-                        string dllFolder = Path.GetDirectoryName(mapDllPath);
-                        string mapPath = GetMapPath(mapDir, dirName);
-                        foreach (string inputPath in Directory.GetFiles($"{mapDir}\\tests\\{dirName}\\inputs", "*.xml"))
-                        {
-                            string inputFileName = Path.GetFileName(inputPath);
-                            string expOutput = $"{mapDir}\\tests\\{dirName}\\expected_outputs\\{inputFileName}";
-                            if (File.Exists(expOutput))
-                            {
-                                dataGridViewMapTestResult.Rows.Add("Info", $"Already exists: {expOutput}");
-                            }
-                            else
-                            {
-                                BiztalkMapExecutor.ApplyBizTalkMap(inputPath, mapDllPath, expOutput, mapPath, dllFolder);
-                                dataGridViewMapTestResult.Rows.Add("Info", $"Generated {expOutput}");
-                            }
-                        }
+                        textBoxSourcePath.Text = $"{selectedClientFiles.Length} files selected";
+                    }
 
+                }
+            }
+        }
+
+        private void viewDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewMT.SelectedCells.Count > 0)
+            {
+                int ind = dataGridViewMT.SelectedCells[0].RowIndex;
+                string data = dataGridViewMT.Rows[ind].Cells[3].Value?.ToString();
+                if (!string.IsNullOrEmpty(data))
+                {
+                    if (data.Trim().StartsWith("<"))
+                    {
+                        var form = new FormXmlViewer(data);
+                        Theme.ApplyTheme(form);
+                        form.ShowDialog();
+                    }
+                    else
+                    {
+                        var form = new FormHL7Viewer(data);
+                        Theme.ApplyTheme(form);
+                        form.ShowDialog();
                     }
                 }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
         }
 
-        private void compareSideBySideToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string testExpOutput = dataGridViewMapTestResult.CurrentRow?
-                    .Cells["TestExpOutput"].Value?.ToString();
-            string testObsOutput = dataGridViewMapTestResult.CurrentRow?
-                .Cells["TestObsOutput"].Value?.ToString();
-            if(testExpOutput!=null && testObsOutput != null)
-            {
-                if(!File.Exists(testExpOutput))
-                {
-                    MessageBox.Show($"Error: The file is missing: {testExpOutput}");
-                    return;
-                }
+            Properties.Settings.Default.SourcePathValue = textBoxSourcePath.Text;
+            Properties.Settings.Default.Save();
 
-                if (!File.Exists(testObsOutput))
-                {
-                    MessageBox.Show($"Error: The file is missing: {TestObsOutput}");
-                    return;
-                }
-                WinMergeDiff.CompareWithWinMerge(testExpOutput, testObsOutput);
-            }
-            
+            if (listener != null)
+                listener.Stop();
         }
 
-        private void btnEditRegRepIgnoreList_Click(object sender, EventArgs e)
+        private void ResizeDataGridView()// There is a bug where the bottom of the grid is cut off on screens with different dpi. You only need to call this at the load time.
         {
-            var form = new FormRegRepIgnoreList(reg_rep_ignore_list);
+            int newHeight = ClientSize.Height - dataGridViewMT.Top;
+
+            if (newHeight < 0)
+                newHeight = 0;
+
+            dataGridViewMT.SetBounds(
+                dataGridViewMT.Left,
+                dataGridViewMT.Top,
+                ClientSize.Width - dataGridViewMT.Left - 12,
+                newHeight);
+        }
+
+        private void viewReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new FormReportViewer(dataGridViewMT);
+            Theme.ApplyTheme(form);
             form.ShowDialog();
-            reg_rep_ignore_list = form.fields;
-            UpdateReGRepIgnoreList();
         }
-
-        private void UpdateReGRepIgnoreList()
-        {
-            listBoxRegressionReportIgnoreList.Items.Clear();
-            foreach (string item in reg_rep_ignore_list)
-                listBoxRegressionReportIgnoreList.Items.Add(item);
-        }
-
-        private async void btnGenerateReport_Click(object sender, EventArgs e)
-        {
-            textBoxRegressionReportStatus.Text = "";
-            if (string.IsNullOrEmpty(textBoxOldFolder.Text))
-            {
-                MessageBox.Show("Please enter the folder older data.");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(textBoxNewFolder.Text))
-            {
-                MessageBox.Show("Please enter the folder newer data.");
-                return;
-            }
-
-            string oldFolder = textBoxOldFolder.Text;
-            string newFolder = textBoxNewFolder.Text;
-            if (!Directory.Exists(oldFolder))
-            {
-                MessageBox.Show("Invalid older folder path.");
-                return;
-            }
-
-            if (!Directory.Exists(newFolder))
-            {
-                MessageBox.Show("Invalid new folder path.");
-                return;
-            }
-
-            // Save the Excel file
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Pdf files (*.pdf)|*.pdf",
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    await GenerateReport(oldFolder, newFolder, saveFileDialog.FileName, reg_rep_ignore_list);
-                   
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to generate report. {ex.Message} {ex.StackTrace}", "Error");
-                }
-            }
-
-        }
-
-        private async Task GenerateReport(string oldFolder, string newFolder, string pdfPath, HashSet<string>ignoreList)
-        {
-            progressBarReport.Style = ProgressBarStyle.Marquee;
-            var errors = new HashSet<string>();
-            ReportGenerator.CreatePdfReport(pdfPath, oldFolder, newFolder, ignoreList, errors);
-            var sb = new StringBuilder();
-            foreach(string err in errors)
-            {
-                sb.Append(err);
-            }
-            sb.Append($"Report was created Successfully: {pdfPath}");
-            textBoxRegressionReportStatus.Text = sb.ToString(); ;
-            progressBarReport.Style = ProgressBarStyle.Blocks;
-        }
-
-        private void btnOldFolderOpenDialog_Click(object sender, EventArgs e)
-        {
-            string folder = SelectFolder();
-            if (folder != null)
-            {
-                textBoxOldFolder.Text = folder;
-            }
-        }
-
-        private void btnNewFolderOpenDialog_Click(object sender, EventArgs e)
-        {
-            string folder = SelectFolder();
-            if (folder != null)
-                textBoxNewFolder.Text = folder;
-        }
-
-        public static string SelectFolder()
-        {
-            using (var dialog = new OpenFileDialog())
-            {
-                dialog.ValidateNames = false;
-                dialog.CheckFileExists = false;
-                dialog.CheckPathExists = true;
-
-                dialog.FileName = "Select Folder";
-
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    string folderPath = Path.GetDirectoryName(dialog.FileName);
-                    return folderPath;
-                }
-            }
-            return null;
-        }
-
-
-
     }
 }

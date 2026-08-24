@@ -1,7 +1,7 @@
 ﻿using Biztalk.Helpers;
 using BizTester.Helpers;
-using BizTester.Helpers;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -22,6 +22,7 @@ namespace BizTester.Server
         public string ackCode { get; set; }
         public MLLP_Listener(int port, bool sendAck, string ackCode, CustomLogger logger = null)
         {
+            this.label = $"{port}";
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;
@@ -33,6 +34,7 @@ namespace BizTester.Server
         }
         public MLLP_Listener(string port_text, bool sendAck, string ackCode, CustomLogger logger)
         {
+            this.label = port_text;
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;
@@ -63,7 +65,7 @@ namespace BizTester.Server
             {
                 tcpListener = new TcpListener(IPAddress.Any, this.port);
                 tcpListener.Start();
-                logger.Info("Server started. Waiting for connections...");
+                logger.Info($"Started listening on {this.port}. Waiting for connections...");
 
                 while (isListening)
                 {
@@ -157,14 +159,8 @@ namespace BizTester.Server
 
                             if (!msg.Trim().StartsWith("MSH"))
                             {
-                                try
-                                {
-                                    SendSoapResponse(ref clientStream);
-                                }catch(Exception ex)
-                                {
-                                    string stackTrace = ex.StackTrace;
-                                    logger.Error($"The message does not seem to be a HL7v2 message. SendSoapResponse failed. {ex}. {stackTrace}", msg);
-                                }
+                                logger.Error($"The message does not seem to be a HL7v2 message. SendSoapResponse failed.", msg);
+
                             }
                         }
                         else if (insideMessage) // Add valid message content
@@ -182,14 +178,6 @@ namespace BizTester.Server
             tcpClient.Close();
         }
 
-        private void SendSoapResponse(ref NetworkStream clientStream)
-        {
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources\\v3_HCIM_IN_FindCandidatesResponse.xml");
-            string soapResponse = File.ReadAllText(filePath);
-
-            byte[] responseBytes = Encoding.UTF8.GetBytes(soapResponse);
-            clientStream.Write(responseBytes, 0, responseBytes.Length);
-        }
         private void SendAck(string msg, ref NetworkStream clientStream)
         {
             string ackMessage;

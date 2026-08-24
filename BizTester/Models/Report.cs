@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HL7.Tea.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -7,7 +8,7 @@ using System.Globalization;
 namespace BizTester.Models
 {
     public class ReportMsg{
-        public HL7.Dotnetcore.Message msg { get; set; }
+        public HL7Message msg { get; set; }
         public DateTime? sentOn { get; set; } = null;
         public DateTime? ackedOn { get; set; } = null;
         public DateTime? receivedOn { get; set; } = null;
@@ -41,16 +42,8 @@ namespace BizTester.Models
                             .Trim('\r', '\n');
                         hl7 = hl7.Replace(@"\T\\R\", @"\R\");
 
-                        var msg = new HL7.Dotnetcore.Message(hl7);
-                        try
-                        {
-                            msg.ParseMessage();
-                        }catch(Exception ex)
-                        {
-                            errors.Append($"Failed to parse {hl7}. {ex.Message}");
-                            continue;
-                        }
-                        string msgControlId = msg.Segments("MSH")[0].Fields(10).Value.ToString();
+                        var msg = new HL7Message(hl7);
+                        string msgControlId = msg.GetFieldOne("MSH-10");
                         ReportMsg m = new ReportMsg();
                         m.msg = msg;
 
@@ -74,7 +67,7 @@ namespace BizTester.Models
                             messages.Add(msgControlId, m);
                         }else if(description.StartsWith("Received acknowledgement"))
                         {
-                            string ackMsgId = msg.Segments("MSA")[0].Fields(2).Value.ToString();
+                            string ackMsgId = msg.GetFieldOne("MSA-2");
                             if (messages.ContainsKey(ackMsgId))
                             {
                                 messages[ackMsgId].ackedOn = dt;

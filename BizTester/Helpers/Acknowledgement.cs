@@ -1,5 +1,5 @@
 ﻿using BizTester.Helpers;
-using HL7.Dotnetcore;
+using HL7.Tea.Core;
 using System;
 using System.Linq;
 using System.Xml.Linq;
@@ -9,9 +9,6 @@ namespace Biztalk.Helpers
 
     public class Acknowledgement
     {
-        private const string START_BLOCK = "\x0b";
-        private const string END_BLOCK = "\x1c\x0d";
-
         public static bool RequiresAcknowledgement(string msg, CustomLogger logger)
         {
             const string HL7V3_ACK = "<MSH.15_AcceptAcknowledgmentType>";
@@ -25,9 +22,8 @@ namespace Biztalk.Helpers
                 try
                 {
                     msg = HL7Helper.CleanHL7(msg);
-                    var message = new Message(msg);
-                    message.ParseMessage();
-                    var acceptAcknowledgeType = message.GetValue("MSH.15");
+                    var message = new HL7Message(msg);
+                    var acceptAcknowledgeType = message.GetFieldOne("MSH.15");
                     return acceptAcknowledgeType.Length > 0;
                 }
                 catch(Exception ex)
@@ -92,13 +88,10 @@ namespace Biztalk.Helpers
             {
                 return Get_HL7v3_AcknowledgementMessage(incomingHl7Message);
             }
-            var message = new Message(incomingHl7Message);
-            message.ParseMessage();
-            var messageControlId = message.GetValue("MSH.10");
-            var ack = message.GetACK();
-            ack.SetValue("MSA.1", ackCode);
-            string msg = ack.SerializeMessage(false).Trim();
-            return START_BLOCK + msg + END_BLOCK;
+            var message = new HL7Message(incomingHl7Message);
+            var messageControlId = message.GetFieldOne("MSH-10");
+            var ack = message.GetAck(ackCode);
+            return ack;
         }
     }
 }

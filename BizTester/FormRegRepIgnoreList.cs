@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BizTester
 {
     public partial class FormRegRepIgnoreList : Form
     {
-        public HashSet<string> fields;
-
         public FormRegRepIgnoreList(HashSet<string> fields)
         {
-            this.fields = fields;
             InitializeComponent();
             foreach (string item in fields)
             {
@@ -23,23 +21,28 @@ namespace BizTester
         
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            var itemsToDelete = new List<string>();
-            foreach(var item in listBoxFields.SelectedItems)
+            for (int i = listBoxFields.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                itemsToDelete.Add(item.ToString());
+                int index = listBoxFields.SelectedIndices[i];
+                listBoxFields.Items.RemoveAt(index);
             }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if(textBoxName.Text.Contains(" "))
+            Regex regex = new Regex(@"^[A-Z][A-Z][A-Z,1-9]\-\d+((\.\d+)*)$");
+            if (textBoxName.Text.Length < 1 || textBoxName.Text.Contains(" ") || !regex.Match(textBoxName.Text).Success)
             {
-                MessageBox.Show("Invalid name. It should be a valid HL7 field name");
+                MessageBox.Show("Invalid name. It should be a valid HL7 field or sub-field name");
+                return;
             }
+
             listBoxFields.Items.Add(textBoxName.Text);
-            fields.Add(textBoxName.Text);
         }
-        
-        
+
+        internal HashSet<string> GetIgnoreList()
+        {
+            return new HashSet<string>(listBoxFields.Items.Cast<string>());
+        }
     }
 }

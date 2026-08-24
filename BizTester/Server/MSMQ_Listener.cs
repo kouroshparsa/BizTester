@@ -1,6 +1,7 @@
 ﻿using BizTester.Helpers;
 using MSMQ.Messaging;
 using System;
+using System.Linq;
 using System.Threading;
 
 namespace BizTester.Server
@@ -11,6 +12,7 @@ namespace BizTester.Server
 
         public MSMQ_Listener(string queue, CustomLogger logger=null)
         {
+            this.label = queue.Split('\\').LastOrDefault();
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;

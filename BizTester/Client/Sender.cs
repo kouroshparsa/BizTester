@@ -6,6 +6,6 @@ namespace BizTester.Client
     internal class Sender
     {
         internal CustomLogger logger;
-        public virtual void Send(string msg) { }
+        public virtual void Send(string msg, string fileName) { }
     }
 }

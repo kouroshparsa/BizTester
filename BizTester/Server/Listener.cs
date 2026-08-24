@@ -9,8 +9,8 @@ namespace BizTester.Server
         internal bool isListening = true;
         internal Thread listenThread;
         internal CustomLogger logger;
-        internal ConcurrentQueue<string> messageQueue;
-
+        internal ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
+        internal string label = "inputs";
         public virtual void Start() { }
         public virtual void Stop()
         {
@@ -18,7 +18,7 @@ namespace BizTester.Server
             {
                 isListening = false;
             }
-            logger.Info("Server is stopped.");
+            logger.Info($"Stopped listening on {label}");
         }
         
     }

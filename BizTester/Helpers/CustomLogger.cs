@@ -1,13 +1,15 @@
-﻿using System;
+﻿using MSMQ.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace BizTester.Helpers
 {
     public class CustomLogger
     {
-        internal DataGridView dataGridView;
+        internal readonly DataGridView dataGridView;
         internal List<string> columns;
         private enum LogTypes
         {
@@ -32,7 +34,10 @@ namespace BizTester.Helpers
             {
                 try
                 {
-                    dataGridView.Invoke(new Action<string, string, string>(UpdateDataGridView), type, msg, data);
+                    if (dataGridView.InvokeRequired)
+                    {
+                        dataGridView.BeginInvoke(new Action<string, string, string>(UpdateDataGridView), type, msg, data);
+                    }
                 } catch(Exception ex)
                 {
                     Console.WriteLine(ex.Message);
@@ -119,8 +124,16 @@ namespace BizTester.Helpers
 
         public void Flush()
         {
-            if(this.dataGridView != null)
-                this.dataGridView.Refresh();
+            if (dataGridView == null || dataGridView.IsDisposed)
+                return;
+
+            if (dataGridView.InvokeRequired)
+            {
+                dataGridView.BeginInvoke(new Action(Flush));
+                return;
+            }
+
+            dataGridView.Refresh();
         }
     }
 }

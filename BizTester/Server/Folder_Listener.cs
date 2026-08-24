@@ -1,4 +1,5 @@
 ﻿using BizTester.Helpers;
+using HL7.Tea.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,7 @@ namespace BizTester.Server
         private static HashSet<string> failedFileNames = new HashSet<string>();
         public Folder_Listener(string path, CustomLogger logger=null)
         {
+            this.label = "the folder";
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;
@@ -20,13 +22,6 @@ namespace BizTester.Server
             this.path = path;
         }
 
-        private string ReadHL7File(string path)
-        {
-            string content = File.ReadAllText(path);
-            var msg = new HL7.Dotnetcore.Message(content);
-            msg.ParseMessage();
-            return msg.SerializeMessage(true);
-        }
         private void ListenForFiles()
         {
             while (isListening)
@@ -39,7 +34,7 @@ namespace BizTester.Server
                     {
                         if (!failedFileNames.Contains(filename))
                         {
-                            string content = ReadHL7File(file);
+                            string content = File.ReadAllText(file);
                             logger.Info($"Detected data file: {filename}", content);
                             File.Delete(file);
                             logger.Info($"Deleted file {filename}");

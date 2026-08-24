@@ -7,7 +7,7 @@ namespace BizTester.Client
 {
     internal class File_Sender : Sender
     {
-        public string folder { get; }
+        public string Folder { get; }
 
         public File_Sender(CustomLogger logger, string folder)
         {
@@ -16,35 +16,31 @@ namespace BizTester.Client
             {
                 throw new Exception($"Invalid folder {folder}");
             }
-            this.folder = folder;
+            this.Folder = folder;
         }
 
-        public override void Send(string data)
+        public override void Send(string data, string fileName)
         {
-            Task.Run(() =>
-            {
-                SendMessage(data);
-            });
+            SendMessage(data, fileName);
         }
-        private void SendMessage(string data)
+        private void SendMessage(string data, string fileName)
         {
             string res = HL7Helper.SanitizeHl7(data);
             if (!string.IsNullOrEmpty(res))
             {
                 logger.Warn($"The HL7 message seems to be malformatted: {res}", data);
             }
-            string filename = $"{Guid.NewGuid()}.hl7v2";
-            string path = Path.Combine(folder, filename);
+            string path = Path.Combine(Folder, fileName);
             while (File.Exists(path))
             {
-                filename = $"{Guid.NewGuid()}.hl7v2";
-                path = Path.Combine(folder, filename);
+                    fileName = $"{Guid.NewGuid()}.hl7v2";
+                path = Path.Combine(Folder, fileName);
             }
 
             try
             {
                 File.WriteAllText(path, data);
-                logger.Info($"Created file {filename}", data);
+                logger.Info($"Created file {fileName}", data);
             }
             catch (Exception ex)
             {

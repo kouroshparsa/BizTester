@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace BizTester
 {
     public partial class FormColumnSelector : Form
     {
-        private List<string> columns;
 
         public FormColumnSelector(List<string> columns)
         {
-            this.columns = columns;
             InitializeComponent();
             foreach (string item in columns)
             {
@@ -29,19 +24,19 @@ namespace BizTester
         {
             for (int i = listBoxColumns.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                columns.RemoveAt(i);
                 listBoxColumns.Items.RemoveAt(listBoxColumns.SelectedIndices[i]);
             }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if(textBoxName.Text.Contains(" "))
+            Regex regex = new Regex(@"^[A-Z][A-Z][A-Z,1-9]\-\d+((\.\d+)*)$");
+            if (textBoxName.Text.Length < 1 || textBoxName.Text.Contains(" ") || !regex.Match(textBoxName.Text).Success)
             {
-                MessageBox.Show("Invalid name. It should be a valid HL7 field name");
+                MessageBox.Show("Invalid name. It should be a valid HL7 field or sub-field name");
+                return;
             }
             listBoxColumns.Items.Add(textBoxName.Text);
-            columns.Add(textBoxName.Text);
         }
 
         public List<string> GetColumns()
@@ -56,9 +51,7 @@ namespace BizTester
                 int ind = listBoxColumns.SelectedIndices[0];
                 string temp = listBoxColumns.Items[ind].ToString();
                 listBoxColumns.Items[ind] = listBoxColumns.Items[ind-1].ToString();
-                columns[ind] =  listBoxColumns.Items[ind-1].ToString();
                 listBoxColumns.Items[ind-1] = temp;
-                columns[ind-1] = temp;
                 listBoxColumns.SelectedIndex = listBoxColumns.SelectedIndices[0] - 1;
                 listBoxColumns.ClearSelected();
                 listBoxColumns.SelectedIndex = ind -1;
@@ -72,9 +65,7 @@ namespace BizTester
                 int ind = listBoxColumns.SelectedIndices[0];
                 string temp = listBoxColumns.Items[ind].ToString();
                 listBoxColumns.Items[ind] = listBoxColumns.Items[ind+1].ToString();
-                columns[ind] = listBoxColumns.Items[ind+1].ToString();
                 listBoxColumns.Items[ind + 1] = temp;
-                columns[ind + 1] = temp;
                 listBoxColumns.ClearSelected();
                 listBoxColumns.SelectedIndex = ind + 1;
             }

@@ -15,15 +15,13 @@ namespace BizTester.Client
             this.QueueName = queue;
         }
 
-        public override void Send(string data)
+        public override void Send(string data, string fileName)
         {
-            Task.Run(() =>
-            {
-                SendMessage(data);
-            });
+            SendMessage(data);
         }
         private void SendMessage(string data)
         {
+            data = data.Replace(HL7Helper.BEGIN_MSG, "").Replace(HL7Helper.END_MSG, "");// When sending HL7 to a queue, Biztalk does not like the begining and ending characters of HL7 so trim them off.
             string res = HL7Helper.SanitizeHl7(data);
             if (!string.IsNullOrEmpty(res))
             {

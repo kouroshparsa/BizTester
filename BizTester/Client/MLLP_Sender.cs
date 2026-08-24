@@ -36,12 +36,9 @@ namespace BizTester.Client
 
         }
 
-        public override void Send(string data)
+        public override void Send(string data, string fileName)
         {
-            Task.Run(() =>
-            {
-                SendMessage(data);
-            });
+            SendMessage(data);
         }
         private void SendMessage(string data)
         {

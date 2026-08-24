@@ -95,7 +95,7 @@
             this.MinimizeBox = false;
             this.Name = "FormRegRepIgnoreList";
             this.ShowIcon = false;
-            this.Text = "Ignore Liat";
+            this.Text = "Ignore List";
             this.ResumeLayout(false);
             this.PerformLayout();
 
