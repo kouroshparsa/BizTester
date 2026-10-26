@@ -19,7 +19,8 @@ namespace BizTester.Server
         }
 
         public override void Start() {
-            foreach(MLLP_Listener listener in listeners)
+            isListening = true;
+            foreach (MLLP_Listener listener in listeners)
             {
                 listener.Start();
             }

@@ -1,7 +1,6 @@
 ﻿using Biztalk.Helpers;
 using BizTester.Helpers;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -17,7 +16,7 @@ namespace BizTester.Server
         const int IDLE_DELAY = 1000;
 
         public int port { get; }
-        public bool sendAck { get; set; }
+        public bool shouldSendAck { get; set; }
 
         public string ackCode { get; set; }
         public MLLP_Listener(int port, bool sendAck, string ackCode, CustomLogger logger = null)
@@ -29,7 +28,7 @@ namespace BizTester.Server
             if(port < 1)
                 throw new Exception("Invalid port");
             this.port = port;
-            this.sendAck = sendAck;
+            this.shouldSendAck = sendAck;
             this.ackCode = ackCode;
         }
         public MLLP_Listener(string port_text, bool sendAck, string ackCode, CustomLogger logger)
@@ -38,7 +37,7 @@ namespace BizTester.Server
             if (logger == null)
                 logger = new CustomLogger();
             this.logger = logger;
-            this.sendAck = sendAck;
+            this.shouldSendAck = sendAck;
             this.ackCode = ackCode;
             int p;
             bool success = int.TryParse(port_text, out p);
@@ -92,6 +91,7 @@ namespace BizTester.Server
         
         public override void Start()
         {
+            isListening = true;
             listenThread = new Thread(new ThreadStart(ListenForClients));
             listenThread.Priority = ThreadPriority.Highest;
             listenThread.Start();
@@ -150,7 +150,7 @@ namespace BizTester.Server
                                 this.messageQueue.Enqueue(msg);
                             }
 
-                            if (sendAck)
+                            if (shouldSendAck)
                             {
                                 logger.Info("Message expects an acknowledgement.");
                                 SendAck(msg, ref clientStream);

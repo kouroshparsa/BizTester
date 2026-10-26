@@ -47,6 +47,11 @@ namespace BizTester
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBoxServerControls = new System.Windows.Forms.GroupBox();
+            this.textBoxServerIP = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBoxServerTopic = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.radioButtonServerKafka = new System.Windows.Forms.RadioButton();
             this.progressBarServer = new System.Windows.Forms.ProgressBar();
             this.comboBoxAckCode = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -63,6 +68,10 @@ namespace BizTester
             this.radioButtonServerFolder = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnCancel = new BizTester.UIHelpers.RoundedButton();
+            this.textBoxClientTopic = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.radioButtonClientKafka = new System.Windows.Forms.RadioButton();
             this.clientDelay = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.clientCount = new System.Windows.Forms.NumericUpDown();
@@ -164,11 +173,11 @@ namespace BizTester
             this.Message,
             this.Data});
             this.dataGridViewMT.ContextMenuStrip = this.contextMenuStripMT;
-            this.dataGridViewMT.Location = new System.Drawing.Point(4, 281);
+            this.dataGridViewMT.Location = new System.Drawing.Point(4, 301);
             this.dataGridViewMT.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridViewMT.Name = "dataGridViewMT";
             this.dataGridViewMT.RowHeadersWidth = 62;
-            this.dataGridViewMT.Size = new System.Drawing.Size(627, 143);
+            this.dataGridViewMT.Size = new System.Drawing.Size(675, 159);
             this.dataGridViewMT.TabIndex = 18;
             // 
             // Timestamp
@@ -178,7 +187,7 @@ namespace BizTester
             this.Timestamp.MinimumWidth = 8;
             this.Timestamp.Name = "Timestamp";
             this.Timestamp.ReadOnly = true;
-            this.Timestamp.Width = 112;
+            this.Timestamp.Width = 83;
             // 
             // Type
             // 
@@ -187,7 +196,7 @@ namespace BizTester
             this.Type.MinimumWidth = 8;
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
-            this.Type.Width = 68;
+            this.Type.Width = 56;
             // 
             // Message
             // 
@@ -216,17 +225,17 @@ namespace BizTester
             this.tabControl2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(627, 235);
+            this.tabControl2.Size = new System.Drawing.Size(675, 257);
             this.tabControl2.TabIndex = 17;
             // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.groupBoxServerControls);
-            this.tabPage3.Location = new System.Drawing.Point(4, 29);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage3.Size = new System.Drawing.Size(619, 202);
+            this.tabPage3.Size = new System.Drawing.Size(667, 231);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Server";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -235,6 +244,11 @@ namespace BizTester
             // 
             this.groupBoxServerControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxServerControls.Controls.Add(this.textBoxServerIP);
+            this.groupBoxServerControls.Controls.Add(this.label12);
+            this.groupBoxServerControls.Controls.Add(this.textBoxServerTopic);
+            this.groupBoxServerControls.Controls.Add(this.label11);
+            this.groupBoxServerControls.Controls.Add(this.radioButtonServerKafka);
             this.groupBoxServerControls.Controls.Add(this.progressBarServer);
             this.groupBoxServerControls.Controls.Add(this.comboBoxAckCode);
             this.groupBoxServerControls.Controls.Add(this.label9);
@@ -253,19 +267,67 @@ namespace BizTester
             this.groupBoxServerControls.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxServerControls.Name = "groupBoxServerControls";
             this.groupBoxServerControls.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxServerControls.Size = new System.Drawing.Size(602, 164);
+            this.groupBoxServerControls.Size = new System.Drawing.Size(655, 216);
             this.groupBoxServerControls.TabIndex = 1;
             this.groupBoxServerControls.TabStop = false;
             this.groupBoxServerControls.Text = "Server (Consumer)";
+            // 
+            // textBoxServerIP
+            // 
+            this.textBoxServerIP.Location = new System.Drawing.Point(287, 85);
+            this.textBoxServerIP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxServerIP.Name = "textBoxServerIP";
+            this.textBoxServerIP.Size = new System.Drawing.Size(116, 20);
+            this.textBoxServerIP.TabIndex = 17;
+            this.textBoxServerIP.Text = "localhost";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(268, 87);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(20, 13);
+            this.label12.TabIndex = 18;
+            this.label12.Text = "IP:";
+            // 
+            // textBoxServerTopic
+            // 
+            this.textBoxServerTopic.Location = new System.Drawing.Point(139, 85);
+            this.textBoxServerTopic.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxServerTopic.Name = "textBoxServerTopic";
+            this.textBoxServerTopic.Size = new System.Drawing.Size(116, 20);
+            this.textBoxServerTopic.TabIndex = 15;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(103, 87);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(37, 13);
+            this.label11.TabIndex = 16;
+            this.label11.Text = "Topic:";
+            // 
+            // radioButtonServerKafka
+            // 
+            this.radioButtonServerKafka.AutoSize = true;
+            this.radioButtonServerKafka.Location = new System.Drawing.Point(20, 79);
+            this.radioButtonServerKafka.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.radioButtonServerKafka.Name = "radioButtonServerKafka";
+            this.radioButtonServerKafka.Size = new System.Drawing.Size(53, 17);
+            this.radioButtonServerKafka.TabIndex = 14;
+            this.radioButtonServerKafka.Text = "Kafka";
+            this.radioButtonServerKafka.UseVisualStyleBackColor = true;
             // 
             // progressBarServer
             // 
             this.progressBarServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarServer.Location = new System.Drawing.Point(139, 117);
+            this.progressBarServer.Location = new System.Drawing.Point(139, 149);
             this.progressBarServer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBarServer.Name = "progressBarServer";
-            this.progressBarServer.Size = new System.Drawing.Size(455, 24);
+            this.progressBarServer.Size = new System.Drawing.Size(508, 24);
             this.progressBarServer.TabIndex = 13;
             // 
             // comboBoxAckCode
@@ -278,19 +340,19 @@ namespace BizTester
             "CA",
             "CE",
             "CR"});
-            this.comboBoxAckCode.Location = new System.Drawing.Point(247, 93);
+            this.comboBoxAckCode.Location = new System.Drawing.Point(247, 125);
             this.comboBoxAckCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxAckCode.Name = "comboBoxAckCode";
-            this.comboBoxAckCode.Size = new System.Drawing.Size(114, 28);
+            this.comboBoxAckCode.Size = new System.Drawing.Size(114, 21);
             this.comboBoxAckCode.TabIndex = 7;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(189, 93);
+            this.label9.Location = new System.Drawing.Point(189, 125);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(87, 20);
+            this.label9.Size = new System.Drawing.Size(59, 13);
             this.label9.TabIndex = 12;
             this.label9.Text = "ACK Code:";
             // 
@@ -299,10 +361,10 @@ namespace BizTester
             this.checkBoxServerAck.AutoSize = true;
             this.checkBoxServerAck.Checked = true;
             this.checkBoxServerAck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxServerAck.Location = new System.Drawing.Point(20, 90);
+            this.checkBoxServerAck.Location = new System.Drawing.Point(20, 122);
             this.checkBoxServerAck.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxServerAck.Name = "checkBoxServerAck";
-            this.checkBoxServerAck.Size = new System.Drawing.Size(199, 24);
+            this.checkBoxServerAck.Size = new System.Drawing.Size(141, 17);
             this.checkBoxServerAck.TabIndex = 6;
             this.checkBoxServerAck.Text = "Send acknowledgement";
             this.checkBoxServerAck.UseVisualStyleBackColor = true;
@@ -316,7 +378,7 @@ namespace BizTester
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStart.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnStart.ForeColor = System.Drawing.Color.White;
-            this.btnStart.Location = new System.Drawing.Point(20, 117);
+            this.btnStart.Location = new System.Drawing.Point(20, 149);
             this.btnStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(111, 24);
@@ -327,10 +389,10 @@ namespace BizTester
             // 
             // textBoxServerPort
             // 
-            this.textBoxServerPort.Location = new System.Drawing.Point(139, 63);
+            this.textBoxServerPort.Location = new System.Drawing.Point(139, 64);
             this.textBoxServerPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxServerPort.Name = "textBoxServerPort";
-            this.textBoxServerPort.Size = new System.Drawing.Size(116, 26);
+            this.textBoxServerPort.Size = new System.Drawing.Size(116, 20);
             this.textBoxServerPort.TabIndex = 5;
             // 
             // textBoxServerQueue
@@ -340,7 +402,7 @@ namespace BizTester
             this.textBoxServerQueue.Location = new System.Drawing.Point(139, 44);
             this.textBoxServerQueue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxServerQueue.Name = "textBoxServerQueue";
-            this.textBoxServerQueue.Size = new System.Drawing.Size(456, 26);
+            this.textBoxServerQueue.Size = new System.Drawing.Size(509, 20);
             this.textBoxServerQueue.TabIndex = 4;
             this.textBoxServerQueue.Text = ".\\private$\\test";
             // 
@@ -351,7 +413,7 @@ namespace BizTester
             this.textBoxServerPath.Location = new System.Drawing.Point(139, 25);
             this.textBoxServerPath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxServerPath.Name = "textBoxServerPath";
-            this.textBoxServerPath.Size = new System.Drawing.Size(456, 26);
+            this.textBoxServerPath.Size = new System.Drawing.Size(509, 20);
             this.textBoxServerPath.TabIndex = 3;
             // 
             // label3
@@ -360,7 +422,7 @@ namespace BizTester
             this.label3.Location = new System.Drawing.Point(103, 65);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 20);
+            this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Port:";
             // 
@@ -370,7 +432,7 @@ namespace BizTester
             this.label2.Location = new System.Drawing.Point(91, 44);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 20);
+            this.label2.Size = new System.Drawing.Size(42, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Queue:";
             // 
@@ -380,17 +442,17 @@ namespace BizTester
             this.label1.Location = new System.Drawing.Point(101, 27);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 20);
+            this.label1.Size = new System.Drawing.Size(32, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Path:";
             // 
             // radioButtonServerMLLP
             // 
             this.radioButtonServerMLLP.AutoSize = true;
-            this.radioButtonServerMLLP.Location = new System.Drawing.Point(20, 63);
+            this.radioButtonServerMLLP.Location = new System.Drawing.Point(20, 61);
             this.radioButtonServerMLLP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonServerMLLP.Name = "radioButtonServerMLLP";
-            this.radioButtonServerMLLP.Size = new System.Drawing.Size(68, 24);
+            this.radioButtonServerMLLP.Size = new System.Drawing.Size(53, 17);
             this.radioButtonServerMLLP.TabIndex = 2;
             this.radioButtonServerMLLP.Text = "MLLP";
             this.radioButtonServerMLLP.UseVisualStyleBackColor = true;
@@ -400,10 +462,10 @@ namespace BizTester
             // 
             this.radioButtonServerMSMQ.AutoSize = true;
             this.radioButtonServerMSMQ.Checked = true;
-            this.radioButtonServerMSMQ.Location = new System.Drawing.Point(20, 45);
+            this.radioButtonServerMSMQ.Location = new System.Drawing.Point(20, 43);
             this.radioButtonServerMSMQ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonServerMSMQ.Name = "radioButtonServerMSMQ";
-            this.radioButtonServerMSMQ.Size = new System.Drawing.Size(76, 24);
+            this.radioButtonServerMSMQ.Size = new System.Drawing.Size(58, 17);
             this.radioButtonServerMSMQ.TabIndex = 1;
             this.radioButtonServerMSMQ.TabStop = true;
             this.radioButtonServerMSMQ.Text = "MSMQ";
@@ -416,7 +478,7 @@ namespace BizTester
             this.radioButtonServerFolder.Location = new System.Drawing.Point(20, 25);
             this.radioButtonServerFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonServerFolder.Name = "radioButtonServerFolder";
-            this.radioButtonServerFolder.Size = new System.Drawing.Size(72, 24);
+            this.radioButtonServerFolder.Size = new System.Drawing.Size(54, 17);
             this.radioButtonServerFolder.TabIndex = 2;
             this.radioButtonServerFolder.Text = "Folder";
             this.radioButtonServerFolder.UseVisualStyleBackColor = true;
@@ -425,11 +487,11 @@ namespace BizTester
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.groupBox2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage4.Size = new System.Drawing.Size(619, 202);
+            this.tabPage4.Size = new System.Drawing.Size(667, 231);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Client";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -438,6 +500,10 @@ namespace BizTester
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnCancel);
+            this.groupBox2.Controls.Add(this.textBoxClientTopic);
+            this.groupBox2.Controls.Add(this.label13);
+            this.groupBox2.Controls.Add(this.radioButtonClientKafka);
             this.groupBox2.Controls.Add(this.clientDelay);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.clientCount);
@@ -461,17 +527,63 @@ namespace BizTester
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(611, 207);
+            this.groupBox2.Size = new System.Drawing.Size(659, 229);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Client (Generator)";
             // 
+            // btnCancel
+            // 
+            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnCancel.BorderRadius = 10;
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnCancel.ForeColor = System.Drawing.Color.Black;
+            this.btnCancel.Location = new System.Drawing.Point(286, 187);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(79, 24);
+            this.btnCancel.TabIndex = 35;
+            this.btnCancel.Text = "Abort";
+            this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // textBoxClientTopic
+            // 
+            this.textBoxClientTopic.Location = new System.Drawing.Point(140, 90);
+            this.textBoxClientTopic.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxClientTopic.Name = "textBoxClientTopic";
+            this.textBoxClientTopic.Size = new System.Drawing.Size(108, 20);
+            this.textBoxClientTopic.TabIndex = 34;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(96, 90);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(37, 13);
+            this.label13.TabIndex = 33;
+            this.label13.Text = "Topic:";
+            // 
+            // radioButtonClientKafka
+            // 
+            this.radioButtonClientKafka.AutoSize = true;
+            this.radioButtonClientKafka.Location = new System.Drawing.Point(19, 84);
+            this.radioButtonClientKafka.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.radioButtonClientKafka.Name = "radioButtonClientKafka";
+            this.radioButtonClientKafka.Size = new System.Drawing.Size(53, 17);
+            this.radioButtonClientKafka.TabIndex = 28;
+            this.radioButtonClientKafka.Text = "Kafka";
+            this.radioButtonClientKafka.UseVisualStyleBackColor = true;
+            // 
             // clientDelay
             // 
             this.clientDelay.DecimalPlaces = 1;
-            this.clientDelay.Location = new System.Drawing.Point(211, 167);
+            this.clientDelay.Location = new System.Drawing.Point(211, 183);
             this.clientDelay.Name = "clientDelay";
-            this.clientDelay.Size = new System.Drawing.Size(62, 26);
+            this.clientDelay.Size = new System.Drawing.Size(62, 20);
             this.clientDelay.TabIndex = 27;
             this.clientDelay.Value = new decimal(new int[] {
             1,
@@ -482,16 +594,16 @@ namespace BizTester
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(117, 171);
+            this.label10.Location = new System.Drawing.Point(117, 187);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(130, 20);
+            this.label10.Size = new System.Drawing.Size(88, 13);
             this.label10.TabIndex = 26;
             this.label10.Text = "Delay (Seconds):";
             // 
             // clientCount
             // 
-            this.clientCount.Location = new System.Drawing.Point(211, 148);
+            this.clientCount.Location = new System.Drawing.Point(211, 164);
             this.clientCount.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -503,7 +615,7 @@ namespace BizTester
             0,
             0});
             this.clientCount.Name = "clientCount";
-            this.clientCount.Size = new System.Drawing.Size(62, 26);
+            this.clientCount.Size = new System.Drawing.Size(62, 20);
             this.clientCount.TabIndex = 25;
             this.clientCount.Value = new decimal(new int[] {
             1,
@@ -514,10 +626,10 @@ namespace BizTester
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(252, 69);
+            this.label7.Location = new System.Drawing.Point(252, 71);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(28, 20);
+            this.label7.Size = new System.Drawing.Size(20, 13);
             this.label7.TabIndex = 24;
             this.label7.Text = "IP:";
             // 
@@ -525,28 +637,28 @@ namespace BizTester
             // 
             this.progressBarClient.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBarClient.Location = new System.Drawing.Point(373, 143);
+            this.progressBarClient.Location = new System.Drawing.Point(373, 159);
             this.progressBarClient.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBarClient.Name = "progressBarClient";
-            this.progressBarClient.Size = new System.Drawing.Size(230, 24);
+            this.progressBarClient.Size = new System.Drawing.Size(278, 24);
             this.progressBarClient.TabIndex = 22;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(167, 149);
+            this.label8.Location = new System.Drawing.Point(167, 165);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(56, 20);
+            this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 21;
             this.label8.Text = "Count:";
             // 
             // textBoxClientIP
             // 
-            this.textBoxClientIP.Location = new System.Drawing.Point(273, 67);
+            this.textBoxClientIP.Location = new System.Drawing.Point(273, 69);
             this.textBoxClientIP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxClientIP.Name = "textBoxClientIP";
-            this.textBoxClientIP.Size = new System.Drawing.Size(148, 26);
+            this.textBoxClientIP.Size = new System.Drawing.Size(148, 20);
             this.textBoxClientIP.TabIndex = 23;
             // 
             // btnTransformation
@@ -557,7 +669,7 @@ namespace BizTester
             this.btnTransformation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTransformation.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnTransformation.ForeColor = System.Drawing.Color.White;
-            this.btnTransformation.Location = new System.Drawing.Point(12, 143);
+            this.btnTransformation.Location = new System.Drawing.Point(12, 159);
             this.btnTransformation.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnTransformation.Name = "btnTransformation";
             this.btnTransformation.Size = new System.Drawing.Size(117, 24);
@@ -574,7 +686,7 @@ namespace BizTester
             this.btnSend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSend.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnSend.ForeColor = System.Drawing.Color.White;
-            this.btnSend.Location = new System.Drawing.Point(286, 143);
+            this.btnSend.Location = new System.Drawing.Point(286, 159);
             this.btnSend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(79, 24);
@@ -585,10 +697,10 @@ namespace BizTester
             // 
             // textBoxClientPort
             // 
-            this.textBoxClientPort.Location = new System.Drawing.Point(140, 67);
+            this.textBoxClientPort.Location = new System.Drawing.Point(140, 69);
             this.textBoxClientPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxClientPort.Name = "textBoxClientPort";
-            this.textBoxClientPort.Size = new System.Drawing.Size(108, 26);
+            this.textBoxClientPort.Size = new System.Drawing.Size(108, 20);
             this.textBoxClientPort.TabIndex = 5;
             // 
             // textBoxClientQueue
@@ -598,7 +710,7 @@ namespace BizTester
             this.textBoxClientQueue.Location = new System.Drawing.Point(140, 49);
             this.textBoxClientQueue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxClientQueue.Name = "textBoxClientQueue";
-            this.textBoxClientQueue.Size = new System.Drawing.Size(457, 26);
+            this.textBoxClientQueue.Size = new System.Drawing.Size(505, 20);
             this.textBoxClientQueue.TabIndex = 4;
             this.textBoxClientQueue.Text = ".\\private$\\test";
             // 
@@ -609,7 +721,7 @@ namespace BizTester
             this.textBoxClientFolder.Location = new System.Drawing.Point(140, 27);
             this.textBoxClientFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxClientFolder.Name = "textBoxClientFolder";
-            this.textBoxClientFolder.Size = new System.Drawing.Size(457, 26);
+            this.textBoxClientFolder.Size = new System.Drawing.Size(505, 20);
             this.textBoxClientFolder.TabIndex = 3;
             // 
             // label4
@@ -618,7 +730,7 @@ namespace BizTester
             this.label4.Location = new System.Drawing.Point(104, 67);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 20);
+            this.label4.Size = new System.Drawing.Size(29, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Port:";
             // 
@@ -628,7 +740,7 @@ namespace BizTester
             this.label5.Location = new System.Drawing.Point(91, 47);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 20);
+            this.label5.Size = new System.Drawing.Size(42, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "Queue:";
             // 
@@ -638,7 +750,7 @@ namespace BizTester
             this.label6.Location = new System.Drawing.Point(69, 28);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(95, 20);
+            this.label6.Size = new System.Drawing.Size(64, 13);
             this.label6.TabIndex = 9;
             this.label6.Text = "Folder Path:";
             // 
@@ -648,7 +760,7 @@ namespace BizTester
             this.radioButtonClientMLLP.Location = new System.Drawing.Point(19, 66);
             this.radioButtonClientMLLP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonClientMLLP.Name = "radioButtonClientMLLP";
-            this.radioButtonClientMLLP.Size = new System.Drawing.Size(68, 24);
+            this.radioButtonClientMLLP.Size = new System.Drawing.Size(53, 17);
             this.radioButtonClientMLLP.TabIndex = 2;
             this.radioButtonClientMLLP.Text = "MLLP";
             this.radioButtonClientMLLP.UseVisualStyleBackColor = true;
@@ -661,7 +773,7 @@ namespace BizTester
             this.radioButtonClientMSMQ.Location = new System.Drawing.Point(19, 47);
             this.radioButtonClientMSMQ.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonClientMSMQ.Name = "radioButtonClientMSMQ";
-            this.radioButtonClientMSMQ.Size = new System.Drawing.Size(76, 24);
+            this.radioButtonClientMSMQ.Size = new System.Drawing.Size(58, 17);
             this.radioButtonClientMSMQ.TabIndex = 1;
             this.radioButtonClientMSMQ.TabStop = true;
             this.radioButtonClientMSMQ.Text = "MSMQ";
@@ -674,7 +786,7 @@ namespace BizTester
             this.radioButtonClientFiles.Location = new System.Drawing.Point(19, 27);
             this.radioButtonClientFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButtonClientFiles.Name = "radioButtonClientFiles";
-            this.radioButtonClientFiles.Size = new System.Drawing.Size(52, 24);
+            this.radioButtonClientFiles.Size = new System.Drawing.Size(41, 17);
             this.radioButtonClientFiles.TabIndex = 0;
             this.radioButtonClientFiles.Text = "File";
             this.radioButtonClientFiles.UseVisualStyleBackColor = true;
@@ -686,11 +798,11 @@ namespace BizTester
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.btnOpenDialog);
             this.groupBox3.Controls.Add(this.textBoxSourcePath);
-            this.groupBox3.Location = new System.Drawing.Point(12, 93);
+            this.groupBox3.Location = new System.Drawing.Point(12, 111);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox3.Size = new System.Drawing.Size(591, 47);
+            this.groupBox3.Size = new System.Drawing.Size(639, 46);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Source";
@@ -704,7 +816,7 @@ namespace BizTester
             this.btnOpenDialog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOpenDialog.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnOpenDialog.ForeColor = System.Drawing.Color.White;
-            this.btnOpenDialog.Location = new System.Drawing.Point(509, 19);
+            this.btnOpenDialog.Location = new System.Drawing.Point(557, 19);
             this.btnOpenDialog.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnOpenDialog.Name = "btnOpenDialog";
             this.btnOpenDialog.Size = new System.Drawing.Size(73, 24);
@@ -720,7 +832,7 @@ namespace BizTester
             this.textBoxSourcePath.Location = new System.Drawing.Point(9, 22);
             this.textBoxSourcePath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxSourcePath.Name = "textBoxSourcePath";
-            this.textBoxSourcePath.Size = new System.Drawing.Size(493, 26);
+            this.textBoxSourcePath.Size = new System.Drawing.Size(541, 20);
             this.textBoxSourcePath.TabIndex = 10;
             // 
             // btnColumns
@@ -731,7 +843,7 @@ namespace BizTester
             this.btnColumns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnColumns.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnColumns.ForeColor = System.Drawing.Color.White;
-            this.btnColumns.Location = new System.Drawing.Point(4, 255);
+            this.btnColumns.Location = new System.Drawing.Point(5, 271);
             this.btnColumns.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnColumns.Name = "btnColumns";
             this.btnColumns.Size = new System.Drawing.Size(85, 24);
@@ -745,7 +857,7 @@ namespace BizTester
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(635, 435);
+            this.ClientSize = new System.Drawing.Size(683, 471);
             this.Controls.Add(this.btnColumns);
             this.Controls.Add(this.dataGridViewMT);
             this.Controls.Add(this.tabControl2);
@@ -826,6 +938,15 @@ namespace BizTester
         private RoundedButton btnOpenDialog;
         private System.Windows.Forms.TextBox textBoxSourcePath;
         private System.Windows.Forms.ToolStripMenuItem viewReportToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBoxClientTopic;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.RadioButton radioButtonClientKafka;
+        private System.Windows.Forms.TextBox textBoxServerTopic;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.RadioButton radioButtonServerKafka;
+        private System.Windows.Forms.TextBox textBoxServerIP;
+        private System.Windows.Forms.Label label12;
+        private RoundedButton btnCancel;
     }
 }
 

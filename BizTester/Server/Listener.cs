@@ -6,7 +6,7 @@ namespace BizTester.Server
 {
     class Listener
     {
-        internal bool isListening = true;
+        internal bool isListening = false;
         internal Thread listenThread;
         internal CustomLogger logger;
         internal ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();

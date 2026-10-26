@@ -4,6 +4,8 @@ using BizTester.Models;
 using BizTester.Server;
 using BizTester.Transformer;
 using BizTester.UIHelpers;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+
 //using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -15,8 +17,8 @@ namespace BizTester
 {
     public partial class MainForm : Form
     {
-        private dynamic listener;
-        private dynamic client;
+        private dynamic listener = null;
+        private dynamic client = null;
         private CustomLogger logger;
         private TransformationSpec trSpec;
         private string[] selectedClientFiles;
@@ -71,7 +73,7 @@ namespace BizTester
                     {
                         listener = new MSMQ_Listener(textBoxServerQueue.Text, logger);
                     }
-                    else// MLLP
+                    else if(radioButtonServerMLLP.Checked)
                     {
                         if (textBoxServerPort.Text.Contains(","))
                         {
@@ -81,6 +83,10 @@ namespace BizTester
                         {
                             listener = new MLLP_Listener(textBoxServerPort.Text, checkBoxServerAck.Checked, comboBoxAckCode.Text, logger);
                         }
+                    }
+                    else // Kafka
+                    {
+                        listener = new Kafka_Listener(textBoxServerTopic.Text, textBoxServerIP.Text, textBoxServerPort.Text, logger);
                     }
 
                     listener.Start();
@@ -103,6 +109,7 @@ namespace BizTester
 
         private async void btnSend_Click(object sender, EventArgs e)
         {
+
             if (Directory.Exists(textBoxSourcePath.Text))
             {
                 selectedClientFiles = Directory.GetFiles(textBoxSourcePath.Text);
@@ -110,16 +117,19 @@ namespace BizTester
             else if (File.Exists(textBoxSourcePath.Text))
             {
                 selectedClientFiles = new string[] { textBoxSourcePath.Text  };
+            }else if(textBoxSourcePath.Text.Length > 0 && selectedClientFiles == null)
+            {
+                MessageBox.Show("Invalid source path.");
+                return;
             }
 
-            if (selectedClientFiles.Length < 1)
+            if (selectedClientFiles != null && selectedClientFiles.Length < 1)
             {
                 MessageBox.Show("Please enter a file or folder path");
                 return;
             }
 
             progressBarClient.Style = ProgressBarStyle.Marquee;
-            progressBarClient.Visible = true;
             HL7Helper.ResetCounter();
             int count = 1;
             if(!int.TryParse(clientCount.Text, out count))
@@ -143,7 +153,7 @@ namespace BizTester
                     logger.Error("Missing source file path");
                     return;
                 }
-                
+
                 if (radioButtonClientFiles.Checked)
                 {
                     client = new File_Sender(logger, textBoxClientFolder.Text);
@@ -152,10 +162,17 @@ namespace BizTester
                 {
                     client = new MLLP_Sender(logger, textBoxClientPort.Text, textBoxClientIP.Text);
                 }
-                else// MSMQ
+                else if (radioButtonClientMSMQ.Checked)// MSMQ
                 {
                     client = new MSMQ_Sender(logger, textBoxClientQueue.Text);
                 }
+                else { // Kafka
+                    client = new Kafka_Sender(logger, textBoxClientTopic.Text, textBoxClientPort.Text, textBoxClientIP.Text);
+                }
+
+                progressBarClient.Visible = true;
+                btnCancel.Visible = true;
+                btnSend.Visible = false;
 
                 await Task.Run(async () =>
                 {
@@ -176,6 +193,14 @@ namespace BizTester
                                 TimeSpan.FromSeconds((double)delay));
 
                             logger.Flush();
+                            if (client.isCancelled)
+                            {
+                                break;
+                            }
+                        }
+                        if (client.isCancelled)
+                        {
+                            break;
                         }
                     }
                 });
@@ -185,8 +210,15 @@ namespace BizTester
             {
                 logger.Error(ex.Message);
             }
+
+            if (client != null)
+            {
+                client.Close();
+            }
             progressBarClient.Style = ProgressBarStyle.Blocks;
             progressBarClient.Visible = false;
+            btnCancel.Visible = false;
+            btnSend.Visible = true;
         }
         
 
@@ -290,18 +322,32 @@ namespace BizTester
                 textBoxServerPath.Enabled = true;
                 textBoxServerQueue.Enabled = false;
                 textBoxServerPort.Enabled = false;
+                textBoxServerTopic.Enabled = false;
+                textBoxServerIP.Enabled = false;
             }
             else if (radioButtonServerMSMQ.Checked)
             {
                 textBoxServerPath.Enabled = false;
                 textBoxServerQueue.Enabled = true;
                 textBoxServerPort.Enabled = false;
+                textBoxServerTopic.Enabled = false;
+                textBoxServerIP.Enabled = false;
             }
             else if (radioButtonServerMLLP.Checked)
             {
                 textBoxServerPath.Enabled = false;
                 textBoxServerQueue.Enabled = false;
                 textBoxServerPort.Enabled = true;
+                textBoxServerTopic.Enabled = false;
+                textBoxServerIP.Enabled = false;
+            }
+            else if (radioButtonServerKafka.Checked)
+            {
+                textBoxServerPath.Enabled = false;
+                textBoxServerQueue.Enabled = false;
+                textBoxServerPort.Enabled = true;
+                textBoxServerTopic.Enabled = true;
+                textBoxServerIP.Enabled = true;
             }
         }
 
@@ -313,6 +359,7 @@ namespace BizTester
                 textBoxClientQueue.Enabled = false;
                 textBoxClientPort.Enabled = false;
                 textBoxClientIP.Enabled = false;
+                textBoxClientTopic.Enabled = false;
             }
             else if (radioButtonClientMSMQ.Checked)
             {
@@ -320,6 +367,7 @@ namespace BizTester
                 textBoxClientQueue.Enabled = true;
                 textBoxClientPort.Enabled = false;
                 textBoxClientIP.Enabled = false;
+                textBoxClientTopic.Enabled = false;
             }
             else if (radioButtonClientMLLP.Checked)
             {
@@ -327,6 +375,15 @@ namespace BizTester
                 textBoxClientQueue.Enabled = false;
                 textBoxClientPort.Enabled = true;
                 textBoxClientIP.Enabled = true;
+                textBoxClientTopic.Enabled = false;
+            }
+            else if (radioButtonClientKafka.Checked)
+            {
+                textBoxClientFolder.Enabled = false;
+                textBoxClientQueue.Enabled = false;
+                textBoxClientPort.Enabled = true;
+                textBoxClientIP.Enabled = true;
+                textBoxClientTopic.Enabled = true;
             }
         }
 
@@ -415,6 +472,7 @@ namespace BizTester
             this.trSpec = new TransformationSpec(Properties.Settings.Default.TransformationSourceFilePathValue);
             textBoxSourcePath.Text = Properties.Settings.Default.SourcePathValue;
             this.comboBoxAckCode.SelectedItem = this.comboBoxAckCode.Items[0];
+            btnCancel.Visible = false;
             UpdateServerOptions();
             ToolTip toolTipServerPort = new ToolTip();
             toolTipServerPort.SetToolTip(textBoxServerPort, "You can enter multiple ports by separating them by comma");
@@ -517,6 +575,7 @@ namespace BizTester
 
             if (listener != null)
                 listener.Stop();
+
         }
 
         private void ResizeDataGridView()// There is a bug where the bottom of the grid is cut off on screens with different dpi. You only need to call this at the load time.
@@ -538,6 +597,11 @@ namespace BizTester
             var form = new FormReportViewer(dataGridViewMT);
             Theme.ApplyTheme(form);
             form.ShowDialog();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            client.Cancel();
         }
     }
 }

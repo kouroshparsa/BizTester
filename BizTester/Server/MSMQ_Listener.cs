@@ -60,6 +60,7 @@ namespace BizTester.Server
         }
         public override void Start()
         {
+            isListening = true;
             try
             {
                 logger.Info("Started to collect messages from the queue.");
