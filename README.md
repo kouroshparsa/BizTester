@@ -1,6 +1,6 @@
 # Introduction
 
-To see the older v5 documentation, <a href="REAME-v5.md">click here</a>.
+To see the older v5 documentation, <a href="README-v5.md">click here</a>.
 
 
 `BizTester` is a Windows GUI app for sending and receiving HL7v2 messages via MLLP, MSMQ, file system or Kafka. It can also perform transformations.
